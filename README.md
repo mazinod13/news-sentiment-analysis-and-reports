@@ -37,7 +37,8 @@ fetch → parse → normalise → dedupe → enrich (NLP) → store → report
 # 1. Environment
 python -m venv .venv
 .venv\Scripts\activate          # Windows;  source .venv/bin/activate on POSIX
-pip install -e ".[dev]"
+pip install -r requirements-dev.txt
+pip install -e . --no-deps      # register the `app` package
 
 # 2. Config
 cp .env.example .env             # fill DATABASE_URL and any API keys
@@ -78,7 +79,9 @@ NEWS-SENTIMENT/
 ├── README.md                     # this file
 ├── GUIDE.md                      # ← start here to add an outlet
 ├── DATA_SOURCES.md               # generated inventory of every external source
-├── pyproject.toml                # deps, tooling config (ruff, pytest, mypy)
+├── pyproject.toml                # deps + tooling config (ruff, pytest) — source of truth
+├── requirements.txt              # runtime deps, mirrors pyproject (drift is test-enforced)
+├── requirements-dev.txt          # + pytest, ruff
 ├── Dockerfile
 ├── docker-compose.yml            # postgres + app + opt-in worker
 ├── .env.example                  # every env var the app reads, documented
@@ -166,7 +169,8 @@ NEWS-SENTIMENT/
 │   │   ├── test_annapurna_post.py
 │   │   └── ...
 │   ├── test_dates.py             # shared: BS conversion, feed dates
-│   └── test_pipeline.py          # shared: canonical URLs, dedupe, config validation
+│   ├── test_pipeline.py          # shared: canonical URLs, dedupe, config validation
+│   └── test_packaging.py         # shared: requirements.txt vs pyproject.toml
 │
 ├── data/                         # gitignored
 │   ├── raw/                      # optional raw payload archive

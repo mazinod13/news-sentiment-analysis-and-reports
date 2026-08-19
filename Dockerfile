@@ -8,14 +8,16 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Dependency layer. Only pyproject.toml is copied so this layer stays cached and
-# is rebuilt when a dependency changes -- not on every source edit. The stub
-# package exists purely so the editable install has something to point at; the
-# real source is copied over it below.
-COPY pyproject.toml README.md ./
-RUN mkdir -p app && touch app/__init__.py \
-    && pip install --no-cache-dir -e ".[dev]"
+# Dependency layer. Only the requirements files are copied, so this layer stays
+# cached and is rebuilt when a dependency changes -- not on every source edit.
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install --no-cache-dir -r requirements-dev.txt
 
 COPY . .
+
+# Register the package itself. --no-deps because the layer above already
+# installed everything, and tests/test_packaging.py guarantees the two lists
+# agree with pyproject.toml.
+RUN pip install --no-cache-dir -e . --no-deps
 
 CMD ["python", "-m", "app.main", "--help"]

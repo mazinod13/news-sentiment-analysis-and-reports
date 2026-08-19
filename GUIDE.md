@@ -115,7 +115,7 @@ docker compose logs -f worker
 ```
 
 Source is bind-mounted, so **an edit on your host applies to the next `run`
-with no rebuild**. Rebuild only when `pyproject.toml` changes:
+with no rebuild**. Rebuild only when a dependency changes:
 
 ```bash
 docker compose build app
@@ -147,7 +147,8 @@ The scraping half needs no database:
 
 ```bash
 python -m venv .venv && .venv\Scripts\activate
-pip install -e ".[dev]"
+pip install -r requirements-dev.txt
+pip install -e . --no-deps
 python -m app.main probe annapurna-post
 pytest
 ```
@@ -536,15 +537,21 @@ cleaning rule, a new `method`. Then:
 4. **Cover it with a shared test** in `tests/test_dates.py` or
    `tests/test_pipeline.py`, so the next person cannot silently break it.
 
-The genuinely conflict-prone files are `pyproject.toml` (both adding a
-dependency) and `app/ingestion/registry.py` (both adding a method). Both are
-tiny and easy to resolve by hand — just expect it and re-run `pytest` after.
+The genuinely conflict-prone files are the dependency lists (both adding a
+package) and `app/ingestion/registry.py` (both adding a method). Both are tiny
+and easy to resolve by hand — just expect it and re-run `pytest` after.
+
+A dependency goes in **three** places, and they must agree:
+`pyproject.toml`, `requirements.txt` (or `requirements-dev.txt` for tooling),
+and then `docker compose build app`. `tests/test_packaging.py` fails if the
+first two drift, so you cannot forget one silently.
 
 ### Before every push
 
 ```bash
-docker compose run --rm app pytest
+docker compose run --rm app pytest                        # includes the dependency drift check
 docker compose run --rm app python -m app.main sources    # validates all configs
+python scripts/gen_sources.py --check                     # DATA_SOURCES.md is current
 ruff check .
 ```
 
@@ -602,6 +609,8 @@ They are in [README.md](README.md) as the target shape, nothing more.
 | `python -m app.main worker` | yes | continuous scheduler |
 | `python -m app.main db upgrade` | yes | create missing tables |
 | `python scripts/new_source.py --id ...` | no | scaffold a new outlet |
+| `python scripts/gen_sources.py` | no | refresh the DATA_SOURCES.md status block |
+| `python scripts/gen_sources.py --check` | no | fail if that block is stale (CI) |
 | `pytest` | no | everything, offline |
 
 ### Source config fields
