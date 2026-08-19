@@ -1,0 +1,204 @@
+# Nepal OSINT — Data Sources
+
+> Every external website / feed the app ingests from. **News & social** come from `backend-v5/config/sources.yaml`; **government, financial & service** sources are the hosts wired into the backend scrapers/clients. The frontend never calls these directly — the backend worker ingests them on a schedule into Postgres, and the UI renders from the app's own `/api/v1/*` API (see [API_REFERENCE.md](API_REFERENCE.md)).
+
+**Totals:** 60 news feeds (52 active, 8 inactive) · 8 X/Twitter accounts · 87 Nitter accounts · 6 Reddit queries · 31 govt/finance/geo portals · 4 external services.
+
+## Contents
+
+- [News outlets (RSS / HTML)](#news-outlets-rss-html)
+- [Government & official portals](#government-official-portals)
+- [Financial & market](#financial-market)
+- [Energy & fuel](#energy-fuel)
+- [Aviation (ADS-B)](#aviation-ads-b)
+- [Geospatial & satellite](#geospatial-satellite)
+- [Social media (X / Nitter / Reddit)](#social-media-x-nitter-reddit)
+- [External processing services](#external-processing-services)
+- [Inactive / removed feeds](#inactive-removed-feeds)
+
+## News outlets (RSS / HTML)
+
+52 active feeds ingested by the RSS/HTML scrapers (`app/ingestion/*`). Priority drives poll frequency (1 = every ~15 min).
+
+| # | Source | Link | Lang | Cat | Prio | Method |
+|---|--------|------|:----:|:---:|:----:|:------:|
+| 1 | Annapurna Post | <https://annapurnapost.com/rss> | ne | news | 1 | rss |
+| 2 | BBC Nepali | <https://feeds.bbci.co.uk/nepali/rss.xml> | ne | news | 1 | rss |
+| 3 | BBC South Asia | <https://feeds.bbci.co.uk/news/world/asia/rss.xml> | en | news | 1 | rss |
+| 4 | My Republica | <https://myrepublica.nagariknetwork.com/> | en | news | 1 | html |
+| 5 | Nagarik News | <https://nagariknews.nagariknetwork.com/feed> | ne | news | 1 | rss |
+| 6 | OnlineKhabar (English) | <https://english.onlinekhabar.com/feed> | en | news | 1 | rss |
+| 7 | OnlineKhabar (Nepali) | <https://www.onlinekhabar.com/feed> | ne | news | 1 | rss |
+| 8 | Ratopati | <https://ratopati.com/> | ne | news | 1 | html |
+| 9 | Setopati | <https://www.setopati.com/feed> | ne | news | 1 | rss |
+| 10 | The Himalayan Times | <https://www.thehimalayantimes.com/> | en | news | 1 | html |
+| 11 | The Kathmandu Post | <https://kathmandupost.com/rss> | en | news | 1 | rss |
+| 12 | eKantipur | <https://ekantipur.com/> | ne | news | 1 | html |
+| 13 | AP1 TV | <https://ap1hdtv.com/feed/> | ne | news | 2 | rss |
+| 14 | Gorkhapatra | <https://gorkhapatraonline.com/rss> | ne | news | 2 | rss |
+| 15 | Himal Press | <https://www.himalpress.com/feed/> | ne | news | 2 | rss |
+| 16 | Image Channel | <https://www.imagekhabar.com/feed> | ne | news | 2 | rss |
+| 17 | Kantipur TV | <https://www.kantipurtv.com/> | ne | news | 2 | html |
+| 18 | Khabarhub | <https://english.khabarhub.com/feed/> | en | news | 2 | rss |
+| 19 | Khabarhub (Nepali) | <https://khabarhub.com/feed/> | ne | news | 2 | rss |
+| 20 | Mero Lagani | <https://merolagani.com/rss.aspx> | ne | economic | 2 | rss |
+| 21 | Nepali Times | <https://www.nepalitimes.com/> | en | news | 2 | html |
+| 22 | Pahilo Post | <https://pahilopost.com/feed> | ne | news | 2 | rss |
+| 23 | Ratopati Gandaki | <https://gandaki.ratopati.com/province/4> | ne | news | 2 | html |
+| 24 | The Rising Nepal | <https://risingnepaldaily.com/rss> | en | news | 2 | rss |
+| 25 | Gandak News | <https://www.gandaknews.com/feed/> | ne | news | 3 | rss |
+| 26 | HimalPress Bagmati | <https://en.himalpress.com/category/province/province-3/feed/> | en | news | 3 | rss |
+| 27 | Janakpur Today | <https://ejanakpurtoday.com/feed/> | ne | news | 3 | rss |
+| 28 | Karnali Mission | <https://karnalimission.com/feed/> | ne | news | 3 | rss |
+| 29 | Lumbini Online | <https://www.lumbinionline.com/feed/> | ne | news | 3 | rss |
+| 30 | OnlineKhabar Bagmati | <https://www.onlinekhabar.com/content/province/bagmati/feed> | ne | news | 3 | rss |
+| 31 | OnlineKhabar Gandaki | <https://www.onlinekhabar.com/content/province/gandaki/feed> | ne | news | 3 | rss |
+| 32 | OnlineKhabar Karnali | <https://www.onlinekhabar.com/content/province/karnali/feed> | ne | news | 3 | rss |
+| 33 | OnlineKhabar Koshi | <https://www.onlinekhabar.com/content/province/koshi/feed> | ne | news | 3 | rss |
+| 34 | OnlineKhabar Lumbini | <https://www.onlinekhabar.com/content/province/lumbini/feed> | ne | news | 3 | rss |
+| 35 | OnlineKhabar Madhesh | <https://www.onlinekhabar.com/content/province/madhesh/feed> | ne | news | 3 | rss |
+| 36 | OnlineKhabar Sudurpashchim | <https://www.onlinekhabar.com/content/province/sudurpashchim/feed> | ne | news | 3 | rss |
+| 37 | Our Biratnagar | <https://ourbiratnagar.net/feed/> | ne | news | 3 | rss |
+| 38 | Ratopati Bagmati | <https://bagmati.ratopati.com/> | ne | news | 3 | html |
+| 39 | Ratopati Karnali | <https://karnali.ratopati.com/> | ne | news | 3 | html |
+| 40 | Ratopati Koshi | <https://koshi.ratopati.com/> | ne | news | 3 | html |
+| 41 | Ratopati Lumbini | <https://lumbini.ratopati.com/> | ne | news | 3 | html |
+| 42 | Ratopati Madhesh | <https://madhesh.ratopati.com/> | ne | news | 3 | html |
+| 43 | Ratopati Sudurpashchim | <https://sudurpashchim.ratopati.com/> | ne | news | 3 | html |
+| 44 | Spotlight Nepal | <https://www.spotlightnepal.com/feed/> | en | news | 3 | rss |
+| 45 | eKantipur Bagmati | <https://ekantipur.com/pradesh-3> | ne | news | 3 | html |
+| 46 | eKantipur Gandaki | <https://ekantipur.com/pradesh-4> | ne | news | 3 | html |
+| 47 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
+| 48 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
+| 49 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
+| 50 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
+| 51 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 52 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 4 | rss |
+
+## Government & official portals
+
+| Source | Link | What it provides |
+|---|---|---|
+| BIPAD Portal (NDRRMA) | https://bipadportal.gov.np | National disaster incidents — floods, earthquakes, fires, landslides (disaster feed & map) |
+| Election Commission Nepal (ECN) | https://election.gov.np · https://result.election.gov.np | Candidates, live election results (House of Representatives 2082) |
+| Office of Company Registrar — CAMIS | https://camis.ocr.gov.np · https://application.ocr.gov.np | Company registrations, directors, beneficial ownership enrichment |
+| Inland Revenue Department (IRD) | https://ird.gov.np | PAN/VAT taxpayer enrichment (hashed) |
+| House of Representatives | https://hr.parliament.gov.np | Bills, MPs, parliamentary questions, verbatim speeches |
+| National Assembly | https://na.parliament.gov.np | Upper-house members and business |
+| Office of PM & Council of Ministers (OPMCM) | https://opmcm.gov.np | Federal cabinet decisions (govt-decisions tracker) |
+| Provincial OCMCM (7 provinces) | https://ocmcm.{koshi,madhesh,bagmati,gandaki,lumbini,karnali,sudurpashchim}.gov.np | Provincial cabinet decisions |
+| Ministry of Home Affairs | https://moha.gov.np | Home-affairs announcements, curfew/security notices |
+| Ministry of Foreign Affairs | https://mofa.gov.np | Foreign-affairs press releases |
+| Supreme Court of Nepal | https://supremecourt.gov.np | Judiciary references |
+| Office of the Auditor General | https://oag.gov.np | Audit / accountability references |
+| Public Service Commission (Lok Sewa) | https://psc.gov.np | Public-service references |
+| Nepal Police (Traffic) | https://traffic.nepalpolice.gov.np | Traffic / incident references |
+| Municipal portals (sample) | tulsipurmun.gov.np · pokharamun.gov.np · siddharthanagarmun.gov.np · ... | Local-government procurement/announcements |
+
+## Financial & market
+
+| Source | Link | What it provides |
+|---|---|---|
+| Nepal Rastra Bank (central bank) | https://www.nrb.org.np | Forex rates, monetary indicators (economy / NRB snapshot) |
+| Nepal Stock Exchange (NEPSE) | https://www.nepalstock.com · https://www.nepalstock.com.np | Live market index & prices (market summary) |
+| ShareSansar | https://www.sharesansar.com | Market news & data |
+| MeroLagani | https://merolagani.com | Market data feed (economic RSS) |
+| Securities Board of Nepal (SEBON) | https://sebon.gov.np | Securities regulator data |
+| Public Debt Management Office (PDMO) | https://pdmo.gov.np | Public-debt figures (debt clock) |
+| FENEGOSIDA | https://fenegosida.org | Fuel/commodity dealer federation references |
+| IMF | https://www.imf.org | International macro references |
+
+## Energy & fuel
+
+| Source | Link | What it provides |
+|---|---|---|
+| Nepal Electricity Authority (NEA) | https://www.nea.org.np | Power supply / load-shedding (energy feed) |
+| Nepal Oil Corporation (NOC) | https://noc.org.np | Fuel prices (energy feed) |
+
+## Aviation (ADS-B)
+
+| Source | Link | What it provides |
+|---|---|---|
+| OpenSky Network | https://opensky-network.org | Live aircraft positions (ADS-B) |
+| adsb.fi | https://opendata.adsb.fi | Community ADS-B feed |
+| adsb.lol | https://api.adsb.lol | Community ADS-B feed |
+
+## Geospatial & satellite
+
+| Source | Link | What it provides |
+|---|---|---|
+| Google Earth Engine | https://earthengine.googleapis.com | Satellite imagery, NDVI, flood extent, damage assessment (PWTT) |
+| Google Maps / APIs | https://maps.google.com · https://www.googleapis.com | Geocoding / basemap references |
+| OpenStreetMap Overpass | https://overpass-api.de · https://overpass.kumi.systems | Infrastructure / POI geodata |
+
+## Social media (X / Nitter / Reddit)
+
+### X / Twitter API accounts
+
+| Account | Name | Category | Link |
+|---------|------|----------|------|
+| @ECNOfficial | Election Commission Nepal | govt | <https://x.com/ECNOfficial> |
+| @NepaliArmyHQ | Nepal Army Headquarters | security | <https://x.com/NepaliArmyHQ> |
+| @BIPADPortal | BIPAD Portal | disaster | <https://x.com/BIPADPortal> |
+| @thapagk | GK Thapa | journalist | <https://x.com/thapagk> |
+| @hamrorabi | Hamro Rabi | news | <https://x.com/hamrorabi> |
+| @kathmandupost | The Kathmandu Post | news | <https://x.com/kathmandupost> |
+| @OnlineKhabar | Online Khabar | news | <https://x.com/OnlineKhabar> |
+| @BBCNepali | BBC Nepali | international | <https://x.com/BBCNepali> |
+
+### Nitter (scraped X, no API key)
+
+Instances: <https://nitter.poast.org> · <https://nitter.privacydev.net>
+
+87 monitored accounts, by category:
+
+- **analyst** (3): [@ICrisisGroup](https://x.com/ICrisisGroup) (International Crisis Group), [@SouthAsiaIndex](https://x.com/SouthAsiaIndex) (South Asia Index (Analysis)), [@HimalSouthAsian](https://x.com/HimalSouthAsian) (Himal Southasian)
+- **civil_society** (4): [@TINepal](https://x.com/TINepal) (Transparency International Nepal), [@INSECOnline](https://x.com/INSECOnline) (INSEC Nepal (Human Rights)), [@nhrc_np](https://x.com/nhrc_np) (National Human Rights Commission), [@AdvocacyForum](https://x.com/AdvocacyForum) (Advocacy Forum Nepal)
+- **disaster** (1): [@NDRRMA_Nepal](https://x.com/NDRRMA_Nepal) (NDRRMA Nepal (Disaster))
+- **economy** (4): [@NRB_Nepal](https://x.com/NRB_Nepal) (Nepal Rastra Bank), [@nepse_official](https://x.com/nepse_official) (NEPSE (Stock Exchange)), [@NEFNepal](https://x.com/NEFNepal) (Nepal Economic Forum), [@SamriddhiNP](https://x.com/SamriddhiNP) (Samriddhi Foundation (Think Tank))
+- **govt** (4): [@ECNOfficial](https://x.com/ECNOfficial) (Election Commission Nepal), [@MoHA_Nepal](https://x.com/MoHA_Nepal) (Ministry of Home Affairs), [@pmsushilakarki](https://x.com/pmsushilakarki) (Sushila Karki (Interim PM)), [@KulmanGhising](https://x.com/KulmanGhising) (Kulman Ghising (Energy Minister))
+- **international** (11): [@BBCNepali](https://x.com/BBCNepali) (BBC Nepali), [@UNNepal](https://x.com/UNNepal) (United Nations Nepal), [@USEmbNepal](https://x.com/USEmbNepal) (U.S. Embassy Nepal), [@UKinNepal](https://x.com/UKinNepal) (British Embassy Kathmandu), [@EUinNepal](https://x.com/EUinNepal) (EU Delegation to Nepal), [@WHONepal](https://x.com/WHONepal) (WHO Nepal), [@UNICEFNepal](https://x.com/UNICEFNepal) (UNICEF Nepal), [@ADB_SouthAsia](https://x.com/ADB_SouthAsia) (Asian Development Bank South Asia), [@ICRCnp](https://x.com/ICRCnp) (ICRC Nepal), [@IndiaInNepal](https://x.com/IndiaInNepal) (Embassy of India Kathmandu), [@ChinaEmbNepal](https://x.com/ChinaEmbNepal) (Chinese Embassy Nepal)
+- **journalist** (14): [@sudheerktm](https://x.com/sudheerktm) (Sudheer Sharma (Journalist)), [@realpbhattarai](https://x.com/realpbhattarai) (Pradip Bhattarai (Commentator)), [@Vijaykumarko](https://x.com/Vijaykumarko) (Vijay Kumar Panday (TV Host)), [@kundadixit](https://x.com/kundadixit) (Kunda Dixit (Nepali Times)), [@romangautam](https://x.com/romangautam) (Roman Gautam (Himal Southasian)), [@bhadrarukum](https://x.com/bhadrarukum) (Bhadra Sharma (NYT Nepal)), [@kishorenepal](https://x.com/kishorenepal) (Kishore Nepal (Writer)), [@RameshBhushal](https://x.com/RameshBhushal) (Ramesh Bhushal (Science Reporter)), [@KoshRKoirala](https://x.com/KoshRKoirala) (Kosh R Koirala (Republica Editor)), [@NepaliComment](https://x.com/NepaliComment) (Dipesh Tripathi (Nepali Comment)), [@rabirajbaral](https://x.com/rabirajbaral) (Rabi Raj Baral (Journalist)), [@Cvaanee](https://x.com/Cvaanee) (Shivanee Thapa Basnyat (News Editor)), [@biswasktm](https://x.com/biswasktm) (Biswas Baral (KTM Post Editor)), [@shwetha19S](https://x.com/shwetha19S) (Shwetha Srikanthan (Himal Southasian))
+- **judiciary** (2): [@SupremeCourtNP](https://x.com/SupremeCourtNP) (Supreme Court of Nepal), [@NepalBar](https://x.com/NepalBar) (Nepal Bar Association)
+- **news** (3): [@kathmandupost](https://x.com/kathmandupost) (The Kathmandu Post), [@OnlineKhabar](https://x.com/OnlineKhabar) (Online Khabar), [@MyRepublica](https://x.com/MyRepublica) (My Republica)
+- **political** (34): [@kpsharmaoli](https://x.com/kpsharmaoli) (KP Sharma Oli (CPN-UML)), [@cmprachanda](https://x.com/cmprachanda) (Pushpa Kamal Dahal (Maoist Centre)), [@SherBDeuba](https://x.com/SherBDeuba) (Sher Bahadur Deuba (NC)), [@thapagk](https://x.com/thapagk) (Gagan Thapa (NC President)), [@hamrorabi](https://x.com/hamrorabi) (Rabi Lamichhane (RSP)), [@ShahBalen](https://x.com/ShahBalen) (Balen Shah (RSP, former Mayor)), [@KTnepal](https://x.com/KTnepal) (Kamal Thapa (RPP)), [@brb1954](https://x.com/brb1954) (Baburam Bhattarai (Socialist)), [@yogesbhattarai](https://x.com/yogesbhattarai) (Yogesh Bhattarai (CPN-UML)), [@BishnuRimal](https://x.com/BishnuRimal) (Bishnu Rimal (CPN-UML)), [@RabindraMishra](https://x.com/RabindraMishra) (Rabindra Mishra (RPP)), [@BinodKChaudhary](https://x.com/BinodKChaudhary) (Binod Chaudhary (NC MP)), [@SwarnimWagle](https://x.com/SwarnimWagle) (Swarnim Wagle (RSP Vice-Chair)), [@NPSaudnc](https://x.com/NPSaudnc) (NP Saud (NC, Former FM)), [@NCPurnaKhadka](https://x.com/NCPurnaKhadka) (Purna Bahadur Khadka (NC)), [@IshwarPokhrel](https://x.com/IshwarPokhrel) (Ishwar Pokhrel (CPN-UML)), [@GokulPBaskota](https://x.com/GokulPBaskota) (Gokul Prasad Baskota (CPN-UML)), [@JSPrabhakar](https://x.com/JSPrabhakar) (Janardan Sharma (Maoist Centre)), [@ram_partha](https://x.com/ram_partha) (Ram Karki (Maoist Centre)), [@sumnima_udas](https://x.com/sumnima_udas) (Sumnima Udas (RSP)), [@Kabindra99](https://x.com/Kabindra99) (Kabindra Burlakoti (RSP)), [@Himalayabiraj](https://x.com/Himalayabiraj) (Biraj Bhakta Shrestha (RSP)), [@RajendraLingden](https://x.com/RajendraLingden) (Rajendra Lingden (RPP Chairman)), [@DrPrakashChan1](https://x.com/DrPrakashChan1) (Prakash Chandra Lohani (RPP)), [@rlgolchha](https://x.com/rlgolchha) (Rajlakshmi Golchha (CPN-UML MP)), [@brtdhl](https://x.com/brtdhl) (Bharat Dahal (Commentator)), [@MahabirPun](https://x.com/MahabirPun) (Mahabir Pun (Activist)), [@HarkaSampang](https://x.com/HarkaSampang) (Harka Sampang (Independent)), [@party_swatantra](https://x.com/party_swatantra) (Rastriya Swatantra Party (Official)), [@NepaliCongress](https://x.com/NepaliCongress) (Nepali Congress (Official)), [@CPNUML](https://x.com/CPNUML) (CPN-UML (Official)), [@MaoistCentre](https://x.com/MaoistCentre) (Maoist Centre (Official)), [@RPPNepal](https://x.com/RPPNepal) (RPP (Official)), [@ratemyneta](https://x.com/ratemyneta) (Rate My Neta (Live Election Info))
+- **provincial** (5): [@KoshiCM](https://x.com/KoshiCM) (Koshi Province CM Office), [@BagmatiCM](https://x.com/BagmatiCM) (Bagmati Province CM Office), [@GandakiCM](https://x.com/GandakiCM) (Gandaki Province CM Office), [@LumbiniCM](https://x.com/LumbiniCM) (Lumbini Province CM Office), [@KarnaliCM](https://x.com/KarnaliCM) (Karnali Province CM Office)
+- **security** (2): [@NepaliArmyHQ](https://x.com/NepaliArmyHQ) (Nepal Army Headquarters), [@NepalPoliceHQ](https://x.com/NepalPoliceHQ) (Nepal Police HQ)
+
+### Reddit
+
+Subreddits: [r/NepalSocial](https://www.reddit.com/r/NepalSocial) · [r/nepal](https://www.reddit.com/r/nepal) · [r/nepalstock](https://www.reddit.com/r/nepalstock)
+
+## External processing services
+
+| Service | Endpoint | Purpose |
+|---|---|---|
+| Anthropic (Claude) | https://api.anthropic.com | LLM analysis / clustering validation (optional, feature-flagged) |
+| OpenAI | https://api.openai.com | Embeddings + structured classification (optional, feature-flagged) |
+| Hugging Face | https://huggingface.co | Local LLM (Qwen GGUF) model download |
+| Resend | email API | Transactional email / OTP (optional) |
+
+## Other OSINT references
+
+| Source | Link | What it provides |
+|---|---|---|
+| WikiLeaks | https://wikileaks.org · https://search.wikileaks.org | OSINT document search references |
+
+## Inactive / removed feeds
+
+Configured but disabled (upstream RSS removed or site down):
+
+| Source | Link | Reason |
+|--------|------|--------|
+| Naya Patrika | <https://www.nayapatrikadaily.com/feed> | RSS removed / site down |
+| Share Sansar | <https://www.sharesansar.com/rss> | RSS removed / site down |
+| New Business Age | <https://www.newbusinessage.com/feed> | RSS removed / site down |
+| Udghosh Daily | <https://udghoshdaily.com/feed/> | RSS removed / site down |
+| eNewsbureau Madhesh | <https://enewsbureau.com/feed/> | RSS removed / site down |
+| Ganthan News | <https://ganthan.com/feed/> | RSS removed / site down |
+| Kathmandu Post Karnali | <https://kathmandupost.com/karnali-province/feed> | RSS removed / site down |
+| Kathmandu Post Sudurpashchim | <https://kathmandupost.com/sudurpaschim-province/feed> | RSS removed / site down |
+
+---
+
+_News & social lists are generated from `backend-v5/config/sources.yaml`; government/financial/service hosts are curated from the backend code. Re-run `gen_sources.py` after editing sources.yaml._
