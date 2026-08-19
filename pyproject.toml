@@ -1,0 +1,39 @@
+[project]
+name = "news-sentiment"
+version = "0.1.0"
+description = "Scraping, sentiment analysis and reporting over Nepali news sources"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "feedparser>=6.0.11",
+    "selectolax>=0.3.21",
+    "PyYAML>=6.0",
+    "python-dateutil>=2.9",
+    "nepali-datetime>=1.0.8",
+    "SQLAlchemy>=2.0.30",
+    "psycopg[binary]>=3.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.5",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
