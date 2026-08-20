@@ -1,0 +1,16 @@
+# Normalise every text file to LF in the repository. Without this, editors and
+# scripts on Windows write CRLF for some files and LF for others, so a one-line
+# change shows up as a whole-file rewrite and two branches conflict on files
+# neither of them meaningfully touched.
+* text=auto eol=lf
+
+# Captured payloads stay byte-exact -- they are evidence of what a site actually
+# served, so nothing should rewrite their bytes.
+tests/fixtures/** -text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

@@ -1,0 +1,32 @@
+# Selector pack for Pokhara Hotline article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verified against tests/fixtures/pokhara-hotline_story.html.
+#
+# A WordPress site with a full, correct metadata block -- the opposite of
+# Annapurna Post. Everything except the body comes from <meta>, which is far
+# more stable than the Tailwind utility classes this theme uses for layout.
+
+article:
+  # The article sits in ONE <p> with <br /> separators, not many <p> tags.
+  # `prose-lg` is what distinguishes the body from the two other .prose
+  # containers on the page (a footer note and a callout box, both empty here).
+  body: "div.prose.prose-lg p"
+  author: "meta[name='author']@content"
+  # Real ISO 8601, already carrying +05:45 -- no Bikram Sambat parsing needed.
+  published: "meta[property='article:published_time']@content"
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # Related/trending rails. They sit outside .prose on this template, so they
+  # do not currently leak into the body -- listed so that stays true if the
+  # theme reshuffles.
+  - "[class*='single-related']"
+  - "[class*='single-read-also']"
+  - "[class*='single-trending']"
+  - "[class*='single-just-in']"

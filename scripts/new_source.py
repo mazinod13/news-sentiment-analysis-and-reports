@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -108,6 +109,13 @@ def test_article_extraction(outlet, fixture_text):
 '''
 
 
+def _homepage(url: str) -> str:
+    """Site root for a feed URL -- /rss, /rss/, /feed/, /feed.xml all reduce
+    to the scheme and host rather than a truncated feed path."""
+    parts = urlsplit(url)
+    return f"{parts.scheme}://{parts.netloc}"
+
+
 def write(path: Path, content: str, force: bool) -> None:
     if path.exists() and not force:
         print(f"  exists, skipped  {path.relative_to(ROOT)}")
@@ -138,7 +146,7 @@ def main() -> int:
         "id": args.id,
         "name": args.name,
         "url": args.url,
-        "homepage": args.url.split("/rss")[0].rstrip("/"),
+        "homepage": _homepage(args.url),
         "method": args.method,
         "lang": args.lang,
         "category": args.category,
