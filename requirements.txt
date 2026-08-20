@@ -1,0 +1,21 @@
+# Runtime dependencies.
+#
+# pyproject.toml is the source of truth -- this file mirrors its
+# [project.dependencies] and tests/test_packaging.py fails if the two drift.
+# When you add a dependency, edit BOTH, in the same commit.
+#
+#   pip install -r requirements.txt          # runtime only
+#   pip install -r requirements-dev.txt      # runtime + test/lint tooling
+#
+# These are minimum-version constraints, not a lockfile. For byte-identical
+# rebuilds, generate one from a known-good environment:
+#   pip freeze > requirements.lock.txt
+
+httpx>=0.27
+feedparser>=6.0.11
+selectolax>=0.3.21
+PyYAML>=6.0
+python-dateutil>=2.9
+nepali-datetime>=1.0.8
+SQLAlchemy>=2.0.30
+psycopg[binary]>=3.2

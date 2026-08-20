@@ -1,0 +1,8 @@
+# Development dependencies: everything in requirements.txt plus test and lint
+# tooling. Mirrors [project.optional-dependencies].dev in pyproject.toml --
+# tests/test_packaging.py fails if they drift.
+
+-r requirements.txt
+
+pytest>=8.2
+ruff>=0.5

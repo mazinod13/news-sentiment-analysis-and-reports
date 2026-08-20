@@ -1,0 +1,57 @@
+# Two people can run this side by side without colliding: COMPOSE_PROJECT_NAME
+# namespaces the containers/volumes and POSTGRES_PORT moves the host port, both
+# set per-developer in .env (which is gitignored). See GUIDE.md.
+name: ${COMPOSE_PROJECT_NAME:-news-sentiment}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-news}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-news}
+      POSTGRES_DB: ${POSTGRES_DB:-news_sentiment}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-news} -d ${POSTGRES_DB:-news_sentiment}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # One-shot runner:  docker compose run --rm app python -m app.main <cmd>
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-news}:${POSTGRES_PASSWORD:-news}@postgres:5432/${POSTGRES_DB:-news_sentiment}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Source is bind-mounted, so an edit on the host takes effect on the next
+      # run with no rebuild. Rebuild only when pyproject.toml changes.
+      - .:/app
+      - appdata:/app/data
+    command: ["python", "-m", "app.main", "--help"]
+
+  # Continuous scheduler. Opt-in: docker compose --profile worker up -d worker
+  worker:
+    build: .
+    profiles: ["worker"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-news}:${POSTGRES_PASSWORD:-news}@postgres:5432/${POSTGRES_DB:-news_sentiment}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - appdata:/app/data
+    command: ["python", "-m", "app.main", "worker"]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  appdata:

@@ -1,0 +1,27 @@
+# One outlet per file. The filename must equal the `id` below.
+# Adding an outlet touches no file anyone else is editing -- see GUIDE.md.
+id: annapurna-post
+name: Annapurna Post
+url: https://annapurnapost.com/rss/     # note the trailing slash: /rss 301s here
+homepage: https://annapurnapost.com
+method: rss
+lang: ne
+category: news
+priority: 1
+active: true
+
+# Selector pack used when fetching the full article page (config/selectors/).
+selectors: annapurna-post
+
+# Quirks found while wiring this feed up. Keep these notes -- they are why the
+# selector pack looks the way it does, and the next person will hit them again.
+notes: |
+  - /rss 301-redirects to /rss/; the fetcher must follow redirects.
+  - Items carry NO <pubDate>. The publish time only exists on the article page,
+    as a Bikram Sambat string in Devanagari ("भदौ ३, २०८३ बुधबार १४:२९:५३"),
+    so published_at requires fetching the body. Items with no parseable date
+    fall back to fetched_at and are flagged published_estimated.
+  - <language> in the feed says en-us but every article is Nepali. Trust the
+    `lang` field above, never the feed's.
+  - <link> is http://; canonicalisation upgrades it to https.
+  - <description> is truncated at ~500 chars, so full text needs the article page.

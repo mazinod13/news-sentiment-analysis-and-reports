@@ -1,0 +1,24 @@
+# Selector pack for annapurnapost.com article pages.
+# Syntax: a plain CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> value of that attribute
+# Verified against tests/fixtures/annapurna-post_story.html.
+
+article:
+  # All matches are joined in document order to form the body.
+  body: "div.news__details p"
+  author: "p.author__name a"
+  # Bikram Sambat, Devanagari numerals: "भदौ ३, २०८३ बुधबार १४:२९:५३"
+  published: "p.date span"
+  published_format: bs
+  image: "meta[property='og:image']@content"
+
+# Removed from the tree before the body is assembled.
+exclude:
+  - "script"
+  - "style"
+  - "div.ap__pollSection"
+  - "div.adalyticsblock"
+  - "[campaign]"
+  - "div.shareThis"
+  - "aside"
