@@ -1,0 +1,24 @@
+id: pokhara-hotline
+name: Pokhara Hotline
+url: https://pokharahotline.com/feed/
+homepage: https://pokharahotline.com
+method: rss
+lang: ne
+category: news
+priority: 2
+active: true
+
+selectors: pokhara-hotline
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - WordPress with a complete metadata block, so author/date/image all come
+    from <meta> rather than the DOM. Far more stable than this theme's
+    Tailwind utility classes.
+  - article:published_time is real ISO 8601 already carrying +05:45, so no
+    Bikram Sambat parsing is needed here.
+  - The article body is ONE <p> with <br /> separators, not many <p> tags.
+    Paragraph breaks are therefore lost in the stored body text.
+  - Three .prose containers exist on the page; prose-lg is the article body.
+  - meta[name=author] is the site name ("पोखरा हटलाइन"), not a real byline.

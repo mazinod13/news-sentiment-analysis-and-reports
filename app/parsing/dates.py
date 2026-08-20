@@ -14,7 +14,7 @@ Everything returned here is timezone-aware in Asia/Kathmandu (UTC+05:45).
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 import nepali_datetime
 from dateutil import parser as dateutil_parser
@@ -127,7 +127,10 @@ def parse_feed_datetime(entry) -> datetime | None:
     for attr in ("published_parsed", "updated_parsed"):
         struct = getattr(entry, attr, None)
         if struct:
-            return datetime(*struct[:6], tzinfo=NPT)
+            # feedparser normalises *_parsed to UTC regardless of the offset the
+            # feed declared. Labelling it NPT instead of converting from UTC
+            # shifts every article 5h45m early -- convert, never relabel.
+            return datetime(*struct[:6], tzinfo=timezone.utc).astimezone(NPT)
     for attr in ("published", "updated"):
         raw = getattr(entry, attr, None)
         if raw:

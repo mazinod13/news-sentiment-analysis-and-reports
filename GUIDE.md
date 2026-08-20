@@ -456,6 +456,10 @@ junk is gone.
 pytest tests/sources/test_gorkhapatra.py -v
 ```
 
+Always `pytest`, never `python tests/...` -- a test file has no `__main__`, so
+running it directly just executes the imports and exits without creating any of
+the fixtures pytest injects.
+
 Add a case to `tests/test_dates.py` if your outlet showed you a date format the
 parser had not seen.
 

@@ -506,12 +506,21 @@ Things that break naive scrapers here, all handled in `app/parsing/`:
 
 ## Testing
 
+Run tests with **`pytest`**, never `python tests/...`. A test file has no
+`__main__`; running it directly executes the imports and stops, and the
+fixtures pytest injects (`outlet`, `fixture_text`) never get created.
+
 ```bash
-pytest                          # everything
-pytest tests/test_html.py -v
-ruff check . && ruff format --check .
-mypy app
+pytest                                          # everything
+pytest tests/sources/test_pokhara_hotline.py    # one outlet
+pytest tests/sources/test_pokhara_hotline.py -v # per-test names
+pytest -k "date"                                # only tests matching a substring
+pytest -x                                       # stop at the first failure
+pytest --lf                                     # re-run just last run's failures
+ruff check .
 ```
+
+In Docker: `docker compose run --rm app pytest`.
 
 Tests never hit the network. Every parser test loads a saved payload from `tests/fixtures/`. When a site changes and a scraper breaks, the fix is: refresh the fixture, update the selector pack, confirm the test fails before the fix and passes after.
 

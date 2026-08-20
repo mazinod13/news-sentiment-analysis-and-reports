@@ -51,3 +51,45 @@ def test_implausible_dates():
     assert is_implausible(now + timedelta(days=1)) is True     # future
     assert is_implausible(datetime(1998, 1, 1, tzinfo=NPT)) is True
     assert is_implausible(now - timedelta(hours=2)) is False
+
+
+class TestFeedDates:
+    """feedparser normalises *_parsed to UTC no matter what offset the feed
+    declared. Relabelling that as Nepal time instead of converting shifted
+    every feed-dated article 5h45m early -- caught on Pokhara Hotline, whose
+    feed publishes +0000 while its article pages publish +05:45."""
+
+    def _entry(self, pubdate: str):
+        import feedparser
+
+        feed = feedparser.parse(
+            "<rss version='2.0'><channel><item>"
+            f"<title>t</title><link>https://x.test/1</link><pubDate>{pubdate}</pubDate>"
+            "</item></channel></rss>"
+        )
+        return feed.entries[0]
+
+    def test_utc_feed_date_is_converted_not_relabelled(self):
+        from app.parsing.dates import parse_feed_datetime
+
+        parsed = parse_feed_datetime(self._entry("Mon, 17 Aug 2026 13:32:57 +0000"))
+        assert parsed.isoformat() == "2026-08-17T19:17:57+05:45"
+
+    def test_offset_feed_date_survives_roundtrip(self):
+        """A feed already stating +05:45 must land on the same instant."""
+        from app.parsing.dates import parse_feed_datetime
+
+        parsed = parse_feed_datetime(self._entry("Mon, 17 Aug 2026 19:17:57 +0545"))
+        assert parsed.isoformat() == "2026-08-17T19:17:57+05:45"
+
+    def test_missing_date_returns_none(self):
+        import feedparser
+
+        from app.parsing.dates import parse_feed_datetime
+
+        feed = feedparser.parse(
+            "<rss version='2.0'><channel><item>"
+            "<title>t</title><link>https://x.test/1</link>"
+            "</item></channel></rss>"
+        )
+        assert parse_feed_datetime(feed.entries[0]) is None

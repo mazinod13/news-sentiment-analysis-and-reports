@@ -29,7 +29,13 @@ include = ["app*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+# No -q here: it decrements verbosity, so `pytest -v` would cancel out to the
+# default and silently not list test names. Pass -q or -v per run instead.
+addopts = ""
+# Makes `pytest` work straight from a clone. Without it only `python -m pytest`
+# works (it adds the CWD to sys.path; the `pytest` console script does not),
+# and `import app` fails while loading tests/conftest.py.
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
@@ -37,3 +43,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+# UP017 rewrites `timezone.utc` to `datetime.UTC`, which is 3.11+ only. Both
+# spellings are current and non-deprecated, and the portable one keeps the code
+# runnable on 3.10 while the supported floor is still being settled.
+ignore = ["UP017"]
