@@ -1,0 +1,40 @@
+id: ekantipur-madhesh
+name: eKantipur Madhesh
+url: https://ekantipur.com/pradesh-2
+homepage: https://ekantipur.com
+method: html
+lang: ne
+category: news
+priority: 3
+active: true
+
+selectors: ekantipur-madhesh
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - eKantipur has NO RSS feed anywhere. /rss, /feed and /pradesh-2/rss all
+    return HTTP 200 with an HTML page, so a status check alone is not enough
+    to tell a feed from a miss -- check the content type and the first bytes.
+    Configuring this as method: rss fails with
+    "unparseable feed: not well-formed (invalid token)".
+  - LIMITATION: article bodies are rendered client-side. The server HTML for a
+    story contains only the headline, a one-sentence lede and the byline
+    (~140 chars in the fixture), so `body` here is the LEDE ONLY, not the full
+    article. Full text would need a headless browser; see GUIDE.md.
+  - Listing summary must use a CHILD combinator: `div.category-description > p`.
+    A descendant selector matches the author's <p> first and stores the
+    journalist's name as the summary -- silently, with no error and no empty
+    field. The scaffold ships the descendant form; it must be corrected.
+  - Author and publish time come from the page's schema.org NewsArticle block,
+    which carries a full timestamp. The DOM has only a date-only Bikram Sambat
+    string and is kept as a documented fallback in the selector pack.
+  - That BS string has NO SPACE between month and day here ("श्रावण२९, २०८३"),
+    unlike other pradesh sections ("भाद्र ३, २०८३"). The parser handles both;
+    do not "correct" the fixture.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8, so the fixture fails to
+    decode; tests/sources/test_ekantipur_madhesh.py pins this.
+  - The saved story fixture is not one of the 30 cards in the saved listing
+    fixture -- they were captured on different days, so do not write a test
+    that walks from listing to article.

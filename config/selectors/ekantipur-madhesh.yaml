@@ -1,0 +1,51 @@
+# Selector pack for eKantipur Madhesh (https://ekantipur.com/pradesh-2).
+# Syntax: a CSS selector, optionally suffixed with @attribute; or a dotted
+# schema.org path prefixed with `jsonld:`.
+#   "div.author-date span"               -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+#   "jsonld:author.name"                 -> from the ld+json block
+# Verified against tests/fixtures/ekantipur-madhesh_{listing,story}.html.
+#
+# method: html -- eKantipur publishes no RSS anywhere, so the province index
+# page is the item source. Layout is identical to the other pradesh sections.
+
+listing:
+  item: "div.category"          # 30 story cards per page
+  link: "h2 a@href"             # already absolute
+  title: "h2 a"
+  # CHILD combinator is required. Inside a card the byline sits in
+  # `div.author-name > p` and the summary in `div.category-description > p`;
+  # a descendant selector matches the byline first and would store the
+  # journalist's name as the summary. Measured on this fixture: card 0 gives
+  # "शंकर आचार्य" and card 1 "शिव पुरी" -- both people, no error raised.
+  summary: "div.category-description > p"
+  # Cards carry no date, only a "1 MIN READ" badge -- the date comes from the
+  # article page below.
+
+article:
+  # NOT the full article. eKantipur renders bodies client-side, so the server
+  # HTML holds only the lede (~140 chars here). The child combinator excludes
+  # the byline <p>.
+  body: "section.news-section-wrap > p"
+  author: "jsonld:author.name"
+  # The page's schema.org NewsArticle block carries a full timestamp, while the
+  # DOM shows only a date-only Bikram Sambat string. Both agree on the calendar
+  # day, which is also what proves the naive JSON-LD timestamp is Nepal time:
+  # read as UTC it would land on the following day and contradict the BS date.
+  # The DOM equivalents, if this block ever disappears:
+  #   author:    "div.author-date p a"
+  #   published: "div.author-date span"   with published_format: bs
+  published: "jsonld:datePublished"
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from -- in particular not `div.author-date`, which is
+# the documented fallback for author and published. The byline needs no
+# exclusion anyway: the child combinator in `body` already skips it.
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "header"
+  - "footer"
