@@ -1,0 +1,16 @@
+id: ekantipur-karnali
+name: eKantipur Karnali
+url: https://ekantipur.com/pradesh-6
+homepage: https://ekantipur.com
+method: html
+lang: ne
+category: news
+priority: 3
+active: true
+
+selectors: ekantipur-karnali
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO
