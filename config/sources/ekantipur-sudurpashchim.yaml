@@ -1,0 +1,30 @@
+id: ekantipur-sudurpashchim
+name: eKantipur Sudurpashchim
+url: https://ekantipur.com/pradesh-7
+homepage: https://ekantipur.com
+method: html
+lang: ne
+category: news
+priority: 3
+active: true
+
+selectors: ekantipur-sudurpashchim
+
+notes: |
+  - eKantipur has NO RSS feed anywhere. /rss, /feed and /pradesh-7/rss all
+    return HTTP 200 with an HTML page, so a status check alone is not enough
+    to tell a feed from a miss -- check the content type and the first bytes.
+    Configuring this as method: rss fails with
+    "unparseable feed: not well-formed (invalid token)".
+  - LIMITATION: article bodies are rendered client-side. The server HTML for a
+    story contains only the headline, a one-sentence lede and the byline
+    (~200 chars total), so `body` here is the LEDE ONLY, not the full article.
+    Full text would need a headless browser; see GUIDE.md.
+  - The listing page is the only place with a usable summary, so it is worth
+    keeping even though the article page is also fetched.
+  - The publish date is a Bikram Sambat string in the DOM ("भाद्र ३, २०८३"),
+    date-only with no time. A JSON-LD block also carries datePublished with a
+    time, but the extractor reads CSS selectors only, so the BS date wins.
+  - Listing summary must use a CHILD combinator: `div.category-description > p`.
+    A descendant selector matches the author's <p> first and stores the
+    journalist's name as the summary.
