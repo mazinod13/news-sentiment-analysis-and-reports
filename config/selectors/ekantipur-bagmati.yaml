@@ -1,0 +1,20 @@
+listing:
+  item: "div.category"
+  link: "h2 a@href"
+  title: "h2 a"
+  summary: "div.category-description > p"
+article:
+  body: "section.news-section-wrap > p"                # container holding the article paragraphs
+  author: "jsonld:author.name"
+  published: "jsonld:datePublished"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "header"
+  - "footer"
+  # - ads, related-story rails, poll widgets, share bars...
