@@ -1,0 +1,16 @@
+id: bbc_nepali
+name: BBC Nepali
+url: https://feeds.bbci.co.uk/nepali/rss.xml
+homepage: https://feeds.bbci.co.uk/nepali
+method: rss
+lang: ne
+category: news
+priority: 2
+active: true
+
+selectors: bbc_nepali
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO
