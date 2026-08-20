@@ -1,0 +1,25 @@
+# Selector pack for eKantipur Lumbini article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/ekantipur-lumbini_story.html before committing.
+listing:
+  item: "div.category"
+  link: "h2 a@href"
+  title: "h2 a"
+  summary: "div.category-description > p"
+article:
+  body: "section.news-section-wrap > p"                # container holding the article paragraphs
+  author: "jsonld:author.name"
+  published: "jsonld:datePublished"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "header"
+  - "footer"
+  # - ads, related-story rails, poll widgets, share bars...
