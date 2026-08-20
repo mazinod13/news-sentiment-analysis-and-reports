@@ -28,13 +28,14 @@ Everything between the markers is overwritten — edit the outlet's YAML instead
 
 <!-- BEGIN GENERATED: news-outlets -->
 
-_3 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
+_4 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
 
 | # | Source | Link | Lang | Cat | Prio | Method |
 |---|--------|------|:----:|:---:|:----:|:------:|
 | 1 | Annapurna Post | <https://annapurnapost.com/rss/> | ne | news | 1 | rss |
 | 2 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
-| 3 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 3 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
+| 4 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
 
 <!-- END GENERATED: news-outlets -->
 
