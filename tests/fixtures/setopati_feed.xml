@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <language>en-us</language>
+        <title>Setopati</title>
+        <atom:link href="https://www.setopati.com/feed" rel="self" type="application/rss+xml" />
+        <link>https://www.setopati.com/</link>
+        <description>Setopati News Portal</description>
+
+        <image>
+            <url>https://www.setopati.com/themes/setopati/images/fb-img.png</url>
+            <title>Setopati News Portal</title>
+            <link> https://www.setopati.com/ </link>
+        </image>
+
+                    <item>
+                <title>घरभित्रको विमतिमा राजनीतिक संवाद गर्ने हो, अदालतको ढोका कुरेर बस्ने होइन- महामन्त्री पौडेल</title>
+                <link> https://www.setopati.com/politics/396392 </link>
+                <description>
+                    <![CDATA[]]>
+                </description>
+                <guid isPermaLink="false">https://www.setopati.com/politics/396392</guid>
+                <pubDate>                     Fri, 21 Aug 2026 10:10:00 +0545
+                                    </pubDate>
+            </item>
+                    <item>
+                <title>जसले चीनलाई बनाए विश्वको &#039;कारखाना&#039;</title>
+                <link> https://www.setopati.com/opinion/396333 </link>
+                <description>
+                    <![CDATA[&#039;म सय वटा कफिन बनाउँदै छु, त्यसमध्ये ९९ वटा भ्रष्टहरूका लागि र एउटा मेरै लागि हो&#039; भन्ने उनको भनाइ चर्चित थियो।]]>
+                </description>
+                <guid isPermaLink="false">https://www.setopati.com/opinion/396333</guid>
+                <pubDate>                     Fri, 21 Aug 2026 10:00:48 +0545
+                                    </pubDate>
+            </item>
+                    <item>
+                <title>काठमाडौंको बाँसबारीमा भासियो साढे २ तले घर</title>
+                <link> https://www.setopati.com/social/396390 </link>
+                <description>
+                    <![CDATA[बिहीबार बेलुकी ८ बजे भासिएको थियो।]]>
+                </description>
+                <guid isPermaLink="false">https://www.setopati.com/social/396390</guid>
+                <pubDate>                     Fri, 21 Aug 2026 09:28:00 +0545
+                                    </pubDate>
+            </item>
+                    <item>
+                <title>जापानिज इन्सेफ्लाइटिसबाट झापामा ६ जनाको मृत्यु</title>
+                <link> https://www.setopati.com/social/396389 </link>
+                <description>
+                    <![CDATA[वर्षायाम सुरू भएसँगै झापामा जापानिज इन्सेफ्लाइटिस संक्रमणबाट मृत्यु हुनेको संख्या बढ्दै गएको छ।]]>
+                </description>
+                <guid isPermaLink="false">https://www.setopati.com/social/396389</guid>
+                <pubDate>                     Fri, 21 Aug 2026 09:18:41 +0545
+                                    </pubDate>
+            </item>
+                    <item>
+                <title>पहिरोको जोखिममा रहेका ११५ जनालाई सारियो सुरक्षित स्थानमा</title>
+                <link> https://www.setopati.com/social/396388 </link>
+                <description>
+                    <![CDATA[जिल्ला प्रहरी कार्यालयका प्रवक्ता  नरेशबहादुर शाहीका अनुसार दुवै घरभित्रका सामान  पुरिएका छन्।]]>
+                </description>
+                <guid isPermaLink="false">https://www.setopati.com/social/396388</guid>
+                <pubDate>                     Fri, 21 Aug 2026 09:14:36 +0545
+                                    </pubDate>
+            </item>
+            </channel>
+</rss>
