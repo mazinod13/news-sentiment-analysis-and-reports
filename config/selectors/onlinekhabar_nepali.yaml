@@ -1,0 +1,20 @@
+# Selector pack for OnlineKhabar (Nepali) article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/onlinekhabar_nepali_story.html before committing.
+
+article:
+  title: "h1.entry-title"
+  body: "div.ok18-single-post-content-wrap"                # container holding the article paragraphs
+  author: "span.author-name"
+  published: "div.ok-single-middle > div.ok-container.ok-post-header-container > header > div > div.ok-title-info.flx > div.ok-news-post-hour > span"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...
