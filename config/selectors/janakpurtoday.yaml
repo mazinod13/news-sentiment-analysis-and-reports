@@ -1,0 +1,32 @@
+# Selector pack for janakpur-today article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/janakpurtoday_story.html before committing.
+
+article:
+
+  body: "div.entry-content"
+
+  author: "a[href*='/author/']"
+
+  # High confidence — machine-readable ISO timestamp from the meta tag,
+  # e.g. 2026-08-28T16:26:03+05:45. More reliable than scraping the
+  # visible Bikram Sambat text ("२०८३ भाद्र १२, शुक्रबार १६:२६"),
+  # which would need Devanagari-numeral parsing.
+  published: "meta[property='article:published_time']@content"
+
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: bs   
+                           
+
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "#comments"          # Facebook comments embed under "# Comment"
+  - ".td-related-title"  # "Related News" rail
+  - ".td_module_*"       # related/latest/trending article cards
+  - "footer"              # contact/team/advertising block at page bottom
