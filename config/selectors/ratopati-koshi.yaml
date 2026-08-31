@@ -2,31 +2,48 @@
 # Syntax: a CSS selector, optionally suffixed with @attribute.
 #   "div.post-hour > span"               -> text of the first match
 #   "meta[property='og:image']@content"  -> that attribute
-# Verified against tests/fixtures/ratopati-koshi_listing.html and four live
-# story pages (588692, 588579, 588757, 588663).
 #
-# method: html -- the province portal is a front page, not a feed. Note the
-# cards link to www.ratopati.com/story/<id>/<slug>, NOT to the koshi subdomain,
-# so `link` must yield an absolute URL or urljoin() will build a koshi.* URL
-# that 404s.
+# method: html -- the province portal is a front page, not a feed. Cards link to
+# www.ratopati.com/story/<id>/<slug>, NOT to the koshi subdomain, so `link` must
+# yield an absolute URL or urljoin() builds a koshi.* URL that 404s.
 
 listing:
-  # The page is a front page with several rails, and each rail uses its own
-  # card class. Matching only one of them costs you two thirds of the page:
-  #   div.columnnews      34 cards (top grid, and the मुख्य समाचार rail)
-  #   div.thumbnail-news  17 cards (प्रदेश समाचार, प्रदेश हेडलाइन)
-  #   div.overlay-news     5 cards (मनोरञ्जन)
-  # 45 unique stories between them. Casting wide is safe here: HTMLScraper
-  # skips any card without both a link and a title, and dedupes by URL, so
-  # cards repeated across rails collapse on their own.
-  item: "div.columnnews, div.thumbnail-news, div.overlay-news"
+  # SCOPED TO THE PROVINCE RAILS ON PURPOSE. Do not widen this to a bare
+  # "div.columnnews, div.thumbnail-news, div.overlay-news".
+  #
+  # Every Ratopati province subdomain wraps the same national feed in a
+  # provincial skin. Measured live across koshi/bagmati/madhesh:
+  #
+  #   section                              cards   identical on all 3
+  #   top grid (no <section>)                 37           27
+  #   प्रदेश समाचार                            7            0
+  #   प्रदेश हेडलाइन                           6            0
+  #   मुख्य समाचार (section-world-news)        5            5
+  #   मनोरञ्जन (section-special-news)          4            4
+  #
+  # 36 of 45 stories -- 80% -- were byte-identical across all three provinces.
+  # Only the two प्रदेश rails carry province news.
+  #
+  # This is not merely duplicate output. articles.url_hash is globally UNIQUE
+  # (app/storage/models.py) and the upsert is on_conflict_do_nothing, so a
+  # national story is stored ONCE and attributed to whichever province happened
+  # to ingest first. Widening this selector makes province attribution a
+  # function of scheduler order, and costs 72 wasted body fetches per run
+  # against a host we rate-limit to 1 req/sec.
+  #
+  # If you want Ratopati's national output, add ONE source pointed at
+  # www.ratopati.com rather than collecting it three times here.
+  item: "section.pradesh-samachar div.columnnews,
+         section.pradesh-samachar div.thumbnail-news,
+         section.pradesh-headline div.columnnews,
+         section.pradesh-headline div.thumbnail-news"
   # Match the href, not merely the first <a> in the card. Every card is
   # currently wrapped in a single anchor, so "a@href" also works -- but the day
   # a category chip or an author link is added above the title, "a@href" starts
   # returning that instead, silently and with no error.
   link: "a[href*='/story/']@href"
-  # Match the CLASS, not the tag. This page uses h3.news-title 68 times and
-  # h2.news-title 5 times; "h2.news-title" quietly drops the h3 cards.
+  # Match the CLASS, not the tag: the page uses h3.news-title 68 times and
+  # h2.news-title 5 times, so "h2.news-title" quietly drops most cards.
   title: ".news-title"
   # No `summary`: cards carry a title and a thumbnail only. Pointing summary at
   # the title element just stores the headline twice.
@@ -34,9 +51,9 @@ listing:
 
 article:
   # Select the paragraphs, not the container. "div.the-content" returns the
-  # whole block as one string; "div.the-content p" returns 12 parts that
-  # extract() joins with blank lines, so paragraph structure survives into the
-  # stored body and any later sentence splitting.
+  # whole block as one string; "div.the-content p" returns each paragraph, and
+  # extract() joins them with blank lines, so paragraph structure survives into
+  # the stored body and any later sentence splitting.
   body: "div.the-content p"
   # Both of these appear TWICE on a story page: once in div.news-container and
   # again inside div.post__detail-fixed, the sticky header. Scoping to the
@@ -61,8 +78,8 @@ article:
 # "०५ : १७" with spaces around the colon and _TIME_RE in app/parsing/dates.py
 # requires none, so parse_datetime returns midnight. Dates are correct; times
 # are lost. Fixing it is a one-line change to that shared regex
-# (r"(\d{1,2})\s*:\s*(\d{2})") and needs its own commit -- it touches every
-# outlet.
+# (r"(\d{1,2})\s*:\s*(\d{2})") and needs its own commit -- it touches
+# every outlet.
 
 # NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
 # element you also select from -- in particular not div.post__detail-fixed,
