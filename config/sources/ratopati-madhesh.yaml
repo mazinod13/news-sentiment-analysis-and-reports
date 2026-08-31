@@ -13,4 +13,35 @@ selectors: ratopati-madhesh
 # Record every quirk you hit while wiring this up. The next person will hit
 # them too, and these notes are why the selector pack looks the way it does.
 notes: |
-  - TODO
+  - Ratopati has no usable per-province feed, so the portal front page is the
+    item source.
+  - THE BIG ONE: every province subdomain wraps the same national feed in a
+    provincial skin. Measured live across koshi/bagmati/madhesh, 36 of 45
+    front-page stories were byte-identical on all three; only the two प्रदेश
+    rails (प्रदेश समाचार, प्रदेश हेडलाइन) carry province news. The `item`
+    selector is scoped to those rails and must stay that way -- see the
+    selector pack for the full table and the test that pins it.
+  - Why it matters beyond duplicate output: articles.url_hash is globally
+    UNIQUE and the upsert is on_conflict_do_nothing, so a national story is
+    stored ONCE and attributed to whichever province ingested first. Widening
+    the selector makes province attribution a function of scheduler order.
+  - Cards link to www.ratopati.com/story/<id>/<slug>, NOT to the province
+    subdomain. A `link` selector missing @href returns the anchor TEXT, and
+    urljoin then builds "https://<province>.ratopati.com/<headline>" -- a URL
+    made out of a headline. That was the original bug in this pack; every
+    fetch would have 404'd.
+  - Cards use h3.news-title (68 on the page) and h2.news-title (5). Match the
+    CLASS, not the tag.
+  - div.user and div.post-hour each appear TWICE on a story page: once in
+    div.news-container and again in div.post__detail-fixed, the sticky header.
+    The sticky copy has the TIME STRIPPED, so both selectors are scoped to the
+    container rather than relying on DOM order.
+  - Ratopati ships a schema.org NewsArticle block, but it is invalid JSON on
+    some stories (an unescaped newline inside "description"; story 588579).
+    jsonld: would silently yield nothing there, so the DOM date is used
+    instead -- the opposite call from the eKantipur packs.
+  - The DOM date carries a time written as "०५ : १७", with spaces around the
+    colon, which _TIME_RE in app/parsing/dates.py does not match. Dates are
+    correct; times land at midnight.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.
