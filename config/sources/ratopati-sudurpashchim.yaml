@@ -1,0 +1,16 @@
+id: ratopati-sudurpashchim
+name: ratopati-sudurpashchim
+url: https://sudurpashchim.ratopati.com
+homepage: https://sudurpashchim.ratopati.com
+method: html
+lang: ne
+category: news
+priority: 3
+active: true
+
+selectors: ratopati-sudurpashchim
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO
