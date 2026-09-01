@@ -1,0 +1,57 @@
+{
+ "count": 9223372036854775807,
+ "next": null,
+ "previous": null,
+ "results": [
+  {
+   "id": 1005,
+   "title": "Phaktanglung",
+   "title_en": "Phaktanglung",
+   "title_ne": "फक्ताङलुङ",
+   "type": "Rural Municipality",
+   "code": "phaktanglungmun",
+   "order": 1,
+   "district": 1
+  },
+  {
+   "id": 4002,
+   "title": "Barhadashi",
+   "title_en": "Barhadashi",
+   "title_ne": "बाह्रदशी",
+   "type": "Rural Municipality",
+   "code": "bahradashimun",
+   "order": 312,
+   "district": 4
+  },
+  {
+   "id": 5001,
+   "title": "Belbari",
+   "title_en": "Belbari",
+   "title_ne": "बेलबारी",
+   "type": "Municipality",
+   "code": "belbarimun",
+   "order": 58,
+   "district": 5
+  },
+  {
+   "id": 12006,
+   "title": "Molung",
+   "title_en": "Molung",
+   "title_ne": "मोलुङ",
+   "type": "Rural Municipality",
+   "code": "molungmun",
+   "order": 379,
+   "district": 13
+  },
+  {
+   "id": 12007,
+   "title": "Siddhicharan",
+   "title_en": "Siddhicharan",
+   "title_ne": "सिद्धिचरण",
+   "type": "Municipality",
+   "code": "siddhicharanmun",
+   "order": 733,
+   "district": 13
+  }
+ ]
+}

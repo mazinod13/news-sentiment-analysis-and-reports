@@ -1,0 +1,43 @@
+{
+ "count": 9223372036854775807,
+ "next": null,
+ "previous": null,
+ "results": [
+  {
+   "id": 1,
+   "title": "Taplejung",
+   "title_en": "Taplejung",
+   "title_ne": "ताप्लेजुङ्ग",
+   "code": "taplejung",
+   "order": 41,
+   "province": 1
+  },
+  {
+   "id": 4,
+   "title": "Jhapa",
+   "title_en": "Jhapa",
+   "title_ne": "झापा",
+   "code": "jhapa",
+   "order": 3,
+   "province": 1
+  },
+  {
+   "id": 5,
+   "title": "Morang",
+   "title_en": "Morang",
+   "title_ne": "मोरङ्ग",
+   "code": "morang",
+   "order": 4,
+   "province": 1
+  },
+  {
+   "id": 13,
+   "title": "Okhaldhunga",
+   "title_en": "Okhaldhunga",
+   "title_ne": "ओखलढुङ्गा",
+   "code": "okhaldhunga",
+   "order": 11,
+   "province": 1
+  }
+ ]
+}
