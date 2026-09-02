@@ -1,0 +1,16 @@
+id: khabarhub_english
+name: Khabarhub (English)
+url: https://english.khabarhub.com/feed
+homepage: https://english.khabarhub.com/feed
+method: rss
+lang: en
+category: news
+priority: 2
+active: true
+
+selectors: khabarhub_english
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

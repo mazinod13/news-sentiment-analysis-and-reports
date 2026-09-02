@@ -1,0 +1,16 @@
+id: spotlightnepal
+name: Spotlight Nepal
+url: https://www.spotlightnepal.com/feed/
+homepage: https://www.spotlightnepal.com/feed
+method: rss
+lang: en
+category: news
+priority: 3
+active: true
+
+selectors: spotlightnepal
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

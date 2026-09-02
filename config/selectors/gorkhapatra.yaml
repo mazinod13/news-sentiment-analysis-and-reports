@@ -1,0 +1,20 @@
+# Selector pack for Gorkhapatra article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/gorkhapatra_story.html before committing.
+
+article:
+  title: "h1.single-top-title"
+  body: ".single-blog-box-layout3 .single-blog-content"                # container holding the article paragraphs
+  author: "span.fw-medium.font-size-20"
+  published: "span:has(i.fa-calendar-alt)"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...

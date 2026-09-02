@@ -28,18 +28,20 @@ Everything between the markers is overwritten — edit the outlet's YAML instead
 
 <!-- BEGIN GENERATED: news-outlets -->
 
-_8 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
+_10 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
 
 | # | Source | Link | Lang | Cat | Prio | Method |
 |---|--------|------|:----:|:---:|:----:|:------:|
 | 1 | Annapurna Post | <https://annapurnapost.com/rss/> | ne | news | 1 | rss |
-| 2 | House of Representatives (Federal Parliament) | <https://hr.parliament.gov.np/np/news> | ne | govt | 1 | html |
-| 3 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
-| 4 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
-| 5 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
-| 6 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
-| 7 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
-| 8 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 2 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
+| 3 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
+| 4 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
+| 5 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
+| 6 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
+| 7 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 8 | ratopati-bagmati | <https://bagmati.ratopati.com> | ne | news | 3 | html |
+| 9 | ratopati-koshi | <https://koshi.ratopati.com> | ne | news | 3 | html |
+| 10 | ratopati-madhesh | <https://madhesh.ratopati.com> | ne | news | 3 | html |
 
 <!-- END GENERATED: news-outlets -->
 
