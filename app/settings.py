@@ -34,6 +34,7 @@ class Settings:
     log_level: str
     sources_dir: Path
     selectors_dir: Path
+    ca_certs_dir: Path
 
 
 def load_settings() -> Settings:
@@ -53,4 +54,7 @@ def load_settings() -> Settings:
         log_level=os.getenv("LOG_LEVEL", "INFO"),
         sources_dir=Path(os.getenv("SOURCES_DIR", str(ROOT / "config" / "sources"))),
         selectors_dir=Path(os.getenv("SELECTORS_DIR", str(ROOT / "config" / "selectors"))),
+        # Extra CA intermediates for sites that serve an incomplete chain.
+        # See certs/README.md -- this augments verification, never skips it.
+        ca_certs_dir=Path(os.getenv("CA_CERTS_DIR", str(ROOT / "certs"))),
     )

@@ -1,0 +1,60 @@
+# Selector pack for the House of Representatives (https://hr.parliament.gov.np/np/news).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "li em"                              -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verified against tests/fixtures/house-of-representatives_{listing,story}.html.
+#
+# method: html -- an official parliamentary press-release page, not a news
+# outlet. Expect government prose and no bylines.
+#
+# TLS: this host serves an incomplete certificate chain. The missing Sectigo
+# intermediate ships in certs/; see certs/README.md. Without it every fetch
+# dies with "unable to get local issuer certificate".
+
+listing:
+  # `div.row div.col-sm-6` matches 60 nodes for 30 stories -- the bootstrap
+  # grid classes nest. `div.grid-news` is the actual card, one per story.
+  item: "div.grid-news"
+  # The card opens with a thumbnail <a> and repeats the same href on the title
+  # <a>, so the first anchor is the right one either way.
+  link: "a@href"
+  title: "h4"
+  # THE DATE LIVES ON THE LISTING, NOT THE ARTICLE. Story pages carry no date
+  # element at all -- only a Bikram Sambat dateline buried in the body prose,
+  # which no CSS selector can reach. So it is captured here, and `article` has
+  # no `published` at all.
+  #
+  # The <em> matters: the <li> around it reads "प्रकाशित मिति: 2026-08-11" and
+  # parse_datetime rejects that outright. Only the <em> holds a bare date.
+  published: "div.down-content li em"
+  # Dates are plain ISO (2026-08-11), not Bikram Sambat, despite the page being
+  # otherwise Nepali. Cross-checked against the BS dateline inside the article
+  # body -- "२६ असार २०८३" and the listing's "2026-07-10" are the same day,
+  # which is also what confirms these dates are Nepal time rather than UTC.
+  published_format: iso
+
+article:
+  # The CONTAINER, not its paragraphs. This site is inconsistent about markup:
+  # most stories put the text in a <p>, but some use a bare
+  # <div style="text-align: justify;"> with no <p> at all, and
+  # "div.single-item p" returns an EMPTY body for those -- 1 of 8 sampled.
+  # Taking the container catches both and cannot double-count; a union like
+  # "div.single-item p, div.single-item div[style]" measured identically on all
+  # 8 but would emit the text twice the day a <p> is wrapped in a styled div.
+  # Cost: multi-paragraph stories lose their blank lines. None of the 8 had
+  # more than one paragraph, so that is theoretical here.
+  body: "div.single-item"
+  # No `author`: these are institutional press releases and carry no byline.
+  # No `published`: see the listing block above.
+  # No og:image on this site; the lead photo is a plain <img> in the article.
+  image: "div.single-item img@src"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # The tag rail sits inside div.single-item and would otherwise be appended
+  # to every body as a stray "ट्यागहरु:" paragraph.
+  - "div.tags-share"
