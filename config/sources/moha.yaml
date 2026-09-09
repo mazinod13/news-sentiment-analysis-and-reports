@@ -1,0 +1,35 @@
+id: moha
+name: Ministry of Home Affairs
+url: https://moha.gov.np/page/news
+homepage: https://moha.gov.np
+method: html
+lang: ne
+category: govt
+priority: 3
+active: true
+
+selectors: moha
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - The listing is a Livewire-rendered TABLE (`wire:click` on the headers), not
+    a card grid. `table.table tbody tr` is the item; each row holds the date in
+    its first cell and the link, title and a duplicate date in the second.
+  - THE DATE IS AN ALL-NUMERIC BIKRAM SAMBAT STRING in Devanagari numerals:
+    "२०८१-०९-०८". app/parsing/dates.py only understood month-name forms
+    ("भदौ ३, २०८३") before this outlet, so support for the numeric shape was
+    added as a SHARED change. It is gated on the presence of Devanagari
+    numerals: in ASCII, "2026-09-03" is indistinguishable from an ISO Gregorian
+    date, and parse_datetime tries BS before ISO under `auto`, so an ungated
+    pattern would have read every ISO date in the project as Bikram Sambat and
+    placed it ~57 years early.
+  - `published_format: bs` is explicit, not required: `auto` resolves these
+    dates identically because the numeric pattern is gated on Devanagari
+    numerals. Verified by mutation -- swapping bs for auto changes nothing.
+  - The homepage tabs (#notice, #news, #press-release, #tender) show only 5-6
+    items each. `/page/news` is the full listing; `/page/press-release` and
+    `/page/notice` are siblings worth adding as separate sources if wanted.
+  - Article bodies are real prose (~1400 chars in the fixture).
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

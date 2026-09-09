@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ne" data-bs-theme="light">
+    <head>
+                        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58851320-19"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+
+                    gtag('config', "UA-58851320-19");
+        </script>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="application/json" id="upload-validation-config">{"maxImageSizeMb":3,"maxImageSizeBytes":3145728,"maxFileSizeMb":20,"maxFileSizeBytes":20971520,"extensions":{"images":["jpg","jpeg","png","gif"],"files":["pdf","doc","docx","xls","xlsx","ppt","pptx","txt","jpg","jpeg","png","gif"],"public_attachments":["pdf","jpg","jpeg","png","gif"],"videos":["3gp","mov","avi","wmv","mp4","flv","ts","m3u8"],"audios":["au","mid","midi","mp3","mp4","m4a","aac","aiff","ogg","wav"]}}</script>
+        <link rel="icon" href="https://moha.gov.np/static/nepal-government.png" type="image/x-icon" />
+        <meta name="google" content="notranslate">
+        <script>
+            (function () {
+                function readCookie(name) {
+                    var match = document.cookie.split('; ').find(function (item) {
+                        return item.indexOf(name + '=') === 0;
+                    });
+
+                    return match ? match.split('=').slice(1).join('=') : null;
+                }
+
+                var theme = readCookie('pro_color_mode');
+                var vision = readCookie('pro_vision_mode');
+
+                var visionClassMap = {
+                    'high-contrast-1': 'high-contrast-1',
+                    'high-contrast-2': 'high-contrast-2',
+                    'high-contrast-3': 'high-contrast-3',
+                    'monochrome': 'monochrome-mode',
+                    'protanopia': 'protanopia-mode',
+                    'deuteranopia': 'deuteranopia-mode',
+                    'tritanopia': 'tritanopia-mode'
+                };
+                var lightOnlyVision = {
+                    'high-contrast-1': true,
+                    'high-contrast-2': true,
+                    'high-contrast-3': true,
+                    'monochrome': true
+                };
+
+                // light-only filters can't co-exist with dark theme.
+                if (vision && lightOnlyVision[vision]) {
+                    theme = 'light';
+                }
+
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                }
+
+                if (vision && visionClassMap[vision]) {
+                    document.documentElement.classList.add(visionClassMap[vision]);
+                }
+            })();
+        </script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" />
+        <link href="https://moha.gov.np/css/proStyle.css?id=e7046b994c32f54cfedc" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://moha.gov.np/plugin/toggleSlider.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <title>समाचार</title>
+<meta property="og:title" content="समाचार">
+<meta property="og:type" content="articles">
+<meta property="og:url" content="https://moha.gov.np/page/news">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="समाचार">
+<meta name="twitter:description" content="">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"समाचार"}</script>
+        <base href="https://moha.gov.np/page/news" />
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+                        <!-- Livewire Styles --><style >[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.list-item][wire\:loading\.list-item], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}dialog#livewire-error::backdrop {background-color: rgba(0, 0, 0, .6);}</style>
+    </head>
+
+    <body class=" "
+          data-language-switcher-url="https://moha.gov.np/switch"
+          data-color-mode-light-message="लाइट मोड सक्रिय भयो।"
+          data-color-mode-dark-message="डार्क मोड सक्रिय भयो।"
+          data-protanopia-enabled-message="प्रोटानोपिया केन्द्रित मोड सक्रिय भयो।"
+          data-protanopia-disabled-message="प्रोटानोपिया केन्द्रित मोड निष्क्रिय भयो।"
+          data-deuteranopia-enabled-message="ड्युटेरानोपिया केन्द्रित मोड सक्रिय भयो।"
+          data-deuteranopia-disabled-message="ड्युटेरानोपिया केन्द्रित मोड निष्क्रिय भयो।"
+          data-tritanopia-enabled-message="ट्राइटानोपिया केन्द्रित मोड सक्रिय भयो।"
+          data-tritanopia-disabled-message="ट्राइटानोपिया केन्द्रित मोड निष्क्रिय भयो।"
+          data-monochrome-enabled-message="मोनोक्रोम मोड सक्रिय भयो।"
+          data-monochrome-disabled-message="मोनोक्रोम मोड निष्क्रिय भयो।"
+          data-high-contrast-enabled-message="उच्च कन्ट्रास्ट स्तर"
+          data-high-contrast-disabled-message="उच्च कन्ट्रास्ट मोड निष्क्रिय भयो।"
+          data-large-cursor-enabled-message="ठूलो कर्सर सक्रिय भयो।"
+          data-large-cursor-disabled-message="ठूलो कर्सर निष्क्रिय भयो।"
+          data-reduce-motion-enabled-message="एनिमेसनहरू रोकिए।"
+          data-reduce-motion-disabled-message="एनिमेसनहरू पुनः सुरु भए।"
+          data-accessibility-reset-message="Accessibility प्रदर्शन सेटिङ रिसेट गरियो।"
+          data-accessibility-colors-restored-message="वेबसाइटका रङ्ग सामान्य अवस्थामा फर्काइयो।"
+          data-accessibility-colors-inverted-message="उच्च कन्ट्रास्टका लागि वेबसाइटका रङ्ग उल्टाइयो।"
+          data-accessibility-reading-started-message="पृष्ठ सामग्री पढ्न सुरु भयो।"
+          data-accessibility-reading-stopped-message="पढ्न रोकियो।"
+          data-accessibility-reading-empty-message="यस पृष्ठमा पढ्न मिल्ने सामग्री भेटिएन।"
+          data-accessibility-reading-unavailable-message="यो ब्राउजरमा टेक्स्ट टु स्पिच समर्थित छैन।">
+    <div id="font_size_styles"></div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <svg
+            aria-hidden="true"
+            focusable="false"
+            width="0"
+            height="0"
+            style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;"
+            xmlns="http://www.w3.org/2000/svg"
+    >
+        <defs>
+            <!--
+                Protanopia / red-weakness enhancement
+                Helps separate colours that depend heavily on red/green difference.
+            -->
+            <filter id="accessibility-protanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix
+                        type="matrix"
+                        values="
+                    1       0       0       0 0
+                   -0.2549  1.2549  0       0 0
+                    0.3031 -0.5451  1.242   0 0
+                    0       0       0       1 0
+                "
+                />
+            </filter>
+
+            <!--
+                Deuteranopia / green-weakness enhancement
+                This is usually the most practically useful mode.
+            -->
+            <filter id="accessibility-deuteranopia" color-interpolation-filters="sRGB">
+                <feColorMatrix
+                        type="matrix"
+                        values="
+                    1       0       0       0 0
+                   -0.4375  1.4375  0       0 0
+                    0.2625 -0.5625  1.3     0 0
+                    0       0       0       1 0
+                "
+                />
+            </filter>
+
+            <!--
+                Tritanopia / blue-yellow weakness enhancement
+                Stronger visual shift because blue/yellow confusion needs a different adjustment.
+            -->
+            <filter id="accessibility-tritanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix
+                        type="matrix"
+                        values="
+                    1.05   -0.05    0       0 0
+                    0       1.567  -0.567   0 0
+                   -0.035  -0.8369  1.8719  0 0
+                    0       0       0       1 0
+                "
+                />
+            </filter>
+        </defs>
+    </svg>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v9.0&appId=148375602234012&autoLogAppEvents=1" nonce="7obfbz20"></script>
+    <header>
+    <div>
+        <a href="https://moha.gov.np/accessibility-mode" class="sr-only sr-only-focusable">
+                            Accessibility Mode सुरु गर्नुहोस्
+                    </a>
+        <div id="accessibility-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+                    <a href="#main-heading" class="sr-only sr-only-focusable">मुख्य सामाग्री पढ्नुहाेस्</a>
+                <a href="#main-nav" class="sr-only sr-only-focusable">मुख्य नेभिगेसन पढ्नुहाेस्</a>
+        <a href="#search-input-mobile" class="sr-only sr-only-focusable d-inline-block d-md-none">वेबसाइट खोजमा जानुहोस्</a>
+        <a href="#search-input" class="sr-only sr-only-focusable d-none d-md-inline-block">वेबसाइट खोजमा जानुहोस्</a>
+    </div>
+    <!-- Mobile Header -->
+    <div class="container-fluid d-block d-md-none my-2">
+        <div class="hstack gap-4 py-2 mobile-title">
+            <div>
+                <a href="https://moha.gov.np"><img src="https://moha.gov.np/static/nepal-government.png" alt="Government of Nepal Logo" class="img-fluid"></a>
+            </div>
+            <div>
+                <h5 class="text-primary fs-6">नेपाल सरकार </h5>
+    <h2 class="fs-2 mt-0 mt-md-2  main-office ">
+        <a href="https://moha.gov.np" class="text-danger">गृह मन्त्रालय</a>     </h2>
+
+            </div>
+        </div>
+    </div>
+    <div class="bg-light pt-2 pb-1 d-block d-md-none">
+        <div class="container-fluid ml-md-auto bg-light text-center mobile-utility">
+            <div class="hstack gap-2">
+                <a href="https://moha.gov.np/switch"
+                   class="showToolTip btn btn-sm btn-light mb-1"
+                   title="Change Language (भाषामा परिवर्तन) . Current Language is Nepali, click to change to English">
+                    EN
+                </a>
+                <button type="button" onclick="toggleColorMode()"
+                        title="लाइट र डार्क मोड परिवर्तन गर्नुहोस्।"
+                        class="btn btn-sm btn-light mb-1 js-color-mode-button"
+                        aria-pressed="false"
+                        aria-label="डार्क मोडमा परिवर्तन गर्नुहोस्।">
+                    <i class="fa js-color-mode-icon fa-moon-o" aria-hidden="true"></i>
+                    <span class="js-color-mode-label">डार्क मोड</span>
+                </button>
+                <a href="https://moha.gov.np/switch-bandwidth" class="btn btn-sm btn-light mb-1 showToolTip"
+                   title="                        वेबसाइटलाई न्युन व्यान्डविथ मोडमा परिवर्तन गर्नुहोस। तस्विर तथा फाइल लोड नहुँदा मोबाइल डाटा कम खपत हुन्छ साथै वेबसाइट चाँडो लोड हुन्छ
+                        ">
+                                            न्यून व्यान्डविथ                                    </a>
+                <button id="mobile-search-button" type="button" title="Search Website" class="ms-auto btn btn-sm btn-light mb-1" aria-label="वेबसाइटमा सामग्री खोज्नुहोस"><i class="fa fa-search"></i></button>
+                <button type="button" onclick="changeFont('decrease')" title="Decrease Font Size" class="btn btn-sm btn-light mb-1" aria-label="फन्ट साइज घटाउनुहोस्।">A-</button>
+                <button type="button" onclick="changeFont('original')" title="Original Font Size" class="btn btn-sm btn-light mb-1" aria-label="फन्ट साइजलाई मूल अवस्थामा फर्काउनुहोस्।">A</button>
+                <button type="button" onclick="changeFont('increase')" title="Increase Font Size" class="btn btn-sm btn-light mb-1" aria-label="फन्ट साइज बढाउनुहोस्।">A+</button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-search-box" class="d-flex align-items-center justify-content-center">
+        <button type="button" id="mobile-search-close" aria-label="Close search" class="btn btn-danger btn-sm">
+            <i class="fa fa-times-circle" aria-hidden="true"></i> Close
+        </button>
+        <div class="w-100">
+            <div class="container-fluid p-5">
+                <form method="GET" action="https://moha.gov.np/search" role="search" aria-label="वेबसाइट खोज">
+                <div>
+                    <label for="search-input-mobile" class="sr-only">वेबसाइटमा सामग्री खोज्नुहोस</label>
+                    <input type="text" class="form-control fs-2" placeholder="वेबसाइटमा सामग्री खोज्नुहोस"
+                           value="" name="q" id="search-input-mobile" minlength="2" maxlength="100" aria-label="खोज्नुहोस">
+                </div>
+                <div class="text-center mt-2 mb-5">
+                    <button class="btn btn-primary btn-block" type="submit" aria-label="खोज गर्नुहोस्"><i class="fa fa-search" aria-hidden="true"></i> खोज्नुहोस</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop Header -->
+    <div class="container-fluid d-none d-md-block">
+        <nav class="top">
+            <div class="hstack gap-2">
+                <a href="https://moha.gov.np/contact"><i class="fa fa-envelope"></i> सम्पर्क</a>
+
+                                    <a href="https://moha.gov.np/office-directory"><i class="fa fa-phone"></i> मातहतका कार्यालयहरु</a>
+                                <a href="https://moha.gov.np/directory"><i class="fa fa-mobile"></i> टेलिफोन निर्देशिका</a>
+                <a href="https://moha.gov.np/switch"
+                   class="ms-auto showToolTip"
+                   title="Change Language (भाषामा परिवर्तन) . Current Language is Nepali, click to change to English">
+                    English
+                </a>
+                <a href="https://moha.gov.np/accessibility-mode"
+                   aria-pressed="false"
+                                          title="Accessibility Mode सुरु गर्नुहोस्।"
+                                    >
+                                            एसिएबिलिटी मोड
+                                    </a>
+                <a href="https://moha.gov.np/screen-reader" title="दृस्टी सम्बन्धि समस्या हुने सेवाग्राहीले स्क्रिन रिडर डाउनलोड गर्न यहाँ क्लिक गर्नुहोला">स्क्रिन रिडर</a>
+                <a href="https://moha.gov.np/switch-bandwidth" class="showToolTip"
+                   title="                        वेबसाइटलाई न्युन व्यान्डविथ मोडमा परिवर्तन गर्नुहोस। तस्विर तथा फाइल लोड नहुँदा मोबाइल डाटा कम खपत हुन्छ साथै वेबसाइट चाँडो लोड हुन्छ
+                        ">
+                                            न्यून व्यान्डविथ                                    </a>
+                <button type="button" class="top-link-button js-color-mode-button" onclick="toggleColorMode()"
+                        title="लाइट र डार्क मोड परिवर्तन गर्नुहोस्।"
+                        aria-pressed="false"
+                        aria-label="डार्क मोडमा परिवर्तन गर्नुहोस्।">
+                    <i class="fa fa-moon-o js-color-mode-icon" aria-hidden="true"></i>
+                    <span class="js-color-mode-label">डार्क मोड</span>
+                </button>
+                <button type="button" class="top-link-button js-high-contrast-button" onclick="cycleHighContrast()"
+                        data-base-label="उच्च कन्ट्रास्ट"
+                        title="उच्च कन्ट्रास्ट स्तरहरू बदल्नुहोस्।"
+                        aria-pressed="false"
+                        aria-label="उच्च कन्ट्रास्ट स्तरहरू बदल्नुहोस्।">
+                    <i class="fa fa-adjust" aria-hidden="true"></i> <span class="js-high-contrast-label">उच्च कन्ट्रास्ट</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="container-fluid d-none d-md-block">
+        <div class="row py-1 py-md-3">
+            <div class="col-lg-1 col-md-1 col-1 d-flex align-items-center justify-content-center">
+                <a href="https://moha.gov.np"><img src="https://moha.gov.np/static/nepal-government.png"
+                                                 alt="Government of Nepal Logo" class="img-fluid"></a>
+            </div>
+
+            <div class="col-lg-7 col-md-4 col-7 text-left text-left mt-2">
+                <h5 class="text-primary fs-6">नेपाल सरकार </h5>
+    <h2 class="fs-2 mt-0 mt-md-2  main-office ">
+        <a href="https://moha.gov.np" class="text-danger">गृह मन्त्रालय</a>     </h2>
+
+            </div>
+
+            <div class="col-lg-4 col-md-4">
+                <div class="w-100 h-100">
+                    <form method="GET" action="https://moha.gov.np/search" role="search" aria-label="वेबसाइट खोज">
+                    <div class="input-group">
+                        <label for="search-input" class="sr-only">वेबसाइटमा सामग्री खोज्नुहोस</label>
+                        <input type="text" class="form-control" placeholder="खोज्नुहोस"
+                               value="" name="q" id="search-input" minlength="2" maxlength="100">
+                        <button class="btn btn-primary" type="submit" aria-label="खोज गर्नुहोस्"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </div>
+                    </form>
+                    <div class="pt-2 hstack gap-2">
+                        <small class="bg-light py-1 px-2">
+                            <span
+    class="js-server-date-time"
+    data-server-timestamp="1788934273"
+    data-server-timezone-offset="345"
+    data-nepali-digits="true"
+>
+    <i class="fa fa-calendar" aria-hidden="true"></i>
+    बुधबार, भाद्र &#2408;&#2410;, &#2408;&#2406;&#2414;&#2409;
+    <span class="ms-3">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <time class="js-server-clock" datetime="2026-09-09T11:56:13+05:45">११:५६</time>
+    </span>
+</span>
+                        </small>
+                        <button type="button" class="ms-auto btn btn-light btn-sm" onclick="changeFont('decrease')"
+                                title="Decrease Font Size"
+                                aria-label="फन्ट साइज घटाउनुहोस्।">A-</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="changeFont('original')"
+                                title="Original Font Size"
+                                aria-label="फन्ट साइजलाई मूल अवस्थामा फर्काउनुहोस्।">A</button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="changeFont('increase')"
+                                title="Increase Font Size"
+                                aria-label="फन्ट साइज बढाउनुहोस्।">A+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="main" id="main-navigation" aria-label="मुख्य नेभिगेसन">
+    <div class="container-fluid">
+        <div id="main-navigation" class="pro-disclosure-nav js-pro-disclosure-nav" data-interactive="true">
+            <button type="button"
+                    class="pro-disclosure-nav__mobile-toggle js-pro-disclosure-nav-toggle"
+                    aria-expanded="false"
+                    aria-controls="main-navigation-menu">
+                <span class="pro-disclosure-nav__mobile-toggle-icon" aria-hidden="true"></span>
+                <span class="pro-disclosure-nav__mobile-toggle-label">मेनु</span>
+            </button>
+
+            <ul id="main-navigation-menu"
+                class="pro-disclosure-nav__menu"
+                data-nav-level="0">
+                <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0">
+                    <div class="pro-disclosure-nav__item-row">
+                        <a href="https://moha.gov.np" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">गृह पृष्ठ</a>
+                    </div>
+                </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="/page/introduction" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    हाम्रो बारेमा
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373397"
+                                            aria-label="उपमेनु खोल्नुहोस् हाम्रो बारेमा">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373397"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/introduction"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        परिचय
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/main-functions"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        मुख्य कार्य
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="http://moha.gov.np/former-ministers"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        पूर्व गृह मन्त्रीहरु
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="http://moha.gov.np/former-secretaries"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        पूर्व गृह सचिवहरु
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="http://moha.gov.np/office-layout" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    संगठनिक संरचना
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373402"
+                                            aria-label="उपमेनु खोल्नुहोस् संगठनिक संरचना">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373402"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="http://moha.gov.np/office-layout"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        मन्त्रालय
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="http://moha.gov.np/offices"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        कार्यालय
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://moha.gov.np/page/resources" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    स्रोतहरु
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373405"
+                                            aria-label="उपमेनु खोल्नुहोस् स्रोतहरु">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373405"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/act-regulation"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        ऐन / नियमावली
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/directive-framework"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        निर्देशिका/कार्यविधि
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/criteria"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        मापदण्ड
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/strategy"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        रणनीति
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/action-plan-guideline"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        कार्ययोजना/मार्गदर्शन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/publication-1"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        प्रकाशन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/other-resources"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        अन्य स्रोतहरु
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/download-57"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        डाउनलोड
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/ka-ra-yathal-sama-ta-athha-yayana-pa-rata-va-thana"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        कार्यदल/ समिति/ अध्ययन प्रतिवेदन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://moha.gov.np/page/progress-report-2105" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    प्रगति विवरण
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373415"
+                                            aria-label="उपमेनु खोल्नुहोस् प्रगति विवरण">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373415"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/annual-progress-report-2079"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        वार्षिक प्रगति प्रतिवेदन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/trimester-progress-report-2"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        त्रैमासिक प्रगति विवरण
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/key-works-performed"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        सम्पादित मुख्य कार्यहरु
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/performance-evaluation"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        कार्यसम्पादन सम्झौता मूल्याङ्कन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://moha.gov.np/page/targeted-sanction-list" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    Targeted Sanction List
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373421"
+                                            aria-label="उपमेनु खोल्नुहोस् Targeted Sanction List">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373421"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/sanction-list"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        प्रतिबन्धित सूची
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://www.un.org/securitycouncil/content/un-sc-consolidated-list"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        Consolidated List
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/post/un-sanction-list"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        UN Sanction List
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://apgml.org"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        APG Sanction List
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/freezing-orders"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        कोष रोक्का आदेश
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/guidance-on-de-listing-and-unfreezing-of-assets"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        Guidance on De-listing and unfreezing of assets
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/directive-on-targeted-financial-sanctions-on-terrorist-financing-proliferation"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        Directive on Targeted Financial Sanctions on Terrorist Financing &amp; Proliferation Financing
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://moha.gov.np/page/peace-portal" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    शान्ति पोर्टल
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373429"
+                                            aria-label="उपमेनु खोल्नुहोस् शान्ति पोर्टल">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373429"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/national-action-plan"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        राष्ट्रिय कार्ययोजना
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/video-gallery"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        भिडियो
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="/page/disaster" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    बारम्बार सोधिने प्रश्नहरु
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373432"
+                                            aria-label="उपमेनु खोल्नुहोस् बारम्बार सोधिने प्रश्नहरु">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373432"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/disaster"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        विपद्
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/drug-control"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        लागु औषध नियन्त्रण
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/bibhusan"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        विभूषण
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/borders-and-immigration"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        सीमा तथा अध्यागमन
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0  pro-disclosure-nav__item--has-children ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://moha.gov.np/page/holidays" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    बिदा
+                                </a>
+
+                                                                    <button type="button"
+                                            class="pro-disclosure-nav__submenu-toggle js-pro-disclosure-nav-submenu-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            aria-controls="pro-disclosure-nav-submenu-373437"
+                                            aria-label="उपमेनु खोल्नुहोस् बिदा">
+                                        <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                                    </button>
+                                                            </div>
+
+                                                            <ul id="pro-disclosure-nav-submenu-373437"
+                                    class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1"
+                                    data-nav-level="1">
+                                                                                                                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/public-holidays-for-2080"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        सम्वत् २०८० सालका विदाहरू
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/government-and-public-holidays-in-2081"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        २०८१ सालको सरकारी तथा सार्वजनिक विदा
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/government-and-public-holidays-in-2082"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        २०८२ सालको सरकारी तथा सार्वजनिक विदा
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                                                                                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-1 ">
+                                                <div class="pro-disclosure-nav__item-row">
+                                                    <a href="https://moha.gov.np/page/government-and-public-holidays-in-2083"
+                                                       class="pro-disclosure-nav__link pro-disclosure-nav__link--level-1">
+                                                        २०८३  सालको सरकारी तथा सार्वजनिक विदा
+                                                    </a>
+
+                                                                                                    </div>
+
+                                                                                            </li>
+                                                                                                            </ul>
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0 ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="http://moha.gov.np/contact" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    सम्पर्क
+                                </a>
+
+                                                            </div>
+
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0 ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://singhadurbarpass.gov.np/en/login" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    सिंहदरबार गेटपास
+                                </a>
+
+                                                            </div>
+
+                                                    </li>
+                                                                    <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0 ">
+                            <div class="pro-disclosure-nav__item-row">
+                                <a href="https://tfs.moha.gov.np/" class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0">
+                                    TFS लगिन
+                                </a>
+
+                                                            </div>
+
+                                                    </li>
+                                                            <li class="pro-disclosure-nav__item pro-disclosure-nav__item--level-0 pro-disclosure-nav__item--has-children pro-disclosure-nav__overflow-item js-pro-disclosure-nav-overflow" hidden>
+                        <div class="pro-disclosure-nav__item-row">
+                            <button type="button"
+                                    class="pro-disclosure-nav__link pro-disclosure-nav__link--level-0 pro-disclosure-nav__overflow-toggle js-pro-disclosure-nav-submenu-toggle"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    aria-controls="pro-disclosure-nav-overflow-menu">
+                                थप
+                                <span class="pro-disclosure-nav__submenu-toggle-icon" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <ul id="pro-disclosure-nav-overflow-menu"
+                            class="pro-disclosure-nav__submenu pro-disclosure-nav__submenu--level-1 pro-disclosure-nav__overflow-menu js-pro-disclosure-nav-overflow-menu"
+                            data-nav-level="1"></ul>
+                    </li>
+                </ul>
+        </div>
+    </div>
+</nav>
+</header>
+    <div class="home-accessibility-menu">
+    <button type="button"
+            class="btn home-accessibility-menu__toggle rounded-circle position-fixed d-inline-flex align-items-center justify-content-center first-color"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#home-accessibility-panel"
+            aria-controls="home-accessibility-panel"
+            aria-expanded="false"
+            aria-label="पहुँचयोग्यता मेनु खोल्नुहोस्">
+        <i class="fa fa-universal-access fa-4x" aria-hidden="true"></i>
+    </button>
+
+    <div class="offcanvas offcanvas-end home-accessibility-menu__panel border-bottom"
+         tabindex="-1"
+         id="home-accessibility-panel"
+         aria-labelledby="home-accessibility-menu-title">
+        <div class="offcanvas-header d-flex align-items-center">
+            <h2 class="offcanvas-title h5 fw-bold mb-0" id="home-accessibility-menu-title">पहुँचयोग्यता मेनु</h2>
+            <button type="button"
+                    class="btn text-reset p-0 ms-auto flex-shrink-0 d-inline-flex align-items-center justify-content-center"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="पहुँचयोग्यता मेनु बन्द गर्नुहोस्">
+                <i class="fa fa-times fs-5" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="offcanvas-body pt-0">
+            <section class="py-1 mt-2">
+                <h3 class="home-accessibility-menu__heading">Website Language (भाषा)</h3>
+                <p class="text-body-secondary">You&#039;re viewing the website in Nepali Language. हालको भाषा नेपाली हो</p>
+                <a href="https://moha.gov.np/switch" class="py-3 btn btn-light btn-block d-inline-flex align-items-center gap-2 text-wrap">
+                    <i class="fa fa-language" aria-hidden="true"></i>
+                    Change to English
+                </a>
+            </section>
+
+            <section class="py-1 mt-2">
+                <h3 class="home-accessibility-menu__heading">फन्ट साइज (अक्षरको आकार)</h3>
+                <div class="row g-2">
+                    <div class="col-4">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap" onclick="changeFont('decrease')">
+                            <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                            घटाउनुहोस्
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap" onclick="changeFont('original')">
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                            रिसेट
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap" onclick="changeFont('increase')">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            बढाउनुहोस्
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-1 mt-2">
+                <div class="d-flex justify-content-between">
+                    <h3 class="home-accessibility-menu__heading">रङ्ग मोड/फिल्टर</h3>
+                    <div class="filter-preview pb-2">
+                        <div class="rgb-guide d-flex gap-2">
+                            <div class="red flex-fill d-flex align-items-center justify-content-center"></div>
+                            <div class="green flex-fill d-flex align-items-center justify-content-center"></div>
+                            <div class="blue flex-fill d-flex align-items-center justify-content-center"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-dark w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-color-mode-button" onclick="toggleColorMode()"
+                                aria-pressed="false"
+                                aria-label="डार्क मोडमा परिवर्तन गर्नुहोस्।">
+                            <i class="fa fa-moon-o js-color-mode-icon" aria-hidden="true"></i>
+                            <span class="js-color-mode-label">डार्क मोड</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-high-contrast-button" onclick="cycleHighContrast()"
+                                data-base-label="उच्च कन्ट्रास्ट"
+                                aria-pressed="false"
+                                aria-label="उच्च कन्ट्रास्ट स्तरहरू बदल्नुहोस्।">
+                            <i class="fa fa-adjust" aria-hidden="true"></i>
+                            <span class="js-high-contrast-label">उच्च कन्ट्रास्ट</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-mode-button" onclick="selectVisionMode('monochrome')"
+                                data-mode="monochrome"
+                                data-on-label="कालो र सेतो"
+                                data-off-label="कालो र सेतो"
+                                data-on-aria-label="कालो र सेतो मोड बन्द गर्नुहोस्।"
+                                data-off-aria-label="कालो र सेतो मोड सुरु गर्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="कालो र सेतो मोड सुरु गर्नुहोस्।">
+                            <i class="fa fa-circle-o js-accessibility-mode-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-mode-label">कालो र सेतो</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-mode-button" onclick="selectVisionMode('protanopia')"
+                                data-mode="protanopia"
+                                data-on-label="प्रोटानोपिया चालु"
+                                data-off-label="प्रोटानोपिया"
+                                data-on-aria-label="प्रोटानोपिया केन्द्रित मोड बन्द गर्नुहोस्।"
+                                data-off-aria-label="रातो कमजोर दृष्टिका लागि प्रोटानोपिया केन्द्रित मोड सुरु गर्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="रातो कमजोर दृष्टिका लागि प्रोटानोपिया केन्द्रित मोड सुरु गर्नुहोस्।">
+                            <i class="fa fa-eye js-accessibility-mode-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-mode-label">प्रोटानोपिया</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-mode-button" onclick="selectVisionMode('deuteranopia')"
+                                data-mode="deuteranopia"
+                                data-on-label="ड्युटेरानोपिया चालु"
+                                data-off-label="ड्युटेरानोपिया"
+                                data-on-aria-label="ड्युटेरानोपिया केन्द्रित मोड बन्द गर्नुहोस्।"
+                                data-off-aria-label="हरियो कमजोर दृष्टिका लागि ड्युटेरानोपिया केन्द्रित मोड सुरु गर्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="हरियो कमजोर दृष्टिका लागि ड्युटेरानोपिया केन्द्रित मोड सुरु गर्नुहोस्।">
+                            <i class="fa fa-eye js-accessibility-mode-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-mode-label">ड्युटेरानोपिया</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-mode-button" onclick="selectVisionMode('tritanopia')"
+                                data-mode="tritanopia"
+                                data-on-label="ट्राइटानोपिया चालु"
+                                data-off-label="ट्राइटानोपिया"
+                                data-on-aria-label="ट्राइटानोपिया केन्द्रित मोड बन्द गर्नुहोस्।"
+                                data-off-aria-label="निलो कमजोर दृष्टिका लागि ट्राइटानोपिया केन्द्रित मोड सुरु गर्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="निलो कमजोर दृष्टिका लागि ट्राइटानोपिया केन्द्रित मोड सुरु गर्नुहोस्।">
+                            <i class="fa fa-eye js-accessibility-mode-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-mode-label">ट्राइटानोपिया</span>
+                        </button>
+                    </div>
+                </div>
+                <small class="mt-2 d-block text-body-secondary">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    प्रोटानोपिया (रातो कमजोरीका लागि), ड्युटेरानोपिया (हरियो कमजोरीका लागि), ट्राइटानोपिया (निलो कमजोरीका लागि)।
+                    <a href="https://moha.gov.np/accessibility-note">थप पढ्नुहोस</a>
+                </small>
+            </section>
+
+            <section class="py-1 mt-2">
+                <h3 class="home-accessibility-menu__heading">ब्यान्डविथ</h3>
+                <small class="mb-2 d-block">
+                    <i class="fa fa-info-circle"></i> न्युन व्यान्डविथ मोडमा तस्विर तथा फाइल लोड नहुँदा मोबाइल डाटा कम खपत हुन्छ साथै वेबसाइट चाँडो लोड हुन्छ
+                </small>
+                <a href="https://moha.gov.np/switch-bandwidth" class="py-3 btn d-inline-flex align-items-center gap-2 text-wrap  btn-light ">
+                    <i class="fa fa-tachometer" aria-hidden="true"></i>
+                                            न्यून व्यान्डविथ                                    </a>
+            </section>
+
+
+            <section class="py-1 mt-2">
+                <h3 class="home-accessibility-menu__heading">थप सुबिधा</h3>
+                <div class="row g-2">
+                    <div class="d-none d-md-block col-md-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-feature-button" onclick="toggleAccessibilityFeature('large-cursor')"
+                                data-feature="large-cursor"
+                                data-on-label="ठूलो कर्सर सक्रिय"
+                                data-off-label="ठूलो कर्सर"
+                                data-on-aria-label="ठूलो कर्सर बन्द गर्नुहोस्।"
+                                data-off-aria-label="ठूलो कर्सर सुरु गर्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="ठूलो कर्सर सुरु गर्नुहोस्।">
+                            <i class="fa fa-mouse-pointer js-accessibility-feature-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-feature-label">ठूलो कर्सर</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="py-3 btn btn-light w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap js-accessibility-feature-button" onclick="toggleAccessibilityFeature('reduce-motion')"
+                                data-feature="reduce-motion"
+                                data-on-label="एनिमेसन रोकिएको"
+                                data-off-label="एनिमेसन रोक्नुहोस्"
+                                data-on-aria-label="एनिमेसनहरू पुनः सुरु गर्नुहोस्।"
+                                data-off-aria-label="एनिमेसनहरू रोक्नुहोस्।"
+                                aria-pressed="false"
+                                aria-label="एनिमेसनहरू रोक्नुहोस्।">
+                            <i class="fa fa-pause-circle js-accessibility-feature-icon" aria-hidden="true"></i>
+                            <span class="js-accessibility-feature-label">एनिमेसन रोक्नुहोस्</span>
+                        </button>
+                    </div>
+                    <div class="col-6 col-md-12">
+                        <a href="https://moha.gov.np/accessibility-mode" class="py-3 btn w-100 d-inline-flex align-items-center justify-content-center gap-2 text-wrap  btn-light "
+                           aria-pressed="false">
+                            <i class="fa fa-wheelchair" aria-hidden="true"></i>
+                                                            पहुँचयोग्य मोड
+                                                    </a>
+                    </div>
+                    <div class="col-12"><small><i class="fa fa-info-circle"></i> पहुँचयोग्य मोड वेबसाइटको डिजाइन भन्दा सामग्री सहज/पहुँचयोग्य तवरले ग्रहण गर्ने विषयमा केन्द्रित हुन्छ</small></div>
+                    <div class="col-6">
+                        <a href="https://moha.gov.np/screen-reader" class="py-3 w-100 btn d-inline-flex align-items-center justify-content-center gap-2 text-wrap btn-light">
+                            स्क्रिन रिडर                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="https://moha.gov.np/accessibility-note" class="py-3 w-100 btn d-inline-flex align-items-center justify-content-center gap-2 text-wrap btn-light">
+                            पहुँचयोग्य सुविधा बारे
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="py-3 mb-5">
+                <a href="https://moha.gov.np/reset-accessibility-settings" class="py-3 btn btn-outline-primary d-inline-flex align-items-center gap-2 text-wrap" onclick="resetAccessibilityMenuPreferences()">
+                    <i class="fa fa-undo" aria-hidden="true"></i>
+                    Accessibility सेटिङ रिसेट गर्नुहोस्
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <main id="main-content" tabindex="-1">
+            <div class="page_detail common_page">
+        <div class="page_title">
+            <div class="container-fluid">
+                <ul>
+                    <li><a href="https://moha.gov.np"><i class="fa fa-home"></i></a></li>
+                                        <li><a href="https://moha.gov.np/page/news">समाचार</a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+
+        <div class="page_body">
+            <div class="container-fluid">
+                <div class="row">
+                                        <div class="col-lg-12 col-md-12 order-0 order-md-1 page_content">
+                        <h1 id="main-heading">समाचार </h1>
+                        <button
+    type="button"
+    class="btn btn-success read-content d-none"
+    aria-label="पृष्ठ सामग्री सुन्नुहोस्"
+    title="पृष्ठ सामग्री सुन्नुहोस्"
+>
+    <i class="fa fa-volume-up" aria-hidden="true"></i>
+</button>
+                        <div wire:key="lw-2743256738-0" wire:snapshot="{&quot;data&quot;:{&quot;pageItem&quot;:[null,{&quot;class&quot;:&quot;App\\Page&quot;,&quot;key&quot;:1,&quot;s&quot;:&quot;mdl&quot;}],&quot;parentSections&quot;:[null,{&quot;keys&quot;:[1,10,743,740,741,742,739,738,745,1157,1219,1223],&quot;class&quot;:&quot;Illuminate\\Database\\Eloquent\\Collection&quot;,&quot;modelClass&quot;:&quot;App\\OfficeSection&quot;,&quot;s&quot;:&quot;elcln&quot;}],&quot;office&quot;:[null,{&quot;class&quot;:&quot;App\\Office&quot;,&quot;key&quot;:2,&quot;s&quot;:&quot;mdl&quot;}],&quot;perPage&quot;:10,&quot;limits&quot;:[{&quot;10&quot;:10,&quot;20&quot;:20,&quot;30&quot;:30,&quot;50&quot;:50,&quot;100&quot;:100,&quot;150&quot;:150,&quot;200&quot;:200},{&quot;s&quot;:&quot;arr&quot;}],&quot;searchText&quot;:null,&quot;publishedDateFrom&quot;:null,&quot;publishedDateTo&quot;:null,&quot;sectionId&quot;:null,&quot;paginators&quot;:[{&quot;page&quot;:1},{&quot;s&quot;:&quot;arr&quot;}],&quot;debug_info&quot;:&quot;&quot;,&quot;sortBy&quot;:&quot;published_date&quot;,&quot;sortDirection&quot;:&quot;desc&quot;},&quot;memo&quot;:{&quot;id&quot;:&quot;H95HR64sLYy3hu785PJA&quot;,&quot;name&quot;:&quot;posts&quot;,&quot;path&quot;:&quot;page\/news&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;np&quot;,&quot;islands&quot;:[]},&quot;checksum&quot;:&quot;42a86cf9640c837b7d46d9967e73f50179741b997b1bf29d33e6dbf2fbb1c424&quot;}" wire:effects="{&quot;url&quot;:{&quot;paginators.page&quot;:{&quot;as&quot;:&quot;page&quot;,&quot;use&quot;:&quot;push&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="H95HR64sLYy3hu785PJA" wire:name="posts">
+    
+    <div class="row" wire:ignore>
+        <div class="col-7 col-md-5 pb-2">
+            <div class="input-group">
+                <input class="form-control nepali-date-picker" type="text" name="date_from" id="date_from" placeholder="मिति देखि" wire:model.live="publishedDateFrom">
+                <input class="form-control nepali-date-picker" type="text" name="date_to" id="date_to" placeholder="मिति सम्म" wire:model.live="publishedDateTo">
+            </div>
+        </div>
+        <div class="col-5 col-md-3">
+            <!--[if BLOCK]><![endif]-->                <div wire:ignore>
+                    <select name="section_id" id="section_id"
+                            class="form-control select-2">
+                        <option value=''>सम्बन्धित शाखा</option>
+                        <option value=1 > Secretariat of Home Minister(मन्त्रिज्यूको सचिवालय)</option><option value=10 > Secretariat of Secretary(सचिवज्यूको सचिवालय)</option><option value=743 > Security and Coordination Division(सुरक्षा तथा समन्वय महाशाखा)</option><option value=750 >==> Peace, Security and Crime Control Section(शान्ति सुरक्षा तथा अपराध नियन्त्रण शाखा)</option><option value=754 > Information Coordination and Analysis Section(सूचना समन्वय तथा विश्लेषण शाखा)</option><option value=757 > Border and Immigration Section(सीमा तथा अध्यागमन शाखा)</option><option value=760 > Local Administration and Province Co-Ordination Section(स्थानीय प्रशासन तथा प्रदेश समन्वय शाखा)</option><option value=740 > Policy, Plan, Monitoring and  Evaluation Division(नीति, योजना अनुगमन तथा मूल्यांकन महाशाखा)</option><option value=755 >==> Policy, Planning and Drug Control Section(नीति, योजना तथा लागु औषध नियन्त्रण शाखा)</option><option value=762 > Monitoring, Evaluation and Reporting Section(अनुगमन, मूल्यांकन तथा प्रतिवेदन शाखा)</option><option value=765 > Citizenship and National Identity Card Section(नागरिकता तथा राष्ट्रिय परिचयपत्र शाखा)</option><option value=1128 > Planning, Monitoring and Evaluation Section(योजना, अनुगमन तथा मूल्याङ्कन शाखा)</option><option value=741 > Administration Division(प्रशासन महाशाखा)</option><option value=752 >==> Grievance Management and Call Center Section(गुनासो व्यवस्थापन तथा कल सेन्टर शाखा)</option><option value=753 > Information & Technology Section(सूचना प्रविधि शाखा)</option><option value=758 > Personnel Administration Section(निजामती कर्मचारी प्रशासन शाखा)</option><option value=763 > Police Personnel Administration Section(प्रहरी कर्मचारी प्रशासन शाखा)</option><option value=1252 > प्रहरी कर्मचारी समायोजन शाखा</option><option value=1684 > Hello Griha Call Center(हेल्लो गृह कल सेन्टर)</option><option value=742 > Internal Management Division(आन्तरिक व्यवस्थापन महाशाखा)</option><option value=747 >==> Account Section(आर्थिक प्रशासन शाखा)</option><option value=748 > Meetings Ceremonies, Office Management and Inventory Section(सभा समारोह, कार्यालय व्यवस्थापन तथा जिन्सी शाखा)</option><option value=749 > Property Management and Bibhusan Section(सम्पत्ति व्यवस्थापन तथा विभूषण शाखा)</option><option value=984 > Registration Section(दर्ता शाखा)</option><option value=1172 > Bibhushan Section(बिभुषण शाखा)</option><option value=739 > Disaster and Conflict Management Division(विपद् तथा द्वन्द्व व्यवस्थापन महाशाखा)</option><option value=744 >==> Disaster Study and Research Section(विपद् अध्ययन तथा अनसुन्धान शाखा)</option><option value=751 > Disaster Policy Coordination and International Relations Section(विपद् नीति समन्वय तथा अन्तर्राष्ट्रिय सम्बन्ध शाखा)</option><option value=756 > Peace Promotion Section(शान्ति प्रवर्धन शाखा)</option><option value=761 > Disaster Response Coordination and Institutional Strengthening Section(विपद प्रतिकार्य समन्वय तथा संस्थागत सुदृढीकरण शाखा)</option><option value=764 > Conflict and Relief Management Section(द्वन्द तथा राहत व्यवस्थापन शाखा)</option><option value=738 > Legal Division(कानून महाशाखा)</option><option value=746 >==> Human Rights Section(मानव अधिकार शाखा)</option><option value=759 > Legal Decision Administration Section(कानून तथा फैसला कार्यान्वयन शाखा)</option><option value=745 > Central Haj Committee(केन्द्रीय हज समिति)</option><option value=1157 > Faulty Asset Management Unit(कसुरजन्य सम्पत्ति व्यवस्थापन इकाई)</option><option value=1219 > Chalani(चलानी शाखा)</option><option value=1223 > Singadurbar Entrance  (South-Gate)(सिंहदरबार दक्षिण गेट)</option>
+                    </select>
+                </div>
+            <!--[if ENDBLOCK]><![endif]-->        </div>
+        <div class="col-12 col-md-4">
+            <input class="form-control firstInput" type="text" name="search" id="search" placeholder="समाचार खोज्नुहोस" wire:model.live.debounce.500ms="searchText">
+        </div>
+    </div>
+    <div class="d-flex justify-content-end pt-2" wire:ignore>
+        <div class="me-2 d-flex justify-content-center align-items-center">Per Page</div>
+        <div>
+            <select name="limit" id="per_page" wire:model.live="perPage" placeholder="Per Page"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option></select>
+        </div>
+    </div>
+    
+    <div wire:loading>
+        Loading समाचार ...
+    </div>
+    <div class="app-table-responsive">
+        <table class="table">
+            <thead>
+                <tr class="d-none d-md-table-row">
+                    <th class="sortable" wire:click="sortBy('published_date')">मिति</th>
+                    <th class="sortable" wire:click="sortBy('title')">समाचार
+                        विवरण</th>
+                    <th>फाईलहरु</th>
+                    <th>एक्सन</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--[if BLOCK]><![endif]-->                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०९-०८</span></td>
+                        <td><a href="https://moha.gov.np/post/aata-mahata-ya-na-ya-na-karanae-gara-na-ga-ha-mana-ta-ra-lya-ra-ka-thama-da-va">
+                                <h6>आत्महत्या न्यूनीकरण गर्न गृह मन्त्रालय र काठमाडौं विश्वविद्यालयबीच समझदारीपत्रमा हस्ताक्षर</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०९-०८
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/aata-mahata-ya-na-ya-na-karanae-gara-na-ga-ha-mana-ta-ra-lya-ra-ka-thama-da-va"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०९-०३</span></td>
+                        <td><a href="https://moha.gov.np/post/navana-ra-ma-ta-il-ka-pa-rasha-sana-ka-ra-ya-lya-bhavana-utha-gha-tana-ra-hatha">
+                                <h6>नवनिर्मित इलाका प्रशासन कार्यालय भवन उद्घाटन, राहदानी तथा राष्ट्रिय परिचयपत्र वितरण सेवा शुभारम्भ</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०९-०३
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/navana-ra-ma-ta-il-ka-pa-rasha-sana-ka-ra-ya-lya-bhavana-utha-gha-tana-ra-hatha"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०९-०२</span></td>
+                        <td><a href="https://moha.gov.np/post/l-ma-b-na-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana-na">
+                                <h6>लुम्बिनी प्रदेशस्तरीय सुरक्षा गोष्ठी, २०८१ सम्पन्न</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०९-०२
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/l-ma-b-na-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana-na"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०८-२४</span></td>
+                        <td><a href="https://moha.gov.np/post/kara-nae-l-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana-na">
+                                <h6>कर्णाली प्रदेशस्तरीय सुरक्षा गोष्ठी, २०८१ सम्पन्न</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०८-२४
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/kara-nae-l-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana-na"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०८-०५</span></td>
+                        <td><a href="https://moha.gov.np/post/sa-tha-rapasha-ca-ma-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana">
+                                <h6>सुदूरपश्चिम प्रदेशस्तरीय सुरक्षा गोष्ठी, २०८१ सम्पन्न</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०८-०५
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/sa-tha-rapasha-ca-ma-pa-ratha-shasa-tara-ya-sa-raka-shha-ga-shha-tha-sama-pana"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०५-१९</span></td>
+                        <td><a href="https://moha.gov.np/post/na-pa-l-pa-rahara-pa-ratha-sha-ka-ra-ya-lya-maha-na-tha-ranagara-ra-il-ka-pa">
+                                <h6>नेपाल प्रहरी प्रदेश कार्यालय, महेन्द्रनगर र इलाका प्रहरी कार्यालय दोधारा चाँदनीको नवनिर्मित भवनको समुद्घाटन</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०५-१९
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/na-pa-l-pa-rahara-pa-ratha-sha-ka-ra-ya-lya-maha-na-tha-ranagara-ra-il-ka-pa"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०५-१९</span></td>
+                        <td><a href="https://moha.gov.np/post/b-dha-pa-rabha-va-ta-ka-shha-ta-raka-na-ra-ka-shhanae">
+                                <h6>बाढी प्रभावित क्षेत्रको निरीक्षण</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०५-१९
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/b-dha-pa-rabha-va-ta-ka-shha-ta-raka-na-ra-ka-shhanae"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०५-१९</span></td>
+                        <td><a href="https://moha.gov.np/post/tha-thha-ra-ca-thana-nagarapa-l-ka-ma-ra-shha-ta-ra-ya-para-cayapata-ra-va">
+                                <h6>दोधारा चाँदनी नगरपालिकामा राष्ट्रिय परिचयपत्र वितरण कार्य शुभारम्भ</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०५-१९
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/tha-thha-ra-ca-thana-nagarapa-l-ka-ma-ra-shha-ta-ra-ya-para-cayapata-ra-va"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०४-२२</span></td>
+                        <td><a href="https://moha.gov.np/post/ca-tavanaka-sa-malta-l-bsa-tha-ra-ghatana-ka-va-shhayama-athha-yayana-gara-na">
+                                <h6>चितवनको सिमलताल बस दुर्घटनाको विषयमा अध्ययन गर्न गठित समितिद्वारा मा. गृहमन्त्रीज्यूलाई प्रतिवेदन पेश</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०४-२२
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/ca-tavanaka-sa-malta-l-bsa-tha-ra-ghatana-ka-va-shhayama-athha-yayana-gara-na"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                                    <tr>
+                        <td class="d-none d-md-table-cell">२०८१-०४-२०</span></td>
+                        <td><a href="https://moha.gov.np/post/ara-gha-kha-ca-ja-l-l-ka-sab-sa-tha-na-ya-tahab-ta-pa-ranae-l-ma-ra-fata-na-gara">
+                                <h6>अर्घाखाँची जिल्लाको सबै स्थानीय तहबाट प्रणालीमार्फत् नागरिकता सिफारिस</h6>
+                                <small class="text-muted">
+                                    <i class="fa fa-clock-o"></i> २०८१-०४-२०
+                                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                                </small>
+                            </a></td>
+                        <td>
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                        </td>
+                        <td class="d-none d-md-table-cell"><a class="btn btn-success btn-sm" href="https://moha.gov.np/post/ara-gha-kha-ca-ja-l-l-ka-sab-sa-tha-na-ya-tahab-ta-pa-ranae-l-ma-ra-fata-na-gara"><i
+                                    class="fa fa-search-plus"></i></a></td>
+                    </tr>
+                <!--[if ENDBLOCK]><![endif]-->            </tbody>
+        </table>
+        <div wire:loading>
+            Loading समाचार ...
+        </div>
+        <div>
+    <!--[if BLOCK]><![endif]-->        <nav class="d-flex justify-items-center justify-content-between">
+            <div class="d-flex justify-content-between flex-fill d-sm-none">
+                <ul class="pagination">
+                    
+                    <!--[if BLOCK]><![endif]-->                        <li class="page-item disabled" aria-disabled="true">
+                            <span class="page-link">&laquo; अघिल्लो</span>
+                        </li>
+                    <!--[if ENDBLOCK]><![endif]-->
+                    
+                    <!--[if BLOCK]><![endif]-->                        <li class="page-item">
+                            <button type="button" dusk="nextPage" class="page-link" wire:click="nextPage('page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()" wire:loading.attr="disabled">पछिल्लो &raquo;</button>
+                        </li>
+                    <!--[if ENDBLOCK]><![endif]-->                </ul>
+            </div>
+
+            <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+                <div>
+                    <p class="small text-muted">
+                        Showing
+                        <span class="fw-semibold">1</span>
+                        to
+                        <span class="fw-semibold">10</span>
+                        of
+                        <span class="fw-semibold">61</span>
+                        results
+                    </p>
+                </div>
+
+                <div>
+                    <ul class="pagination">
+                        
+                        <!--[if BLOCK]><![endif]-->                            <li class="page-item disabled" aria-disabled="true" aria-label="&laquo; अघिल्लो">
+                                <span class="page-link" aria-hidden="true">&lsaquo;</span>
+                            </li>
+                        <!--[if ENDBLOCK]><![endif]-->
+                        
+                        <!--[if BLOCK]><![endif]-->                            
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                            
+                            <!--[if BLOCK]><![endif]-->                                <!--[if BLOCK]><![endif]-->                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item active" wire:key="paginator-page-page-1" aria-current="page"><span class="page-link">1</span></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-2"><button type="button" class="page-link" wire:click="gotoPage(2, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">2</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-3"><button type="button" class="page-link" wire:click="gotoPage(3, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">3</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-4"><button type="button" class="page-link" wire:click="gotoPage(4, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">4</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-5"><button type="button" class="page-link" wire:click="gotoPage(5, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">5</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-6"><button type="button" class="page-link" wire:click="gotoPage(6, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">6</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                                                    <!--[if BLOCK]><![endif]-->                                        <li class="page-item" wire:key="paginator-page-page-7"><button type="button" class="page-link" wire:click="gotoPage(7, 'page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()">7</button></li>
+                                    <!--[if ENDBLOCK]><![endif]-->                                <!--[if ENDBLOCK]><![endif]-->                            <!--[if ENDBLOCK]><![endif]-->                        <!--[if ENDBLOCK]><![endif]-->
+                        
+                        <!--[if BLOCK]><![endif]-->                            <li class="page-item">
+                                <button type="button" dusk="nextPage" class="page-link" wire:click="nextPage('page')" x-on:click="   ($el.closest(&#039;body&#039;) || document.querySelector(&#039;body&#039;)).scrollIntoView()" wire:loading.attr="disabled" aria-label="पछिल्लो &raquo;">&rsaquo;</button>
+                            </li>
+                        <!--[if ENDBLOCK]><![endif]-->                    </ul>
+                </div>
+            </div>
+        </nav>
+    <!--[if ENDBLOCK]><![endif]--></div>
+
+    </div>
+    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://moha.gov.np/js/bootstrap.bundle.min.js?id=5cc1b73e70520fa84b18"></script>
+    <footer class="container-fluid py-5 bg-dark text-light">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-md-4 mb-2">
+                <h2>सम्पर्क </h2>
+                <hr>
+                <h4><strong>गृह मन्त्रालय</strong></h4>
+                <p><strong>सिंहदरबार, काठमाडौँ</strong></p>
+
+                    <p title="Phone">
+                        <a href="tel:+977-1-4211208, +977-1-4211214">
+                            <i class="fa fa-phone-square"></i> +९७७-१-४२११२०८, +९७७-१-४२११२१४
+                        </a>
+                                                    <br>
+                            १११२ (टोल - फ्री)
+                                            </p>
+                                <p>
+                                        <i class="fa fa-envelope-o"></i> 
+                                            control@moha.gov.np
+                        <br>
+                                             gunaso@moha.gov.np
+                        <br>
+                                    </p>
+
+                <h4>हामीलाई फलो गर्नुहोस्</h4>
+                                    <a href="https://www.facebook.com/hellomoha/" title="Visit Facebook Page">
+                        <i class="fa fa-facebook-square fa-3x text-primary"></i>
+                    </a>
+                                                    <a href="https://twitter.com/moha_nepal" title="Visit Twitter Page">
+                        <i class="fa fa-twitter-square fa-3x text-info"></i>
+                    </a>
+                                <br>
+                <a href="https://moha.gov.np/en/page/terms-of-use" class="text-secondary">Terms of Use</a> <span class="text-secondary">|</span> <a href="https://moha.gov.np/en/page/privacy-policy" class="text-secondary">Privacy Policy</a>
+            </div>
+            <div class="col-12 col-md-4 mb-2">
+                <h2>महत्त्वपूर्ण लिंकहरु </h2>
+                <hr>
+                <ul>
+                                            <li><a href="https://donidcr.gov.np" target="_blank">राष्ट्रिय परिचयपत्र तथा पञ्‍जिकरण विभाग</a></li>
+                                            <li><a href="https://www.nepalpolice.gov.np/" target="_blank">नेपाल प्रहरी</a></li>
+                                            <li><a href="https://www.apf.gov.np/" target="_blank">सशस्त्र प्रहरी बल¸ नेपाल</a></li>
+                                            <li><a href="http://www.immigration.gov.np" target="_blank">अध्यागमन विभाग</a></li>
+                                            <li><a href="https://www.dopm.gov.np/category/highlights-content/" target="_blank">कारागार व्यवस्थापन विभाग</a></li>
+                                            <li><a href="https://dmpc.moha.gov.np/" target="_blank">कसूरजन्य सम्पत्ति व्यवस्थापन विभाग</a></li>
+                                            <li><a href="https://nepalhajj.moha.gov.np" target="_blank">नेपाल हज समितिको सचिवालय</a></li>
+                                            <li><a href="http://www.neoc.gov.np/en" target="_blank">राष्ट्रिय आपतकालिन कार्य सञ्चालन केन्द्र</a></li>
+                                            <li><a href="http://drrportal.gov.np" target="_blank">नेपाल विपद व्यवस्थापन पोर्टल</a></li>
+                                    </ul>
+
+            </div>
+            <div class="col-12 col-md-4 mb-2">
+                                    <h2>कार्यालय समय </h2>
+                    <hr>
+                    <ul>
+                        <li>09:00 AM - 5:00 PM (Monday to Friday)</li>
+                    </ul>
+                        <br>
+                    </div>
+        </div>
+    </div>
+</footer>
+<div class="bg-first-dark pt-3 pb-2">
+    <div class="container-fluid text-white">
+        <div class="row">
+            <div class="col-md-4">
+                पछिल्लो अपडेट गरिएको :  2083-05-24 10:10:43 </div>
+            <div class="col-md-4 text-center">
+
+            </div>
+            <div class="col-md-4">
+                <p class=" m-0 text-right">
+                    © सर्वाधिकार सुरक्षित गृह मन्त्रालय
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script type='text/javascript' src='https://moha.gov.np/js/common.js?id=a406d9ae00f74a9fee41'></script>
+    <script type='text/javascript' src='https://moha.gov.np/js/pro-disclosure-nav.js?id=735b8f9bf605904dc51f'></script>
+
+    
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $('#languageSwitcher').on('change', function() {
+            location.href = 'https://moha.gov.np/switch';
+        });
+        $(document).ready(function () {
+            // $('#exampleModal').modal('show')
+                    })
+                var searchSuggestions  =  [{"id":65522,"label":"Official Disaster Relief Appeal (\u0939\u093e\u0930\u094d\u0926\u093f\u0915 \u0905\u092a\u093f\u0932)","target":"https:\/\/www.moha.gov.np\/post\/ha-ra-tha-ka-apa-l-11"},{"id":65791,"label":"\u0936\u094b\u0915 \u092e\u0928\u093e\u0909\u0928\u0947 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e (\u0936\u094b\u0915 \u092e\u0928\u093e\u0909\u0928\u0947 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e)","target":"https:\/\/www.moha.gov.np\/page\/sha-ka-mana-una-sama-bna-thha-sa-cana-4"},{"id":1695,"label":"Kalikot Fire (\u0915\u093e\u0932\u093f\u0915\u094b\u091f \u0906\u0917\u0932\u093e\u0917\u0940 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u092e\u093e \u0964)","target":"https:\/\/daosolu.moha.gov.np\/post\/kalikot-fire"},{"id":109,"label":"Publication (\u092a\u094d\u0930\u0915\u093e\u0936\u0928)","target":"https:\/\/moha.gov.np\/en\/page\/publication-1"},{"id":58990,"label":"\u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u093e\u0932\u092f\u0915\u094b \u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0968\u0964\u0966\u096e\u0964\u0967\u0966 \u0915\u094b \u0928\u093f\u0930\u094d\u0923\u092f\u093e\u0928\u0941\u0938\u093e\u0930 \u0938\u0930\u0941\u0935\u093e \u092d\u090f\u0915\u093e (\u0930\u093e.\u092a. \u092a\u094d\u0930\u0925\u092e \u0930 \u0926\u094d\u0935\u093f\u0924\u0940\u092f \u0936\u094d\u0930\u0947\u0923\u0940\u0915\u093e) \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940\u0939\u0930\u0942\u0915\u094b \u0935\u093f\u0935\u0930\u0923 (\u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u093e\u0932\u092f\u0915\u094b \u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0968\u0964\u0966\u096e\u0964\u0967\u0966 \u0915\u094b \u0928\u093f\u0930\u094d\u0923\u092f\u093e\u0928\u0941\u0938\u093e\u0930 \u0938\u0930\u0941\u0935\u093e \u092d\u090f\u0915\u093e (\u0930\u093e.\u092a. \u092a\u094d\u0930\u0925\u092e \u0930 \u0926\u094d\u0935\u093f\u0924\u0940\u092f \u0936\u094d\u0930\u0947\u0923\u0940\u0915\u093e) \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940\u0939\u0930\u0942\u0915\u094b \u0935\u093f\u0935\u0930\u0923)","target":"https:\/\/daodhanusa.moha.gov.np\/post\/ga-ha-mana-ta-ra-lyaka-ma-ta-ka-na-ra-naeya-na-sa-ra-sara-va-bhaeka-ra-pa-pa-2"},{"id":65826,"label":"\u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u093e\u0932\u092f\u0915\u094b \u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0969\u0964\u0966\u096b\u0964\u0967\u096e \u0915\u094b \u0928\u093f\u0930\u094d\u0923\u092f\u093e\u0928\u0941\u0938\u093e\u0930 \u0938\u0930\u0941\u0935\u093e\/\u092a\u0926\u0938\u094d\u0925\u093e\u092a\u0928 \u092d\u090f\u0915\u093e \u0930\u093e.\u092a.\u092a\u094d\u0930\u0925\u092e \u0930 \u0930\u093e.\u092a.\u0926\u094d\u0935\u093f\u0924\u0940\u092f \u0936\u094d\u0930\u0947\u0923\u0940\u0915\u093e \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940\u0939\u0930\u0942\u0915\u094b \u0935\u093f\u0935\u0930\u0923 (\u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u093e\u0932\u092f\u0915\u094b \u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0969\u0964\u0966\u096b\u0964\u0967\u096e \u0915\u094b \u0928\u093f\u0930\u094d\u0923\u092f\u093e\u0928\u0941\u0938\u093e\u0930 \u0938\u0930\u0941\u0935\u093e\/\u092a\u0926\u0938\u094d\u0925\u093e\u092a\u0928 \u092d\u090f\u0915\u093e \u0930\u093e.\u092a.\u092a\u094d\u0930\u0925\u092e \u0930 \u0930\u093e.\u092a.\u0926\u094d\u0935\u093f\u0924\u0940\u092f \u0936\u094d\u0930\u0947\u0923\u0940\u0915\u093e \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940\u0939\u0930\u0942\u0915\u094b \u0935\u093f\u0935\u0930\u0923)","target":"https:\/\/www.moha.gov.np\/post\/ga-ha-mana-ta-ra-lyaka-ma-ta-ka-na-ra-naeya-na-sa-ra-sara-va-pathasa-tha-pana-4"},{"id":44871,"label":"\u092c\u093e\u0932\u0915\u0941\u092e\u093e\u0930\u0940 \u0918\u091f\u0928\u093e\u0915\u094b \u091c\u093e\u0901\u091a\u092c\u0941\u091d \u0906\u092f\u094b\u0917\u0915\u094b \u0935\u093f\u091c\u094d\u091e\u092a\u094d\u0924\u093f (\u092c\u093e\u0932\u0915\u0941\u092e\u093e\u0930\u0940 \u0918\u091f\u0928\u093e\u0915\u094b \u091c\u093e\u0901\u091a\u092c\u0941\u091d \u0906\u092f\u094b\u0917\u0915\u094b \u0935\u093f\u091c\u094d\u091e\u092a\u094d\u0924\u093f)","target":"https:\/\/www.moha.gov.np\/en\/post\/b-lka-ma-ra-ghatana-ka-ja-cab-jha-aaya-gaka-va-ja-niapa-ta"},{"id":32168,"label":"\u0938\u092e\u094d\u092e\u093e\u0928\u093e\u0930\u094d\u0925 \u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0915\u0938\u094d\u0924\u094b \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0932\u093e\u0908 \u092a\u094d\u0930\u0926\u093e\u0928 \u0917\u0930\u093f\u0928\u094d\u091b ? (\u0938\u092e\u094d\u092e\u093e\u0928\u093e\u0930\u094d\u0925 \u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0915\u0938\u094d\u0924\u094b \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0932\u093e\u0908 \u092a\u094d\u0930\u0926\u093e\u0928 \u0917\u0930\u093f\u0928\u094d\u091b ?)","target":"https:\/\/moha.gov.np\/en\/post\/sama-ma-na-ra-tha-na-pa-l-na-gara-kata-kasa-ta-va-yaka-ta-l-ii-pa-ratha-na-gara"},{"id":45607,"label":"Sanction List (\u092a\u094d\u0930\u0924\u093f\u092c\u0928\u094d\u0927\u093f\u0924 \u0938\u0942\u091a\u0940)","target":"https:\/\/www.moha.gov.np\/page\/sanction-list"},{"id":7950,"label":"\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u093f\u092f \u091d\u0923\u094d\u0921\u093e \u092a\u094d\u0930\u092f\u094b\u0917 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e (\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u093f\u092f \u091d\u0923\u094d\u0921\u093e \u092a\u094d\u0930\u092f\u094b\u0917 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e)","target":"https:\/\/moha.gov.np\/en\/post\/ra-shha-ta-ra-ya-jhanae-da-pa-raya-ga-sama-bna-thha-sa-cana"},{"id":444,"label":"\u0932\u093e\u0917\u0942 \u0914\u0937\u0927 (\u0928\u093f\u092f\u0928\u094d\u0924\u094d\u0930\u0923) \u0910\u0928, \u0968\u0966\u0969\u0969 (\u0932\u093e\u0917\u0942 \u0914\u0937\u0927 (\u0928\u093f\u092f\u0928\u094d\u0924\u094d\u0930\u0923) \u0910\u0928, \u0968\u0966\u0969\u0969)","target":"https:\/\/www.moha.gov.np\/en\/post\/l-ga-oushhathha-na-yana-ta-ranae-aina"},{"id":43963,"label":"Download (\u0921\u093e\u0909\u0928\u0932\u094b\u0921)","target":"https:\/\/moha.gov.np\/en\/page\/download-57"},{"id":15722,"label":"Press Release (\u092e\u093f\u0924\u093f \u0968\u0966\u096d\u096d\/\u0966\u0968\/\u0968\u0968 \u0917\u0924\u0947 \u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u093e\u0932\u092f\u0926\u094d\u0935\u093e\u0930\u093e \u091c\u093e\u0930\u0940 \u092a\u094d\u0930\u0947\u0938 \u0935\u093f\u091c\u094d\u091e\u092a\u094d\u0924\u093f)","target":"https:\/\/daosolu.moha.gov.np\/post\/press-release-2026"},{"id":57803,"label":"Social Security Allowance Distribution Directives 2082 (\u0938\u093e\u092e\u093e\u091c\u093f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u092d\u0924\u094d\u0924\u093e \u0935\u093f\u0924\u0930\u0923 \u0915\u093e\u0930\u094d\u092f\u0935\u093f\u0927\u093f \u0968\u0966\u096e\u0968)","target":"https:\/\/www.moha.gov.np\/post\/social-security-allowance-distribution-directives-2082"},{"id":448,"label":"\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u0926\u0948\u0935\u0940 \u092a\u094d\u0930\u0915\u094b\u092a \u0909\u0926\u094d\u0926\u093e\u0930 \u0915\u094b\u0937 \u0938\u0902\u091a\u093e\u0932\u0928 \u0928\u093f\u092f\u092e\u093e\u0935\u0932\u0940 \u0968\u0966\u096c\u0969 (\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u0926\u0948\u0935\u0940 \u092a\u094d\u0930\u0915\u094b\u092a \u0909\u0926\u094d\u0926\u093e\u0930 \u0915\u094b\u0937 \u0938\u0902\u091a\u093e\u0932\u0928 \u0928\u093f\u092f\u092e\u093e\u0935\u0932\u0940 \u0968\u0966\u096c\u0969)","target":"https:\/\/moha.gov.np\/en\/post\/pa-rathha-namana-ta-ra-tha-va-pa-raka-pa-utha-tha-ra-ka-shha-sa-ca-lna-na-yama"},{"id":32169,"label":"\u0915\u0938\u094d\u0924\u094b \u0905\u0935\u0938\u094d\u0925\u093e\u092e\u093e \u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0915\u093e\u092f\u092e \u0930\u0939\u0901\u0926\u0948\u0928 ? (\u0915\u0938\u094d\u0924\u094b \u0905\u0935\u0938\u094d\u0925\u093e\u092e\u093e \u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0915\u093e\u092f\u092e \u0930\u0939\u0901\u0926\u0948\u0928 ?)","target":"https:\/\/moha.gov.np\/en\/post\/kasa-ta-avasa-tha-ma-na-pa-l-na-gara-kata-ka-yama-raha-tha-na"},{"id":65384,"label":"\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u093f \u0938\u0942\u091a\u0928\u093e\u0964 (\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u093f \u0938\u0942\u091a\u0928\u093e\u0964)","target":"https:\/\/moha.gov.np\/en\/post\/sa-ra-vajana-ka-b-tha-sama-bna-thha-sa-cana-37"},{"id":32435,"label":"Transfer Details of Gazetted First and Second Class employees (as per the decision dated 2078.09.21) (\u092e\u093f\u0924\u093f \u0968\u0966\u096d\u096e\u0964\u0966\u096f\u0964\u0968\u0967 \u0915\u094b \u0928\u093f\u0930\u094d\u0923\u092f\u093e\u0928\u0941\u0938\u093e\u0930 \u092d\u090f\u0915\u094b \u0930\u093e.\u092a. \u092a\u094d\u0930\u0925\u092e \u0924\u0925\u093e \u0926\u094d\u0935\u093f\u0924\u0940\u092f \u0936\u094d\u0930\u0947\u0923\u0940\u0915\u093e \u0915\u0930\u094d\u092e\u091a\u093e\u0930\u0940\u0939\u0930\u0941\u0915\u094b \u0915\u093e\u091c \u0938\u0930\u0941\u0935\u093e \u0935\u093f\u0935\u0930\u0923)","target":"https:\/\/www.moha.gov.np\/en\/post\/transfer-details-of-gazetted-first-and-second-class-employees-as-per-the-2"},{"id":40450,"label":"\u0935\u093f.\u0938\u0902. \u0968\u0966\u096e\u0966 \u0938\u093e\u0932\u0915\u094b \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u093f \u0938\u0942\u091a\u0928\u093e (\u092e\u093f\u0924\u093f \u0968\u0966\u096d\u096f\u0964\u0967\u0968\u0964\u0966\u0968) (\u0935\u093f.\u0938\u0902. \u0968\u0966\u096e\u0966 \u0938\u093e\u0932\u0915\u094b \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u093f \u0938\u0942\u091a\u0928\u093e (\u092e\u093f\u0924\u093f \u0968\u0966\u096d\u096f\u0964\u0967\u0968\u0964\u0966\u0968))","target":"https:\/\/www.moha.gov.np\/post\/va-sa-sa-lka-sa-ra-vajana-ka-b-tha-sama-bna-thha-sa-cana-ma-ta"},{"id":509,"label":"\u092a\u094d\u0930\u0947\u0938 \u0935\u093f\u091c\u094d\u091e\u092a\u094d\u0924\u093f \u0964 (\u0915\u091e\u094d\u091a\u0928\u092a\u0941\u0930 \u0918\u091f\u0928\u093e\u0915\u094b \u091b\u093e\u0928\u0935\u0940\u0928 \u0938\u092e\u093f\u0924\u093f\u0915\u094b \u092a\u094d\u0930\u0924\u093f\u0935\u0947\u0926\u0928)","target":"https:\/\/www.moha.gov.np\/post\/pa-ra-sa-va-ja-niapa-ta"},{"id":46415,"label":"\u092e\u093e. \u0909\u092a\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u090f\u0935\u0902 \u0917\u0943\u0939\u092e\u0928\u094d\u0924\u094d\u0930\u0940\u091c\u094d\u092f\u0942\u0915\u094b \u0905\u0927\u094d\u092f\u0915\u094d\u0937\u0924\u093e\u092e\u093e \u0935\u093f\u092a\u0926\u094d \u091c\u094b\u0916\u093f\u092e \u0928\u094d\u092f\u0942\u0928\u0940\u0915\u0930\u0923 \u0924\u0925\u093e \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f\u0915\u093e\u0930\u0940 \u0938\u092e\u093f\u0924\u093f\u0915\u094b \u0968\u0967 \u0914\u0902 \u092c\u0948\u0920\u0915 \u0938\u092e\u094d\u092a\u0928\u094d\u0928 (\u092e\u093e. \u0909\u092a\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u090f\u0935\u0902 \u0917\u0943\u0939\u092e\u0928\u094d\u0924\u094d\u0930\u0940\u091c\u094d\u092f\u0942\u0915\u094b \u0905\u0927\u094d\u092f\u0915\u094d\u0937\u0924\u093e\u092e\u093e \u0935\u093f\u092a\u0926\u094d \u091c\u094b\u0916\u093f\u092e \u0928\u094d\u092f\u0942\u0928\u0940\u0915\u0930\u0923 \u0924\u0925\u093e \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f\u0915\u093e\u0930\u0940 \u0938\u092e\u093f\u0924\u093f\u0915\u094b \u0968\u0967 \u0914\u0902 \u092c\u0948\u0920\u0915 \u0938\u092e\u094d\u092a\u0928\u094d\u0928)","target":"https:\/\/moha.gov.np\/post\/ma-upapa-rathha-namana-ta-ra-eva-ga-hamana-ta-ra-ja-ya-ka-athha-yaka-shhata-ma"},{"id":441,"label":"Citizenship Act 2063 (\u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u090f\u200d\u0947\u0928, \u0968\u0966\u096c\u0969)","target":"https:\/\/www.moha.gov.np\/en\/post\/citizenship-act-2063"},{"id":4800,"label":"\u092e\u0930\u094d\u092f\u093e\u0926\u093e\u0915\u094d\u0930\u092e (\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u093f\u092f \u091c\u0940\u0935\u0928\u0915\u093e \u0935\u093f\u092d\u093f\u0928\u094d\u0928 \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u092e\u093e \u0930\u0939\u0947\u0915\u093e \u092e\u0939\u093e\u0928\u0941\u092d\u093e\u0935\u0939\u0930\u0941\u0915\u094b \u092e\u0930\u094d\u092f\u093e\u0926\u093e\u0915\u094d\u0930\u092e) (\u092e\u0930\u094d\u092f\u093e\u0926\u093e\u0915\u094d\u0930\u092e (\u0930\u093e\u0937\u094d\u091f\u094d\u0930\u093f\u092f \u091c\u0940\u0935\u0928\u0915\u093e \u0935\u093f\u092d\u093f\u0928\u094d\u0928 \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u092e\u093e \u0930\u0939\u0947\u0915\u093e \u092e\u0939\u093e\u0928\u0941\u092d\u093e\u0935\u0939\u0930\u0941\u0915\u094b \u092e\u0930\u094d\u092f\u093e\u0926\u093e\u0915\u094d\u0930\u092e))","target":"https:\/\/moha.gov.np\/en\/post\/mara-ya-tha-ka-rama-ra-shha-ta-ra-ya-ja-vanaka-va-bha-na-na-ka-shha-ta-rama-raha"},{"id":32173,"label":"\u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0938\u092e\u093e\u092a\u094d\u0924 \u092d\u090f\u092a\u0936\u094d\u091a\u093e\u0924\u094d \u0915\u0947 \u092e\u0947\u0930\u094b \u0905\u0927\u093f\u0915\u093e\u0930 \u0930 \u0915\u0930\u094d\u0924\u0935\u094d\u092f \u092a\u0928\u093f \u0905\u0928\u094d\u0924\u094d\u092f \u0939\u0941\u0928\u094d\u091b ? (\u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u0938\u092e\u093e\u092a\u094d\u0924 \u092d\u090f\u092a\u0936\u094d\u091a\u093e\u0924\u094d \u0915\u0947 \u092e\u0947\u0930\u094b \u0905\u0927\u093f\u0915\u093e\u0930 \u0930 \u0915\u0930\u094d\u0924\u0935\u094d\u092f \u092a\u0928\u093f \u0905\u0928\u094d\u0924\u094d\u092f \u0939\u0941\u0928\u094d\u091b ?)","target":"https:\/\/moha.gov.np\/en\/post\/na-pa-l-na-gara-kata-sama-pa-ta-bhaepasha-ca-ta-ka-ma-ra-athha-ka-ra-ra-kara"},{"id":43635,"label":"\u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0966\u0964\u0966\u0969\u0964\u0967\u096a \u0917\u0924\u0947 \u092c\u0915\u0930 \u0908\u0926 (\u0908\u0926 \u0909\u0932 \u0905\u091c\u0939\u093e) \u0915\u094b \u0905\u0935\u0938\u0930\u092e\u093e \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e (\u092e\u093f\u0924\u093f \u0968\u0966\u096e\u0966\u0964\u0966\u0969\u0964\u0967\u096a \u0917\u0924\u0947 \u092c\u0915\u0930 \u0908\u0926 (\u0908\u0926 \u0909\u0932 \u0905\u091c\u0939\u093e) \u0915\u094b \u0905\u0935\u0938\u0930\u092e\u093e \u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u092c\u093f\u0926\u093e)","target":"https:\/\/moha.gov.np\/post\/sa-ra-vajana-ka-b-tha-sama-bna-thha-sa-cana-bkara-iitha-iitha-ul-ajaha-ka"},{"id":65790,"label":"\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u0935\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e (\u0938\u093e\u0930\u094d\u0935\u091c\u0928\u093f\u0915 \u0935\u093f\u0926\u093e \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0938\u0942\u091a\u0928\u093e)","target":"https:\/\/www.moha.gov.np\/page\/sa-ra-vajana-ka-va-tha-sama-bna-thha-sa-cana-75"},{"id":30927,"label":"Disaster (\u0935\u093f\u092a\u0926\u094d)","target":"https:\/\/www.moha.gov.np\/page\/disaster"},{"id":32171,"label":"\u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u092a\u0930\u093f\u0924\u094d\u092f\u093e\u0917 \u0917\u0930\u094d\u0928\u0947 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e \u0915\u0938\u094d\u0924\u094b \u091b ? (\u0928\u0947\u092a\u093e\u0932\u0940 \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e \u092a\u0930\u093f\u0924\u094d\u092f\u093e\u0917 \u0917\u0930\u094d\u0928\u0947 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e \u0915\u0938\u094d\u0924\u094b \u091b ?)","target":"https:\/\/www.moha.gov.np\/en\/post\/na-pa-l-na-gara-kata-para-ta-ya-ga-gara-na-pa-raka-ra-ya-kasa-ta-chha"},{"id":63094,"label":"Details of the martyrs of the Gen-Z Movement (\u091c\u0947\u0928\u091c\u0940 \u0906\u0928\u094d\u0926\u094b\u0932\u0928\u0915\u093e \u0936\u0939\u0940\u0926\u0939\u0930\u0942\u0915\u094b \u0935\u093f\u0935\u0930\u0923)","target":"https:\/\/moha.gov.np\/en\/page\/details-of-the-martyrs-of-the-gen-z-movement"},{"id":462,"label":"Paripatra Login (\u092a\u0930\u093f\u092a\u0924\u094d\u0930 \u092a\u094d\u0930\u0923\u093e\u0932\u0940)","target":"http:\/\/moha.gov.np\/pro_admin"},{"id":32181,"label":"\u0928\u0947\u092a\u093e\u0932\u092e\u093e \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e\u0915\u094b \u0907\u0924\u093f\u0939\u093e\u0938 \u0915\u0938\u094d\u0924\u094b \u091b ? (\u0928\u0947\u092a\u093e\u0932\u092e\u093e \u0928\u093e\u0917\u0930\u093f\u0915\u0924\u093e\u0915\u094b \u0907\u0924\u093f\u0939\u093e\u0938 \u0915\u0938\u094d\u0924\u094b \u091b ?)","target":"https:\/\/www.moha.gov.np\/en\/post\/na-pa-lma-na-gara-kata-ka-ita-ha-sa-kasa-ta-chha"},{"id":65913,"label":"Heartfelt tribute to all the martyrs of the Gen Z Movement, and highest respect for their sacrifice. (Gen Z \u0906\u0928\u094d\u0926\u094b\u0932\u0928\u0915\u093e \u0938\u092e\u094d\u092a\u0942\u0930\u094d\u0923 \u0936\u0939\u0940\u0926\u0939\u0930\u0942\u092a\u094d\u0930\u0924\u093f \u092d\u093e\u0935\u092a\u0942\u0930\u094d\u0923 \u0936\u094d\u0930\u0926\u094d\u0927\u093e\u091e\u094d\u091c\u0932\u0940 \u0924\u0925\u093e \u0909\u0939\u093e\u0901\u0939\u0930\u0942\u0915\u094b \u092c\u0932\u093f\u0926\u093e\u0928\u092a\u094d\u0930\u0924\u093f \u0909\u091a\u094d\u091a \u0938\u092e\u094d\u092e\u093e\u0928\u0964)","target":"https:\/\/www.moha.gov.np\/post\/heartfelt-tribute-to-all-the-martyrs-of-the-gen-z-movement-and-highest-respect"},{"id":33250,"label":"CIMS Upgradation and Support \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0906\u0936\u092f\u092a\u0924\u094d\u0930\u0926\u093e\u0924\u093e\u0939\u0930\u0941\u0915\u094b \u0938\u0902\u0915\u094d\u0937\u093f\u092a\u094d\u0924 \u0938\u0942\u091a\u0940\u0964 ()","target":"https:\/\/moha.gov.np\/en\/post\/cims-upgradation-and-support-sama-bna-thha-aashayapata-ratha-ta-hara-ka-sa-ka"},{"id":31912,"label":"\u0932\u093e\u0917\u0941 \u200d\u0914\u0937\u0927 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0915\u0938\u094d\u0924\u094b \u0905\u092a\u0930\u093e\u0927\u092e\u093e \u0915\u0938\u094d\u0924\u094b \u0915\u0938\u094d\u0924\u094b \u0938\u091c\u093e\u092f\u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e \u091b ? (\u0932\u093e\u0917\u0941 \u200d\u0914\u0937\u0927 \u0938\u092e\u094d\u092c\u0928\u094d\u0927\u0940 \u0915\u0938\u094d\u0924\u094b \u0905\u092a\u0930\u093e\u0927\u092e\u093e \u0915\u0938\u094d\u0924\u094b \u0915\u0938\u094d\u0924\u094b \u0938\u091c\u093e\u092f\u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e \u091b ?)","target":"https:\/\/www.moha.gov.np\/post\/l-ga-oushhathha-sama-bna-thha-kasa-ta-apara-thhama-kasa-ta-kasa-ta-saja-yaka-va"},{"id":45703,"label":"\u092e\u093e.\u0909\u092a\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u090f\u0935\u092e\u094d \u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u0940\u091c\u094d\u092f\u0942\u0938\u0901\u0917 \u092d\u0947\u091f \u0917\u0930\u094d\u0928\u0941\u0939\u0941\u0901\u0926\u0948 \u0928\u0947\u092a\u093e\u0932\u0915\u093e \u0932\u093e\u0917\u093f \u0905\u092e\u0947\u0930\u093f\u0915\u0940 \u0930\u093e\u091c\u0926\u0942\u0924 \u0921\u093f\u0928 \u0925\u092e\u094d\u092a\u094d\u0938\u0928 \u092b\u093e\u0917\u0941\u0928 \u0968\u096d, \u0968\u0966\u096e\u0966 (\u092e\u093e.\u0909\u092a\u092a\u094d\u0930\u0927\u093e\u0928\u092e\u0928\u094d\u0924\u094d\u0930\u0940 \u090f\u0935\u092e\u094d \u0917\u0943\u0939 \u092e\u0928\u094d\u0924\u094d\u0930\u0940\u091c\u094d\u092f\u0942\u0938\u0901\u0917 \u092d\u0947\u091f \u0917\u0930\u094d\u0928\u0941\u0939\u0941\u0901\u0926\u0948 \u0928\u0947\u092a\u093e\u0932\u0915\u093e \u0932\u093e\u0917\u093f \u0905\u092e\u0947\u0930\u093f\u0915\u0940 \u0930\u093e\u091c\u0926\u0942\u0924 \u0921\u093f\u0928 \u0925\u092e\u094d\u092a\u094d\u0938\u0928 \u092b\u093e\u0917\u0941\u0928 \u0968\u096d, \u0968\u0966\u096e\u0966)","target":"https:\/\/daodhanusa.moha.gov.np\/gallery\/ma-upapa-rathha-namana-ta-ra-evama-ga-ha-mana-ta-ra-ja-ya-sa-ga-bha-ta-gara-na"}];
+        $(function () {
+            $("#search-input").autocomplete({
+                source: searchSuggestions,
+                select: function (event, ui) {
+                    window.location.href = ui.item.target;
+                }
+            });
+            $("#search-input-2").autocomplete({
+                source: searchSuggestions,
+                select: function (event, ui) {
+                    window.location.href = ui.item.target;
+                }
+            });
+        });
+    </script>
+    <script src="https://moha.gov.np/vendor/livewire/livewire.min.js?id=ab6b028c"   data-csrf="f5jS6ykLjcacHAkczkYk9Q4ga0LMsbQEmypmtASl" data-module-url="https://moha.gov.np/livewire-cd53595e" data-update-uri="https://moha.gov.np/livewire-cd53595e/update" data-navigate-once="true"></script>
+    <script src="https://moha.gov.np/js/file-validation.js?id=845f36b2d7eeb2f2c684"></script>
+            <link href="https://moha.gov.np/admin/plugin/select2/css/select2.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://moha.gov.np/admin/plugin/nepaliDatePicker/nepali.datepicker.v2.2.min.css"
+            type="text/css" />
+        <script type="text/javascript" src="https://moha.gov.np/admin/plugin/nepaliDatePicker/nepali.datepicker.v2.2.min.js">
+        </script>
+        <script type="text/javascript" src="https://moha.gov.np/admin/plugin/select2/js/select2.js"></script>
+        <script type="text/javascript">
+            $('document').ready(function() {
+                $('.nepali-date-picker').nepaliDatePicker({
+                    npdMonth: true,
+                    npdYear: true,
+                    npdYearCount: 50, // Options | Number of years to show,
+                });
+                $('#section_id').select2()
+                $('#section_id').on('change', function (e) {
+                var data = $('#section_id').select2("val");
+                    window.Livewire.find('H95HR64sLYy3hu785PJA').set('sectionId', data);
+                });
+
+                $('#per_page').select2()
+                $('#per_page').on('change', function (e) {
+                var data = $('#per_page').select2("val");
+                    window.Livewire.find('H95HR64sLYy3hu785PJA').set('perPage', data);
+                });
+            });
+
+        </script>
+        <style>
+            .sortable::after {
+                content: '\f0d7';
+                display: inline-block;
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: inherit;
+                text-rendering: auto;
+                -webkit-font-smoothing: antialiased;
+                color: gray;
+                float: right
+            }
+
+        </style>
+        </body>
+</html>
