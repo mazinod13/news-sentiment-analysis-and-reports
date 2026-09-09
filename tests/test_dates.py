@@ -93,3 +93,45 @@ class TestFeedDates:
             "</item></channel></rss>"
         )
         assert parse_feed_datetime(feed.entries[0]) is None
+
+
+class TestNumericBikramSambat:
+    """All-numeric BS dates, added for moha.gov.np and traffic.nepalpolice.gov.np.
+
+    Both write every listing date as "२०८१-०९-०८" -- no month name anywhere.
+    Before this the parser only understood month-name forms and those outlets
+    lost every date.
+    """
+
+    @pytest.mark.parametrize(
+        ("raw", "expected"),
+        [
+            ("२०८१-०९-०८", "2024-12-23"),   # moha, hyphens
+            ("२०८१/०९/०८", "2024-12-23"),   # slashes
+            ("२०८३।०५।१६", "2026-09-01"),   # danda, as Nepali prose writes it
+            ("२०८३-०४-२८", "2026-08-13"),   # traffic police
+        ],
+    )
+    def test_parses_devanagari_numeric_dates(self, raw, expected):
+        assert parse_datetime(raw, fmt="bs").date().isoformat() == expected
+
+    def test_auto_still_reads_ascii_iso_as_gregorian(self):
+        """THE REASON THE PATTERN IS GATED ON DEVANAGARI NUMERALS.
+
+        parse_datetime tries BS before ISO under fmt="auto". An ungated numeric
+        pattern would match "2026-09-03" -- an ordinary ISO date used by
+        ocmcm-gandaki and mofa -- read 2026 as a BS year and place the article
+        in 1969. Every ISO date in the project would move ~57 years early.
+        """
+        assert parse_datetime("2026-09-03", fmt="auto").date().isoformat() == "2026-09-03"
+        assert parse_datetime("2026-09-03", fmt="iso").date().isoformat() == "2026-09-03"
+
+    def test_ascii_numeric_is_not_guessed_as_bikram_sambat(self):
+        """"2081-09-08" in ASCII is genuinely ambiguous, so we do not guess: it
+        stays Gregorian. Only the Devanagari form is treated as Nepali."""
+        assert parse_datetime("2081-09-08", fmt="auto").year == 2081
+
+    def test_month_name_forms_still_work(self):
+        """Regression: the numeric branch runs last and must not shadow these."""
+        assert parse_datetime("भदौ ३, २०८३", fmt="bs").date().isoformat() == "2026-08-19"
+        assert parse_datetime("श्रावण२९, २०८३", fmt="bs").date().isoformat() == "2026-08-14"

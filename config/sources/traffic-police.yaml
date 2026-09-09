@@ -1,0 +1,27 @@
+id: traffic-police
+name: Nepal Police Traffic Directorate
+url: https://traffic.nepalpolice.gov.np/news/latest-news/
+homepage: https://traffic.nepalpolice.gov.np
+method: html
+lang: ne
+category: govt
+priority: 3
+active: true
+
+selectors: traffic-police
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - The richest of the government portals: the listing carries the FULL story
+    text in `p.f1`, so items are useful even before the article fetch. 33 items
+    in the saved fixture.
+  - 22 of the 33 cards carry `d-none` (hidden until the reader clicks "more"),
+    but they are fully present in the server HTML, so the scraper sees all of
+    them. Do not "fix" this by filtering on visibility.
+  - Dates are ALL-NUMERIC Bikram Sambat in Devanagari ("२०८३-०४-२८"); see the
+    moha notes for why that needed a shared parser change and why it is gated
+    on Devanagari numerals.
+  - Article bodies are real prose (~4200 chars in the fixture).
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

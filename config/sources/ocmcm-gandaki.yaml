@@ -1,0 +1,28 @@
+id: ocmcm-gandaki
+name: Gandaki Province OCMCM
+url: https://ocmcm.gandaki.gov.np/list/news
+homepage: https://ocmcm.gandaki.gov.np
+method: html
+lang: ne
+category: govt
+priority: 3
+active: true
+
+selectors: ocmcm-gandaki
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - Gandaki does NOT run the same CMS as the other six provincial OCMCM
+    portals. Different template, different selectors -- do not copy the
+    ocmcm-koshi pack here.
+  - THE DATE IS IN AN ATTRIBUTE ON AN EMPTY ELEMENT:
+    <span class="nepaliDate" englishdate="2026-09-03"></span>. The visible
+    Nepali date is written by JavaScript, which we never run, so selecting the
+    span's TEXT yields nothing. `span.nepaliDate@englishdate` reads the ISO
+    value directly -- and it is the only outlet in this project whose date is
+    cleaner than the one shown to human readers.
+  - LIMITATION: article pages carry no prose (292 chars, all footer). The
+    notice text is in attachments. The listing is the payload.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

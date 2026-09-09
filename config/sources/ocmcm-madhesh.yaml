@@ -1,0 +1,49 @@
+id: ocmcm-madhesh
+name: Madhesh Province OCMCM
+url: https://ocmcm.madhesh.gov.np/category/notifications/
+homepage: https://ocmcm.madhesh.gov.np
+method: html
+lang: ne
+category: govt
+priority: 3
+active: true
+
+selectors: ocmcm-madhesh
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - Provincial cabinet office notifications.
+  - This host runs the standard Government-of-Nepal CMS, shared by opmcm,
+    mofa, ird and four provincial OCMCM portals: `/category/<slug>/` listings
+    and `/content/<id>/<slug>/` articles. The selector pack is identical across
+    all seven; only the category URL differs.
+  - TWO SHARED-BANNER TRAPS on this CMS, both of which look like the content:
+      * `div.slider__item` / `div.swiper-slide` is a SITE-WIDE widget, not the
+        category's list -- 6 to 204 content links against grid__card's 4 to 9.
+        Selecting it makes the configured category URL meaningless. Its first
+        slide is the same national relief-fund announcement on six of seven
+        hosts, but each portal republishes it under its own /content/ id, so
+        url_hash dedupe does NOT collapse those; they land as near-duplicates.
+      * `div.detail__block` on an article page is that same banner, NOT the
+        article body. It matches exactly once per page, which makes it look
+        like a body container.
+    `div.grid__card` is the real listing card. Measured cross-host overlap of
+    /content/ paths is ZERO for both widgets -- the duplication here is of
+    TEXT, not URLs.
+  - THE DATE IS ON THE LISTING. `div.post__date p` inside a card is reliable;
+    the same selector on an article page hits a related-item's date on some
+    hosts and nothing at all on others, so `article` has no `published` key.
+  - `published_format: auto` is required, not laziness: this family mixes
+    Devanagari Bikram Sambat ("१९ भदौ, २०८३") with English Gregorian
+    ("September 08, 2026, 02:00 PM") depending on the host.
+  - The card's href is wrapped in newlines and indentation in the HTML;
+    select_one's clean() strips it, so the stored URL is well-formed.
+  - LIMITATION: there is NO article body on this host. div.detail__page-desc
+    cleans down to the literal "A\n\nA" -- four characters, two placeholder
+    glyphs. The notice text sits in attachments we do not fetch. The listing
+    title and date are the entire payload; an empty body is the site, not a
+    broken selector. (The raw element measures 209-408 chars, but that is
+    layout whitespace, which clean() strips.)
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

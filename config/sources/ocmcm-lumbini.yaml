@@ -1,0 +1,37 @@
+id: ocmcm-lumbini
+name: Lumbini Province OCMCM
+url: https://ocmcm.lumbini.gov.np/notices
+homepage: https://ocmcm.lumbini.gov.np
+method: html
+lang: ne
+category: govt
+priority: 3
+active: true
+
+selectors: ocmcm-lumbini
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - The listing is the notices TABLE on /notices (`tbody.table-hover-css tr`).
+    Two decoys on this site look like the listing and are not:
+      * `/notice` (singular) returns HTTP 404 -- easy to reach for first.
+      * `div.content__card` on the HOMEPAGE shows notice cards, so it looks
+        right, but that class spans SIX sections -- notice, press-releases,
+        bids, policies, publications, downloads -- so it hands you the whole
+        document library. Measured: 45 cards, of which only 4 were notices.
+      * `div.slider__item`, the Government-of-Nepal CMS site-wide widget, is
+        present here too and carries 38 links on every page.
+  - `link` must be `th a@href`, not a looser anchor: the third cell holds a
+    link to the attached PDF, so a general selector eventually stores a .pdf
+    URL as the article.
+  - This host shares the GoN CMS chrome with opmcm/mofa/ird but is NOT the same
+    template: its articles live at /notice/<id>, not /content/<id>/<slug>/, and
+    it has no div.grid__card. Do not copy the ocmcm-koshi pack here.
+  - The host was slow enough to time out the TLS handshake on one sweep; it
+    succeeds on retry, and the fetcher already backs off and retries.
+  - LIMITATION: article pages carry no prose. The notice text is in the
+    attached PDF, which we do not fetch, so the listing title and date are the
+    entire payload.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.
