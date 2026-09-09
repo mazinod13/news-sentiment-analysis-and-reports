@@ -1,0 +1,16 @@
+id: kathmandupost
+name: The Kathmandu Post
+url: https://kathmandupost.com/rss
+homepage: https://kathmandupost.com
+method: rss
+lang: en
+category: news
+priority: 1
+active: true
+
+selectors: kathmandupost
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

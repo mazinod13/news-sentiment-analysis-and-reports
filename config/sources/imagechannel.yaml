@@ -1,0 +1,16 @@
+id: imagechannel
+name: Image Channel
+url: https://www.imagekhabar.com/feed
+homepage: https://www.imagekhabar.com/feed
+method: rss
+lang: ne
+category: news
+priority: 2
+active: true
+
+selectors: imagechannel
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

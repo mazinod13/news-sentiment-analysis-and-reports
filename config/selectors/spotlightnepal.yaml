@@ -1,0 +1,20 @@
+# Selector pack for Spotlight Nepal article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/spotlightnepal_story.html before committing.
+
+article:
+  title: "body > div.cf.mw8.mt2.mt4-ns.mb2.ph2.center.black-90 > h1"
+  body: "div.rich-text"                # container holding the article paragraphs
+  author: "a.link.dim.lh-title"
+  published: "span:nth-child(3)"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...
