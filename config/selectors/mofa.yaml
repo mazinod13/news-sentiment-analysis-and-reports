@@ -1,0 +1,54 @@
+# Selector pack for Ministry of Foreign Affairs (https://mofa.gov.np).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "div.post__date p"                   -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verified against tests/fixtures/mofa_{listing,story}.html.
+#
+# method: html -- this CMS publishes no feed. The category page is the item
+# source. Identical pack across all seven Government-of-Nepal CMS hosts.
+
+listing:
+  # The REAL card for the configured category. Do not reach for
+  # div.slider__item / div.swiper-slide: that is a SITE-WIDE widget, not this
+  # category's list. Measured on the saved fixtures it holds 6-204 content
+  # links against grid__card's 4-9, so selecting it makes the `url` category
+  # meaningless -- every category source on the host would ingest the whole
+  # site, and each other's items.
+  #
+  # Its first slide is also the same national relief-fund announcement on six
+  # of the seven hosts. Each portal republishes it under its OWN /content/ id,
+  # so url_hash dedupe does NOT collapse them; they arrive as seven near-
+  # duplicate rows for the simhash stage to deal with.
+  item: "div.grid__card"
+  # Take the title's anchor, not the card's first anchor -- the thumbnail is
+  # wrapped in its own <a> to the same URL, and pointing at the image link
+  # makes the pack depend on a thumbnail that not every card has.
+  link: "h3.card__title a@href"
+  title: "h3.card__title a"
+  # THE DATE LIVES HERE, not on the article page. On an article page this same
+  # selector returns a related item's date on three hosts and nothing on the
+  # other four.
+  published: "div.post__date p"
+  # Required, not laziness: this family mixes Devanagari Bikram Sambat
+  # ("१९ भदौ, २०८३") with English Gregorian ("September 08, 2026, 02:00 PM")
+  # depending on the host. `auto` parses both; either fixed format loses one.
+  published_format: auto
+
+article:
+  # Real prose lives here -- 7.2k to 10.9k characters after cleaning, measured
+  # across four sampled articles. This host is the ONLY one of the seven whose
+  # article pages carry text; the other six clean down to four characters.
+  body: "div.detail__page-desc"
+  # NOT div.detail__block -- that is the shared national banner, not the body.
+  # It matches exactly once per page, which is precisely what makes it look
+  # like the right answer.
+  # No `author`: institutional notices carry no byline.
+  # No `published`: see the listing block above.
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"
