@@ -55,6 +55,14 @@ _BS_YEAR_FIRST = re.compile(rf"{_YEAR}\s*({_MONTH_ALTERNATION})\s*,?\s*{_DAY}", 
 # trailing clock, with or without seconds
 _TIME_RE = re.compile(r"(\d{1,2}):(\d{2})(?::(\d{2}))?")
 
+# An all-numeric Bikram Sambat date: २०८१-०९-०८, २०८१/०९/०८, २०८१।०९।०८.
+# moha.gov.np writes every listing date this way.
+_BS_NUMERIC = re.compile(r"(?<!\d)(\d{4})[-/.।](\d{1,2})[-/.।](\d{1,2})(?!\d)")
+
+# Devanagari digits. Their presence is what makes an all-numeric date safe to
+# read as Bikram Sambat -- see _numeric_bs below.
+_DEVANAGARI_DIGITS = frozenset("०१२३४५६७८९")
+
 
 class DateParseError(ValueError):
     pass
@@ -73,16 +81,29 @@ def parse_bs_datetime(text: str) -> datetime:
 
     # Order matters only in that each pattern pins the year to four digits, so
     # at most one of them can match a given string.
+    month_name: str | None = None
     if match := _BS_MONTH_FIRST.search(normalised):
         month_name, day, year = match.group(1), int(match.group(2)), int(match.group(3))
     elif match := _BS_DAY_FIRST.search(normalised):
         day, month_name, year = int(match.group(1)), match.group(2), int(match.group(3))
     elif match := _BS_YEAR_FIRST.search(normalised):
         year, month_name, day = int(match.group(1)), match.group(2), int(match.group(3))
+    elif _DEVANAGARI_DIGITS.intersection(text) and (match := _BS_NUMERIC.search(normalised)):
+        # An all-numeric BS date such as २०८१-०९-०८ (moha.gov.np writes every
+        # listing date this way).
+        #
+        # GATED ON DEVANAGARI NUMERALS ON PURPOSE. In ASCII, "2026-09-03" is
+        # indistinguishable from an ISO Gregorian date, and parse_datetime
+        # tries BS *before* ISO under fmt="auto" -- so an ungated pattern would
+        # read every ISO date in the project as Bikram Sambat and silently
+        # place it ~57 years early. Devanagari digits are the signal that the
+        # publisher meant the Nepali calendar.
+        year, month, day = int(match.group(1)), int(match.group(2)), int(match.group(3))
     else:
         raise DateParseError(f"no Bikram Sambat date found in {text!r}")
 
-    month = NEPALI_MONTHS[month_name.lower()]
+    if month_name is not None:
+        month = NEPALI_MONTHS[month_name.lower()]
 
     hour = minute = second = 0
     time_match = _TIME_RE.search(normalised[match.end():])
