@@ -1,0 +1,29 @@
+# Selector pack for the Public Debt Management Office (https://pdmo.gov.np).
+# Verified against tests/fixtures/pdmo_{listing,story}.html.
+#
+# method: html -- PDMO runs the standard Government-of-Nepal CMS, the same one
+# behind opmcm/mofa/ird and four provincial OCMCM portals: /category/<slug>/
+# listings and /content/<id>/<slug>/ articles.
+
+listing:
+  # The real card. NOT div.slider__item -- that is a site-wide widget carrying
+  # 68 links on this page against the category's 4, so selecting it would make
+  # the configured category URL meaningless.
+  item: "div.grid__card"
+  link: "h3.card__title a@href"
+  title: "h3.card__title a"
+  published: "div.post__date p"
+  published_format: auto
+
+article:
+  # Expect nothing. Like the rest of this CMS family, div.detail__page-desc
+  # cleans down to the literal "A\n\nA" -- four characters, two placeholder
+  # glyphs. The debt notice itself is an attachment we do not fetch, so the
+  # listing title and date are the entire payload.
+  body: "div.detail__page-desc"
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
