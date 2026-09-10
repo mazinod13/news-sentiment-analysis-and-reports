@@ -1,0 +1,29 @@
+id: pdmo
+name: Public Debt Management Office
+url: https://pdmo.gov.np/category/cb-notice
+homepage: https://pdmo.gov.np
+method: html
+lang: ne
+category: economic
+priority: 3
+active: true
+
+selectors: pdmo
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - PDMO PUBLISHES AN RSS FEED AT /rss AND IT IS UNUSABLE. It parses cleanly
+    with 20 entries, which makes it look like the obvious choice -- but every
+    <link> points at http://ictsamachar.com//story/<id>, an unrelated domain,
+    and no entry carries a date. Configuring this as method: rss would ingest
+    another site's URLs under PDMO's name. Checked 2026-09-10.
+  - The site runs the standard Government-of-Nepal CMS. The same two traps
+    apply: `div.slider__item` is a site-wide widget (68 links here against the
+    category's 4), and `div.detail__block` on an article page is the shared
+    national relief-fund banner, not the body.
+  - LIMITATION: article bodies clean down to four characters. The debt notice
+    is an attachment. The listing title and date are the payload.
+  - Dates are Devanagari Bikram Sambat ("२४ भदौ, २०८३").
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

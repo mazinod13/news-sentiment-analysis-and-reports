@@ -1,0 +1,28 @@
+id: nrb
+name: Nepal Rastra Bank
+url: https://www.nrb.org.np/feed/
+homepage: https://www.nrb.org.np
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+selectors: nrb
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - The only Financial & market source with a real, usable feed. WordPress,
+    declared at <link rel="alternate">, served identically from /feed, /rss,
+    /feed/ and /rss/.
+  - The feed carries a full content:encoded (2312 chars) plus an 812-char
+    summary, so items are useful before any article fetch.
+  - NO article body selector is configured. The page's prose did not respond to
+    entry-content / post-content / article p, and guessing would replace a good
+    feed summary with navigation chrome. Revisit only with a fixture in hand.
+  - Feed links are percent-encoded Devanagari slugs
+    (https://www.nrb.org.np/2026/08/%e0%a4%b5...), which is ugly but valid and
+    canonical_url leaves them alone.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

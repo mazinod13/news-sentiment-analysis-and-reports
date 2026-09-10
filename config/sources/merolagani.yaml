@@ -1,0 +1,27 @@
+id: merolagani
+name: MeroLagani
+url: https://merolagani.com/NewsList.aspx?id=7&type=latest
+homepage: https://merolagani.com
+method: html
+lang: ne
+category: economic
+priority: 2
+active: true
+
+selectors: merolagani
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - ASP.NET WebForms: article URLs are query strings
+    (/NewsDetail.aspx?newsID=130642), not paths. canonical_url keeps the query,
+    which is what makes them distinguishable -- do NOT add newsID to the
+    tracking-parameter strip list.
+  - Dates are English Gregorian WITH a clock ("Sep 10, 2026 09:21 AM"), so this
+    is one of the few Nepali sources where the stored timestamp is not midnight.
+  - `link` must be the title anchor: every card opens with a thumbnail in its
+    own <a> to the same URL, so a looser selector depends on a thumbnail that
+    not every card carries.
+  - Article bodies are real prose (~1070 chars in the fixture).
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

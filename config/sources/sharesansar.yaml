@@ -1,0 +1,30 @@
+id: sharesansar
+name: ShareSansar
+url: https://www.sharesansar.com/category/latest
+homepage: https://www.sharesansar.com
+method: html
+lang: en
+category: economic
+priority: 2
+active: true
+
+selectors: sharesansar
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - The page sets ng-app but is fully server-rendered (241 KB of body text), so
+    do not write it off as a SPA the way psc.gov.np or fenegosida.org have to
+    be.
+  - `div.news-list` looks like the card list and is NOT: it is the whole
+    section, search form included. `div.featured-news-list` is the card.
+  - Dates are English with a weekday and no clock
+    ("Thursday, September 10, 2026"), so timestamps land at midnight.
+  - Article URLs carry the publication date in the slug
+    (.../apple-unveils-...-2026-09-10), which is a useful cross-check if the
+    listing date ever looks wrong.
+  - Article bodies are real prose (~5000 chars in the fixture), though
+    `section.main-content p` is a broad container -- it picks up 33 paragraphs
+    including some page furniture.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.
