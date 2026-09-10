@@ -1,0 +1,34 @@
+# Selector pack for Ministry of Home Affairs (https://moha.gov.np).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+# Verified against tests/fixtures/moha_{listing,story}.html.
+#
+# method: html -- this portal publishes no feed. Unlike the seven-host
+# Government-of-Nepal CMS family (opmcm, mofa, ird, four OCMCMs), this host
+# runs its OWN template: every selector below was derived for it specifically.
+
+listing:
+  # A Livewire-rendered TABLE, not a card grid. Rows are the items.
+  item: "table.table tbody tr"
+  link: "td a@href"
+  title: "td a h6"
+  # The first cell. NOT the <small> inside the link -- that carries the same
+  # date but with a clock icon glued to it.
+  published: "td.d-none.d-md-table-cell"
+  # An ALL-NUMERIC Bikram Sambat date in Devanagari: "२०८१-०९-०८". Support for
+  # that shape was added to app/parsing/dates.py for this outlet, gated on the
+  # Devanagari numerals -- see the note in the source config.
+  # `auto` resolves this identically (the gate is what makes that safe); `bs`
+  # is set only because this outlet has exactly one date format and saying so
+  # is cheaper than making a reader check.
+  published_format: bs
+
+article:
+  body: "div.page_body"
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"

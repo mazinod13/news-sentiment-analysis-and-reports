@@ -1,0 +1,16 @@
+id: himalpress-province-5
+name: Himalpress-lumbini
+url: https://en.himalpress.com/category/province/province-5/feed
+homepage: https://en.himalpress.com
+method: rss
+lang: ne
+category: news
+priority: 3
+active: true
+
+selectors: himalpress-province-5
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

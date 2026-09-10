@@ -1,0 +1,20 @@
+# Selector pack for BBC Asia article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/bbc_asia_story.html before committing.
+
+article:
+  title: "h1.Headline-styles__HeadlineStyled-sc-6b3bb442-0"
+  body: "div.LayoutBlock-styles__LayoutBlockStyled-sc-f9c112e7-0"                # container  holding the article paragraphs
+  author: "span.Byline-styles__AuthorNameStyled-sc-66f6383-8"
+  published: "time.Byline-styles__TimeContainerStyled-sc-66f6383-2"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...

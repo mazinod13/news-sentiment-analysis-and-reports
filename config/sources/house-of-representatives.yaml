@@ -1,0 +1,45 @@
+id: house-of-representatives
+name: House of Representatives (Federal Parliament)
+url: https://hr.parliament.gov.np/np/news
+homepage: https://hr.parliament.gov.np
+method: html
+lang: ne
+category: govt
+priority: 1
+active: true
+
+selectors: house-of-representatives
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - Official parliamentary press releases, not a news outlet. Institutional
+    prose, no bylines, and a low publishing rate -- the saved listing spans
+    2023-05-04 to 2026-08-11 across 30 cards.
+  - TLS: this host serves an INCOMPLETE CERTIFICATE CHAIN. It sends only the
+    leaf (*.parliament.gov.np) and omits the Sectigo intermediate. Browsers and
+    curl recover by fetching the intermediate from the leaf's AIA extension;
+    Python's ssl does not, so every request died with
+    "[SSL: CERTIFICATE_VERIFY_FAILED] unable to get local issuer certificate".
+    The intermediate now ships in certs/ and the fetcher loads it on top of
+    certifi. Verification is still fully on -- see certs/README.md.
+  - THE PUBLISH DATE IS ON THE LISTING, NOT THE ARTICLE. Story pages carry no
+    date element at all, only a Bikram Sambat dateline inside the body prose
+    that no CSS selector can reach. So `listing.published` is set and the
+    `article` block has no `published` key.
+  - That date must be read from the <em>, not its <li>: the <li> reads
+    "प्रकाशित मिति: 2026-08-11" and parse_datetime rejects it outright.
+  - Dates are plain ISO (2026-08-11), not Bikram Sambat, even though the rest
+    of the site is Nepali. Cross-checked against the BS dateline in the body:
+    "२६ असार २०८३" and the listing's "2026-07-10" are the same day, which also
+    confirms these are Nepal time and not UTC.
+  - Body markup is INCONSISTENT. Most stories use a <p>; some use a bare
+    <div style="text-align: justify;"> with no <p> anywhere, and a `p`-based
+    selector returns an empty body for those (1 of 8 sampled). The pack selects
+    the container instead. Both layouts have a fixture.
+  - `div.row div.col-sm-6` matches 60 nodes for 30 stories because the
+    bootstrap grid classes nest. Use `div.grid-news`, which is the real card.
+  - A tag rail lives inside div.single-item and is excluded, or every body ends
+    with a stray "ट्यागहरु:" paragraph.
+  - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
+    redirect writes UTF-16 and the loader reads UTF-8.

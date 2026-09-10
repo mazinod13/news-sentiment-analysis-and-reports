@@ -28,21 +28,30 @@ Everything between the markers is overwritten — edit the outlet's YAML instead
 
 <!-- BEGIN GENERATED: news-outlets -->
 
-_11 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
+_20 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
 
 | # | Source | Link | Lang | Cat | Prio | Method |
 |---|--------|------|:----:|:---:|:----:|:------:|
 | 1 | Annapurna Post | <https://annapurnapost.com/rss/> | ne | news | 1 | rss |
-| 2 | MeroLagani | <https://merolagani.com/NewsList.aspx?id=7&type=latest> | ne | economic | 2 | html |
-| 3 | Nepal Rastra Bank | <https://www.nrb.org.np/feed/> | ne | economic | 2 | rss |
+| 2 | House of Representatives (Federal Parliament) | <https://hr.parliament.gov.np/np/news> | ne | govt | 1 | html |
+| 3 | National Assembly (Federal Parliament) | <https://na.parliament.gov.np/np/news> | ne | govt | 1 | html |
 | 4 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
-| 5 | ShareSansar | <https://www.sharesansar.com/category/latest> | en | economic | 2 | html |
-| 6 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
-| 7 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
-| 8 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
-| 9 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
-| 10 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
-| 11 | Public Debt Management Office | <https://pdmo.gov.np/category/cb-notice> | ne | economic | 3 | html |
+| 5 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
+| 6 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
+| 7 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
+| 8 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
+| 9 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 10 | Gandaki Province OCMCM | <https://ocmcm.gandaki.gov.np/list/news> | ne | govt | 3 | html |
+| 11 | Inland Revenue Department | <https://ird.gov.np/category/notice/> | ne | govt | 3 | html |
+| 12 | Karnali Province OCMCM | <https://ocmcm.karnali.gov.np/category/cabinet-decisions/> | ne | govt | 3 | html |
+| 13 | Koshi Province OCMCM | <https://ocmcm.koshi.gov.np/category/notice-publication/> | ne | govt | 3 | html |
+| 14 | Lumbini Province OCMCM | <https://ocmcm.lumbini.gov.np/notices> | ne | govt | 3 | html |
+| 15 | Madhesh Province OCMCM | <https://ocmcm.madhesh.gov.np/category/notifications/> | ne | govt | 3 | html |
+| 16 | Ministry of Foreign Affairs | <https://mofa.gov.np/category/presscategory/> | en | govt | 3 | html |
+| 17 | Ministry of Home Affairs | <https://moha.gov.np/page/news> | ne | govt | 3 | html |
+| 18 | Nepal Police Traffic Directorate | <https://traffic.nepalpolice.gov.np/news/latest-news/> | ne | govt | 3 | html |
+| 19 | Office of PM & Council of Ministers | <https://opmcm.gov.np/category/cabinet-decision/> | ne | govt | 3 | html |
+| 20 | Sudurpashchim Province OCMCM | <https://ocmcm.sudurpashchim.gov.np/category/information> | ne | govt | 3 | html |
 
 <!-- END GENERATED: news-outlets -->
 

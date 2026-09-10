@@ -1,0 +1,20 @@
+# Selector pack for The Kathmandu Post article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/kathmandupost_story.html before committing.
+
+article:
+  title: "#mainContent > main > div > div:nth-child(2) > div.col-sm-8 > h1"
+  body: "section:nth-child(1)"                # container holding the article paragraphs
+  author: "h5 > a"
+  published: "#mainContent > main > div > div:nth-child(2) > div.col-sm-8 > div > div > div:nth-child(5)"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...

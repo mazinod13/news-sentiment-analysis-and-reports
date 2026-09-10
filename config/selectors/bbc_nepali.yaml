@@ -1,0 +1,23 @@
+# Selector pack for BBC Nepali article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/bbc_nepali_story.html before committing.
+
+article:
+  body: "h1.article-heading"                # container holding the article paragraphs
+  author:
+    selector: 'span.css-aixoro'
+    attribute: 'text'
+  published:
+    selector: 'time[datetime]'
+    attribute: 'datetime'
+  published_format: auto
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  # - ads, related-story rails, poll widgets, share bars...

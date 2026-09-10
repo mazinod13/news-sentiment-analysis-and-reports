@@ -12,6 +12,9 @@
 #   pip freeze > requirements.lock.txt
 
 httpx>=0.27
+# certifi arrives transitively via httpx, but fetcher.py imports it directly
+# to build the TLS trust bundle -- declare what we import.
+certifi>=2024.7.4
 feedparser>=6.0.11
 selectolax>=0.3.21
 PyYAML>=6.0

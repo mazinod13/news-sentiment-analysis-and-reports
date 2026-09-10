@@ -1,0 +1,34 @@
+# Selector pack for Gandaki Province OCMCM (https://ocmcm.gandaki.gov.np).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+# Verified against tests/fixtures/ocmcm-gandaki_{listing,story}.html.
+#
+# method: html -- this portal publishes no feed. Unlike the seven-host
+# Government-of-Nepal CMS family (opmcm, mofa, ird, four OCMCMs), this host
+# runs its OWN template: every selector below was derived for it specifically.
+
+listing:
+  item: "li.tap-box-list"
+  # Both anchors in the card point at the SAME URL -- the first wraps a
+  # download icon, the second the title -- so this is safe today. If the
+  # download ever becomes a direct file link, switch to the title anchor.
+  link: "a@href"
+  title: "a p"
+  # THE DATE IS IN AN ATTRIBUTE, AND THE ELEMENT IS EMPTY. The page ships
+  # <span class="nepaliDate" englishdate="2026-09-03"></span> and fills the
+  # visible Nepali text in with JavaScript we never run. A text selector here
+  # returns nothing at all; the @englishdate attribute is already ISO.
+  published: "span.nepaliDate@englishdate"
+  published_format: iso
+
+article:
+  # No `body`: article pages carry no prose (292 chars measured, all of it
+  # footer boilerplate). The notice text lives in attachments we do not fetch,
+  # so the listing title and date are the entire payload.
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"

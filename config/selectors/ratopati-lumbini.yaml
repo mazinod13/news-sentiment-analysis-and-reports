@@ -1,0 +1,87 @@
+# Selector pack for ratopati-lumbini article pages.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+#   "p.date span"                        -> text of the first match
+#   "meta[property='og:image']@content"  -> that attribute
+# Verify against tests/fixtures/ratopati-lumbini_story.html before committing.
+
+listing:
+  # SCOPED TO THE PROVINCE RAILS ON PURPOSE. Do not widen this to a bare
+  # "div.columnnews, div.thumbnail-news, div.overlay-news".
+  #
+  # Every Ratopati province subdomain wraps the same national feed in a
+  # provincial skin. Measured live across koshi/bagmati/madhesh:
+  #
+  #   section                              cards   identical on all 3
+  #   top grid (no <section>)                 37           27
+  #   प्रदेश समाचार                            7            0
+  #   प्रदेश हेडलाइन                           6            0
+  #   मुख्य समाचार (section-world-news)        5            5
+  #   मनोरञ्जन (section-special-news)          4            4
+  #
+  # 36 of 45 stories -- 80% -- were byte-identical across all three provinces.
+  # Only the two प्रदेश rails carry province news.
+  #
+  # This is not merely duplicate output. articles.url_hash is globally UNIQUE
+  # (app/storage/models.py) and the upsert is on_conflict_do_nothing, so a
+  # national story is stored ONCE and attributed to whichever province happened
+  # to ingest first. Widening this selector makes province attribution a
+  # function of scheduler order, and costs 72 wasted body fetches per run
+  # against a host we rate-limit to 1 req/sec.
+  #
+  # If you want Ratopati's national output, add ONE source pointed at
+  # www.ratopati.com rather than collecting it three times here.
+  item: "section.pradesh-samachar div.columnnews,
+         section.pradesh-samachar div.thumbnail-news,
+         section.pradesh-headline div.columnnews,
+         section.pradesh-headline div.thumbnail-news"
+  # Match the href, not merely the first <a> in the card. Every card is
+  # currently wrapped in a single anchor, so "a@href" also works -- but the day
+  # a category chip or an author link is added above the title, "a@href" starts
+  # returning that instead, silently and with no error.
+  link: "a[href*='/story/']@href"
+  # Match the CLASS, not the tag: the page uses h3.news-title 68 times and
+  # h2.news-title 5 times, so "h2.news-title" quietly drops most cards.
+  title: ".news-title"
+  # No `summary`: cards carry a title and a thumbnail only. Pointing summary at
+  # the title element just stores the headline twice.
+  # No `published`: cards carry no date. It comes from the article page below.
+
+article:
+  # Select the paragraphs, not the container. "div.the-content" returns the
+  # whole block as one string; "div.the-content p" returns each paragraph, and
+  # extract() joins them with blank lines, so paragraph structure survives into
+  # the stored body and any later sentence splitting.
+  body: "div.the-content p"
+  # Both of these appear TWICE on a story page: once in div.news-container and
+  # again inside div.post__detail-fixed, the sticky header. Scoping to the
+  # container is not cosmetic -- the sticky copy has the time stripped
+  # ("सोमबार, १५ भदौ २०८३" vs "सोमबार, १५ भदौ २०८३, ०५ : १७"), so an unscoped
+  # selector is one DOM-order change away from silently losing the clock.
+  author: "div.news-container div.user a"
+  published: "div.news-container div.post-hour > span"
+  # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
+  published_format: bs
+  image: "meta[property='og:image']@content"
+
+# Deliberately NOT using jsonld: here, unlike the eKantipur packs.
+# Ratopati does ship a schema.org NewsArticle block with datePublished, but it
+# is invalid JSON on some stories -- an unescaped newline inside "description"
+# (story 588579 is one). load_jsonld() skips a malformed block rather than
+# failing, which is correct, but it means jsonld:datePublished silently returns
+# nothing on those stories and the article lands with no date at all. The DOM
+# date is present on every story, so it is the more reliable source here.
+#
+# KNOWN LIMITATION: the DOM string carries a time, but Ratopati writes it as
+# "०५ : १७" with spaces around the colon and _TIME_RE in app/parsing/dates.py
+# requires none, so parse_datetime returns midnight. Dates are correct; times
+# are lost. Fixing it is a one-line change to that shared regex
+# (r"(\d{1,2})\s*:\s*(\d{2})") and needs its own commit -- it touches
+# every outlet.
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from -- in particular not div.post__detail-fixed,
+# which contains a second copy of div.user and div.post-hour.
+exclude:
+  - "script"
+  - "style"
+  - "aside"

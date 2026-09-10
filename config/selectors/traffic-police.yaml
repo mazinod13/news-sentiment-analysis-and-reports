@@ -1,0 +1,31 @@
+# Selector pack for Nepal Police Traffic Directorate (https://traffic.nepalpolice.gov.np).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+# Verified against tests/fixtures/traffic-police_{listing,story}.html.
+#
+# method: html -- this portal publishes no feed. Unlike the seven-host
+# Government-of-Nepal CMS family (opmcm, mofa, ird, four OCMCMs), this host
+# runs its OWN template: every selector below was derived for it specifically.
+
+listing:
+  item: "div.textbox-04"
+  link: "a@href"
+  title: "h6"
+  # This outlet is unusual: the FULL story text is already in the listing, so
+  # every item arrives with a real summary before any article fetch.
+  summary: "p.f1"
+  # Scoped inside the anchor. A bare "span" would work today but the card gains
+  # a span the moment a badge or tag is added ahead of the date.
+  published: "a span"
+  # All-numeric Bikram Sambat in Devanagari: "२०८३-०४-२८".
+  published_format: bs
+
+article:
+  body: "div.textbox-04 p"
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"

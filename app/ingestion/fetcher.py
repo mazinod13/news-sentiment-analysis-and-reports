@@ -9,12 +9,15 @@ bypassed by accident.
 from __future__ import annotations
 
 import logging
+import ssl
 import threading
 import time
 import urllib.robotparser
 from dataclasses import dataclass
+from pathlib import Path
 from urllib.parse import urlparse
 
+import certifi
 import httpx
 
 from app.settings import Settings
@@ -39,12 +42,38 @@ class FetchResult:
     not_modified: bool = False
 
 
+def build_ssl_context(ca_certs_dir: Path | None) -> ssl.SSLContext:
+    """certifi's roots, plus any intermediates we ship in certs/.
+
+    Several Nepali government sites serve only their leaf certificate and omit
+    the intermediate above it. Browsers and curl recover by downloading the
+    missing certificate from the leaf's Authority Information Access extension;
+    Python's ssl module has no AIA fetching, so it fails with "unable to get
+    local issuer certificate" on a site that loads fine in a browser.
+
+    Loading the intermediates ourselves completes the chain. Verification stays
+    fully on -- expiry, hostname and signature are all still checked. Reaching
+    for verify=False instead would turn a server's misconfiguration into our
+    silent acceptance of any certificate at all.
+    """
+    context = ssl.create_default_context(cafile=certifi.where())
+    if not ca_certs_dir or not ca_certs_dir.is_dir():
+        return context
+    for pem in sorted(ca_certs_dir.glob("*.pem")):
+        try:
+            context.load_verify_locations(cafile=str(pem))
+        except ssl.SSLError:
+            log.warning("ignoring unreadable certificate %s", pem.name)
+    return context
+
+
 class Fetcher:
     def __init__(self, settings: Settings, client: httpx.Client | None = None) -> None:
         self.settings = settings
         self._client = client or httpx.Client(
             follow_redirects=True,          # annapurnapost.com/rss 301s to /rss/
             timeout=settings.request_timeout,
+            verify=build_ssl_context(settings.ca_certs_dir),
             headers={
                 "User-Agent": settings.user_agent,
                 "Accept-Language": "ne,en;q=0.8",

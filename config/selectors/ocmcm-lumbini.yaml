@@ -1,0 +1,38 @@
+# Selector pack for Lumbini Province OCMCM (https://ocmcm.lumbini.gov.np).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+# Verified against tests/fixtures/ocmcm-lumbini_{listing,story}.html.
+#
+# method: html -- this portal publishes no feed. Unlike the seven-host
+# Government-of-Nepal CMS family (opmcm, mofa, ird, four OCMCMs), this host
+# runs its OWN template: every selector below was derived for it specifically.
+
+listing:
+  # The notices TABLE on /notices. Two other things on this site look like the
+  # listing and are not:
+  #   * div.slider__item -- the shared GoN CMS site-wide widget, present here
+  #     too, carrying 38 links regardless of which page you are on;
+  #   * div.content__card on the HOMEPAGE -- tempting, because /notice 404s and
+  #     the homepage does show notice cards. But that class spans SIX sections
+  #     (notice, press-releases, bids, policies, publications, downloads), so
+  #     it hands you the whole document library and calls it notices.
+  item: "tbody.table-hover-css tr"
+  # The <th>, not the row's first anchor in general: the third <td> holds a
+  # link to the attached PDF, and a looser selector would eventually pick it
+  # up and store a .pdf URL as the article.
+  link: "th a@href"
+  title: "th a"
+  # First cell: "भदौ ११, २०८३".
+  published: "td"
+  published_format: bs
+
+article:
+  # No `body`: article pages carry no prose. The notice text is in the attached
+  # PDF, which we do not fetch. The listing title and date are the payload.
+  image: "meta[property='og:image']@content"
+
+# NOTE: `exclude` is applied BEFORE any field is read, so never exclude an
+# element you also select from.
+exclude:
+  - "script"
+  - "style"
+  - "aside"

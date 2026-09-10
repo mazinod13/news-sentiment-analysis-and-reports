@@ -1,0 +1,16 @@
+id: onlinekhabar_nepali
+name: OnlineKhabar (Nepali)
+url: https://www.onlinekhabar.com/feed
+homepage: https://www.onlinekhabar.com/feed
+method: rss
+lang: ne
+category: news
+priority: 1
+active: true
+
+selectors: onlinekhabar_nepali
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO

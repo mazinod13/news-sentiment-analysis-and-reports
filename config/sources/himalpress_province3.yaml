@@ -1,0 +1,16 @@
+id: himalpress_province3
+name: Himal Press (Bagmati Province)
+url: https://en.himalpress.com/category/province/province-3/feed/
+homepage: https://en.himalpress.com/category/province/province-3/feed
+method: rss
+lang: en
+category: news
+priority: 3
+active: true
+
+selectors: himalpress_province3
+
+# Record every quirk you hit while wiring this up. The next person will hit
+# them too, and these notes are why the selector pack looks the way it does.
+notes: |
+  - TODO
