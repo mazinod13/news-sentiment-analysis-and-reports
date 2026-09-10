@@ -1,0 +1,27 @@
+# Selector pack for MeroLagani (https://merolagani.com).
+# Verified against tests/fixtures/merolagani_{listing,story}.html.
+#
+# method: html -- an ASP.NET WebForms site (note the .aspx URLs and the
+# ctl00_ContentPlaceHolder1 element ids). It publishes no feed.
+
+listing:
+  item: "div.media-news"
+  # The TITLE anchor. Each card opens with a thumbnail wrapped in its own <a>
+  # to the same URL, so "a@href" works today -- but it makes the pack depend on
+  # a thumbnail that not every card has.
+  link: "h4.media-title a@href"
+  title: "h4.media-title a"
+  # "Sep 10, 2026 09:21 AM" -- English Gregorian with a real clock, which is
+  # unusual for a Nepali site and much better than a date-only Bikram Sambat
+  # string. Keep the time.
+  published: "span.media-label"
+  published_format: auto
+
+article:
+  body: "div.col-md-9 p"
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
