@@ -1,0 +1,25 @@
+# Selector pack for ShareSansar (https://www.sharesansar.com).
+# Verified against tests/fixtures/sharesansar_{listing,story}.html.
+#
+# method: html -- no feed. The page carries an ng-app attribute but is fully
+# server-rendered (241 KB of text), so CSS selectors work.
+
+listing:
+  # `div.news-list` is the whole SECTION -- it contains the company/date search
+  # FORM as well as the results, so selecting it yields one giant item.
+  # `div.featured-news-list` is the actual card.
+  item: "div.featured-news-list"
+  link: "a@href"
+  title: "h4.featured-news-title"
+  # "Thursday, September 10, 2026" -- English, weekday included, no clock.
+  published: "span.text-org"
+  published_format: auto
+
+article:
+  body: "section.main-content p"
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
