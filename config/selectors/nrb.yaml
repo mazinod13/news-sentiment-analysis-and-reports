@@ -1,0 +1,22 @@
+# Selector pack for Nepal Rastra Bank (https://www.nrb.org.np).
+#
+# method: rss -- the central bank runs WordPress and publishes a real feed at
+# /feed/. That is the ONLY financial source in this group with a usable feed,
+# so no listing block is needed.
+#
+# The feed carries a full <content:encoded> (2312 chars in the fixture) and an
+# 812-char summary, so items are already useful before any article fetch --
+# RSSScraper stores the summary and only overwrites `body` if the article page
+# yields something.
+
+article:
+  # The article page is a WordPress theme whose prose did not respond to any of
+  # the usual containers (entry-content, post-content, article p). Left unset
+  # deliberately: the FEED is the payload here, and a wrong guess would replace
+  # a good 812-char summary with navigation chrome.
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
