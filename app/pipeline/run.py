@@ -1,6 +1,6 @@
 """Orchestrates one source, end to end.
 
-This is the flow GUIDE.md walks through:
+The flow, in order:
 
     1  fetch listing (conditional GET -> 304 short-circuits everything)
     2  dedupe within the batch

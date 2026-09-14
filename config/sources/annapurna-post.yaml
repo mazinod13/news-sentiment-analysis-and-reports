@@ -1,5 +1,4 @@
 # One outlet per file. The filename must equal the `id` below.
-# Adding an outlet touches no file anyone else is editing -- see GUIDE.md.
 id: annapurna-post
 name: Annapurna Post
 url: https://annapurnapost.com/rss/     # note the trailing slash: /rss 301s here

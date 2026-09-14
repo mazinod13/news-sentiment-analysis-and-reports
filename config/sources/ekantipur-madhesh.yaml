@@ -21,7 +21,7 @@ notes: |
   - LIMITATION: article bodies are rendered client-side. The server HTML for a
     story contains only the headline, a one-sentence lede and the byline
     (~140 chars in the fixture), so `body` here is the LEDE ONLY, not the full
-    article. Full text would need a headless browser; see GUIDE.md.
+    article. Full text would need a headless browser.
   - Listing summary must use a CHILD combinator: `div.category-description > p`.
     A descendant selector matches the author's <p> first and stores the
     journalist's name as the summary -- silently, with no error and no empty

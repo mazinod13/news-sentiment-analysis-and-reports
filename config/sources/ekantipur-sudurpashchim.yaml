@@ -19,7 +19,7 @@ notes: |
   - LIMITATION: article bodies are rendered client-side. The server HTML for a
     story contains only the headline, a one-sentence lede and the byline
     (~200 chars total), so `body` here is the LEDE ONLY, not the full article.
-    Full text would need a headless browser; see GUIDE.md.
+    Full text would need a headless browser.
   - The listing page is the only place with a usable summary, so it is worth
     keeping even though the article page is also fetched.
   - The publish date is a Bikram Sambat string in the DOM ("भाद्र ३, २०८३"),
