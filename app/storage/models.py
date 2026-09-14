@@ -1,7 +1,7 @@
 """Database schema.
 
-Phase 1 stores what the scrapers produce. The NLP columns (sentiment,
-entities, topics, embedding) are added in a later phase -- see GUIDE.md.
+Stores what the scrapers produce. NLP columns (sentiment, entities, topics,
+embedding) are not part of the schema yet.
 """
 
 from __future__ import annotations

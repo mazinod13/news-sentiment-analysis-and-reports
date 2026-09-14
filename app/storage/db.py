@@ -42,7 +42,7 @@ def session_scope(settings: Settings) -> Iterator[Session]:
 def create_all(settings: Settings) -> None:
     """Create any missing tables.
 
-    Fine while the schema is still moving and there is no production data.
-    Alembic migrations land with the NLP columns -- see GUIDE.md.
+    Additive only: new tables are created, existing ones are never altered.
+    A column change to an existing table needs a migration.
     """
     Base.metadata.create_all(get_engine(settings))
