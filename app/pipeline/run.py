@@ -8,7 +8,7 @@ The flow, in order:
     4  fetch article bodies -- only for what survived step 3
     5  normalise into Articles
     6  near-duplicate check against recent simhashes
-    7  upsert
+    7  upsert, then keywords + criticality grade for each new article
     8  record state + fetch log
 
 Steps 1-6 need no database, which is what `probe` runs.
@@ -23,6 +23,8 @@ from datetime import datetime, timedelta
 from app.ingestion.base import ScrapeError
 from app.ingestion.fetcher import Fetcher
 from app.ingestion.registry import build_scraper
+from app.nlp.analysis import Analysis, analyse
+from app.nlp.criticality import Lexicon, LexiconError, load_lexicon
 from app.pipeline.dedupe import dedupe_batch, is_near_duplicate
 from app.pipeline.normalize import Article, normalize, url_hash
 from app.settings import NPT, Settings
@@ -117,7 +119,8 @@ def run_source(
             report.new = len(articles)
             return report
 
-        # 6-8. near-duplicate check, store, record
+        # 6-8. near-duplicate check, store + analyse, record
+        lexicon = _load_lexicon(settings, extra)
         with session_scope(settings) as session:
             recent = repo.recent_simhashes(session, since=started - timedelta(days=2))
             for article in articles:
@@ -125,11 +128,15 @@ def run_source(
                     report.duplicate += 1
                     log.debug("near-duplicate skipped: %s", article.url, extra=extra)
                     continue
-                if repo.upsert_article(session, article):
-                    report.new += 1
-                    recent.append(article.simhash)
-                else:
+                article_id = repo.upsert_article(session, article)
+                if article_id is None:
                     report.duplicate += 1
+                    continue
+                report.new += 1
+                recent.append(article.simhash)
+                analysis = _analyse(article, lexicon, extra)
+                if analysis is not None:
+                    repo.save_analysis(session, article_id, analysis, analysed_at=started)
 
             repo.save_state(
                 session,
@@ -165,6 +172,26 @@ def run_source(
 
     log.info("%s", report, extra=extra)
     return report
+
+
+def _load_lexicon(settings: Settings, extra: dict) -> Lexicon | None:
+    """A broken lexicon must not stop ingestion: articles are still stored,
+    and `analyse --missing` grades them once the file is fixed."""
+    try:
+        return load_lexicon(settings.criticality_file)
+    except LexiconError as exc:
+        log.error("storing without analysis, lexicon unusable: %s", exc, extra=extra)
+        return None
+
+
+def _analyse(article: Article, lexicon: Lexicon | None, extra: dict) -> Analysis | None:
+    if lexicon is None:
+        return None
+    try:
+        return analyse(article.title, article.body or article.summary, lexicon)
+    except Exception:  # never lose an article over its analysis
+        log.exception("analysis failed for %s", article.url, extra=extra)
+        return None
 
 
 def _persist_state(settings, source, state_after, started, error) -> None:

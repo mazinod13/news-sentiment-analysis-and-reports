@@ -1,7 +1,8 @@
 """Database schema.
 
-Stores what the scrapers produce. NLP columns (sentiment, entities, topics,
-embedding) are not part of the schema yet.
+Stores what the scrapers produce, plus keywords and a criticality grade per
+article in `article_analysis`. Sentiment, entities and embeddings are not part
+of the schema yet.
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ from sqlalchemy import (
     BigInteger,
     Boolean,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
@@ -19,6 +21,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -66,6 +69,30 @@ class Article(Base):
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     image_url: Mapped[str | None] = mapped_column(Text)
     simhash: Mapped[int] = mapped_column(BigInteger, default=0)
+
+
+class ArticleAnalysis(Base):
+    """Keywords and criticality grade for one article.
+
+    A separate table rather than columns on `articles`, so `db upgrade` -- which
+    only creates missing tables -- adds it to an existing database as is.
+    """
+
+    __tablename__ = "article_analysis"
+
+    article_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("articles.id", ondelete="CASCADE"), primary_key=True
+    )
+    # A (most critical) .. F (routine); see config/criticality.yaml.
+    grade: Mapped[str] = mapped_column(String(1), index=True)
+    score: Mapped[float] = mapped_column(Float)
+    # True when the score was scaled down as a prevention/awareness story.
+    dampened: Mapped[bool] = mapped_column(Boolean, default=False)
+    # [{text, score, count}], best first
+    keywords: Mapped[list] = mapped_column(JSONB, default=list)
+    # [{term, tier, count, points}], most points first
+    matches: Mapped[list] = mapped_column(JSONB, default=list)
+    analysed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class FetchLog(Base):

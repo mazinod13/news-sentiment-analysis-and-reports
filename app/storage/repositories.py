@@ -8,9 +8,10 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from app.nlp.analysis import Analysis
 from app.pipeline.dedupe import from_signed64, to_signed64
 from app.pipeline.normalize import Article as ArticleDTO
-from app.storage.models import Article, FetchLog, SourceState
+from app.storage.models import Article, ArticleAnalysis, FetchLog, SourceState
 
 
 def existing_url_hashes(session: Session, hashes: list[str]) -> set[str]:
@@ -36,11 +37,11 @@ def recent_simhashes(session: Session, *, since: datetime, limit: int = 5000) ->
     return [from_signed64(value) for value in rows]
 
 
-def upsert_article(session: Session, article: ArticleDTO) -> bool:
+def upsert_article(session: Session, article: ArticleDTO) -> int | None:
     """Insert an article, ignoring it if url_hash is already present.
 
-    Returns True when a row was actually inserted. Making this idempotent is
-    what lets a cycle be re-run safely.
+    Returns the new row's id, or None when nothing was inserted. Making this
+    idempotent is what lets a cycle be re-run safely.
     """
     statement = (
         insert(Article)
@@ -63,7 +64,39 @@ def upsert_article(session: Session, article: ArticleDTO) -> bool:
         .on_conflict_do_nothing(index_elements=["url_hash"])
         .returning(Article.id)
     )
-    return session.execute(statement).scalar_one_or_none() is not None
+    return session.execute(statement).scalar_one_or_none()
+
+
+def save_analysis(
+    session: Session, article_id: int, analysis: Analysis, *, analysed_at: datetime
+) -> None:
+    """Insert or replace one article's keywords and grade."""
+    values = {**analysis.as_row(), "analysed_at": analysed_at}
+    statement = (
+        insert(ArticleAnalysis)
+        .values(article_id=article_id, **values)
+        .on_conflict_do_update(index_elements=["article_id"], set_=values)
+    )
+    session.execute(statement)
+
+
+def articles_to_analyse(
+    session: Session, *, after_id: int, limit: int, only_missing: bool
+) -> list[tuple[int, str, str]]:
+    """(id, title, text) of stored articles in id order, for batch analysis.
+
+    Paging by id rather than offset keeps each batch cheap and stable while
+    rows are being written.
+    """
+    query = select(Article.id, Article.title, Article.body, Article.summary).where(
+        Article.id > after_id
+    )
+    if only_missing:
+        query = query.outerjoin(ArticleAnalysis, ArticleAnalysis.article_id == Article.id).where(
+            ArticleAnalysis.article_id.is_(None)
+        )
+    rows = session.execute(query.order_by(Article.id).limit(limit)).all()
+    return [(row.id, row.title, row.body or row.summary) for row in rows]
 
 
 def get_state(session: Session, source_id: str) -> SourceState:

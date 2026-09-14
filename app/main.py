@@ -7,6 +7,8 @@
     python -m app.main worker
     python -m app.main db upgrade
     python -m app.main bipad --since 2026-08-01 --out incidents.csv
+    python -m app.main analyse --file story.txt   keywords + A-F grade, no database
+    python -m app.main analyse --missing          grade stored articles not graded yet
 """
 
 from __future__ import annotations
@@ -17,6 +19,8 @@ import sys
 from app.settings import load_settings
 from app.sources import SourceConfigError, load_sources
 from app.utils.logging import setup_logging
+
+ANALYSE_BATCH = 200
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -52,6 +56,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="also emit records the portal has not verified and approved",
     )
 
+    analyse = sub.add_parser("analyse", help="extract keywords and grade criticality A-F")
+    target = analyse.add_mutually_exclusive_group(required=True)
+    target.add_argument("--text", help="analyse this text; the first line is the title")
+    target.add_argument("--file", help="analyse a UTF-8 text file; the first line is the title")
+    target.add_argument("--missing", action="store_true", help="stored articles not graded yet")
+    target.add_argument(
+        "--all", action="store_true", help="re-grade all stored articles after a lexicon edit"
+    )
+    analyse.add_argument("--top", type=int, default=10, help="keywords to keep (default 10)")
+    analyse.add_argument("--limit", type=int, help="stop after this many stored articles")
+
     return parser
 
 
@@ -76,9 +91,29 @@ def cmd_sources(settings) -> int:
     return 0
 
 
+def _print_analysis(analysis) -> None:
+    criticality = analysis.criticality
+    note = "  (scaled down: prevention/awareness story)" if criticality.dampened else ""
+    print(f"  grade      {criticality.grade}  score {criticality.score}{note}")
+    if criticality.matches:
+        print("  matched    " + ", ".join(
+            f"{m.term} x{m.count} ({m.tier})" for m in criticality.matches
+        ))
+    if analysis.keywords:
+        print("  keywords   " + ", ".join(keyword.text for keyword in analysis.keywords))
+
+
 def cmd_probe(settings, args) -> int:
     from app.ingestion.fetcher import Fetcher
+    from app.nlp.analysis import analyse
+    from app.nlp.criticality import LexiconError, load_lexicon
     from app.pipeline.run import run_source
+
+    try:
+        lexicon = load_lexicon(settings.criticality_file)
+    except LexiconError as exc:
+        print(f"warning: skipping keywords and grades -- {exc}", file=sys.stderr)
+        lexicon = None
 
     sources = load_sources(settings.sources_dir)
     source = sources.get(args.source)
@@ -102,6 +137,8 @@ def cmd_probe(settings, args) -> int:
         print(f"  author     {article.author or '-'}")
         print(f"  lang       {article.lang}")
         print(f"  body       {len(article.body)} chars")
+        if lexicon is not None:
+            _print_analysis(analyse(article.title, article.body or article.summary, lexicon))
         preview = article.body or article.summary
         if args.full:
             print(f"\n{preview}\n")
@@ -220,6 +257,55 @@ def cmd_bipad(settings, args) -> int:
     return 0
 
 
+def cmd_analyse(settings, args) -> int:
+    from app.nlp.analysis import analyse
+    from app.nlp.criticality import GRADES, LexiconError, load_lexicon
+
+    try:
+        lexicon = load_lexicon(settings.criticality_file)
+    except LexiconError as exc:
+        print(f"INVALID: {exc}", file=sys.stderr)
+        return 1
+
+    if args.text is not None or args.file is not None:
+        from pathlib import Path
+
+        raw = args.text if args.text is not None else Path(args.file).read_text(encoding="utf-8")
+        title, _, body = raw.strip().partition("\n")
+        print(f"  title      {title}")
+        _print_analysis(analyse(title, body, lexicon, top_n=args.top))
+        return 0
+
+    from collections import Counter
+    from datetime import datetime
+
+    from app.settings import NPT
+    from app.storage import repositories as repo
+    from app.storage.db import session_scope
+
+    analysed_at = datetime.now(NPT)
+    grades: Counter[str] = Counter()
+    done = after_id = 0
+    while args.limit is None or done < args.limit:
+        batch = ANALYSE_BATCH if args.limit is None else min(ANALYSE_BATCH, args.limit - done)
+        with session_scope(settings) as session:
+            rows = repo.articles_to_analyse(
+                session, after_id=after_id, limit=batch, only_missing=args.missing
+            )
+            for article_id, title, text in rows:
+                analysis = analyse(title, text, lexicon, top_n=args.top)
+                repo.save_analysis(session, article_id, analysis, analysed_at=analysed_at)
+                grades[analysis.grade] += 1
+        if not rows:
+            break
+        done += len(rows)
+        after_id = rows[-1][0]
+
+    summary = ", ".join(f"{grade} {grades[grade]}" for grade in GRADES if grades[grade])
+    print(f"analysed {done} article(s)" + (f": {summary}" if summary else ""))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     settings = load_settings()
@@ -233,6 +319,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_ingest(settings, args)
     if args.command == "bipad":
         return cmd_bipad(settings, args)
+    if args.command == "analyse":
+        return cmd_analyse(settings, args)
     if args.command == "worker":
         from app.scheduler.worker import run_forever
 
