@@ -2,10 +2,11 @@
 
 Scrapes Nepali and English news outlets and government portals on a schedule,
 normalises every item into one article schema, deduplicates syndicated copy,
-and stores the corpus in Postgres for sentiment analysis and reporting.
+stores the corpus in Postgres, and gives every article keywords and an A–F
+criticality grade.
 
 ```
-fetch → parse → fetch body → normalise → dedupe → store
+fetch → parse → fetch body → normalise → dedupe → store → keywords + grade
 ```
 
 **59 sources are configured** — RSS feeds and HTML listing pages, national,
@@ -21,6 +22,7 @@ generated inventory and the wider catalogue.
 - [CLI](#cli)
 - [Project layout](#project-layout)
 - [How one ingest works](#how-one-ingest-works)
+- [Keywords and criticality grades](#keywords-and-criticality-grades)
 - [Configuring sources](#configuring-sources)
 - [Adding a source](#adding-a-source)
 - [Configuration (environment)](#configuration-environment)
@@ -62,6 +64,7 @@ docker compose run --rm app python -m app.main sources
 docker compose run --rm app python -m app.main probe annapurna-post
 docker compose run --rm app python -m app.main ingest --priority 1
 docker compose run --rm app python -m app.main bipad --since 2026-08-01 --out data/incidents.csv
+docker compose run --rm app python -m app.main analyse --missing
 ```
 
 Files written under `data/` land in `./data` on the host.
@@ -96,8 +99,9 @@ python -m app.main probe annapurna-post
 pytest
 ```
 
-`sources`, `probe`, `bipad` and `pytest` need no database. `ingest`, `worker`
-and `db upgrade` need Postgres — start just that with
+`sources`, `probe`, `bipad`, `analyse --text`/`--file` and `pytest` need no
+database. `ingest`, `worker`, `db upgrade` and `analyse --missing`/`--all` need
+Postgres — start just that with
 `docker compose up -d postgres` and set `DATABASE_URL` (see `.env.example`).
 
 ---
@@ -115,6 +119,9 @@ and `db upgrade` need Postgres — start just that with
 | `python -m app.main worker` | yes | continuous scheduler |
 | `python -m app.main db upgrade` | yes | create missing tables |
 | `python -m app.main bipad --since YYYY-MM-DD [--until] [--province] [--out file.csv\|.jsonl]` | no | pull BIPAD Portal disaster incidents |
+| `python -m app.main analyse --file story.txt` (or `--text "..."`) | no | keywords and A–F grade for any text; the first line is the title |
+| `python -m app.main analyse --missing [--limit N]` | yes | grade stored articles that have no grade yet |
+| `python -m app.main analyse --all` | yes | re-grade every stored article, e.g. after editing the lexicon |
 | `python scripts/new_source.py --id ...` | no | scaffold config, selector pack, test and fixture for a new source |
 | `python scripts/gen_sources.py [--check]` | no | regenerate (or verify) the tables in DATA_SOURCES.md |
 
@@ -140,6 +147,13 @@ NEWS-SENTIMENT/
 │   │   ├── article.py       article extraction from a selector pack
 │   │   ├── dates.py         Bikram Sambat / Devanagari / feed dates
 │   │   └── clean.py         text cleanup
+│   ├── nlp/                 keywords + criticality grade; pure Python, offline
+│   │   ├── nepali.py        rule-based Nepali tagging and case-marker stemming
+│   │   ├── english.py       English stopwords
+│   │   ├── tokens.py        mixed-script tokenizer
+│   │   ├── keywords.py      noun-phrase keywords
+│   │   ├── criticality.py   lexicon-weighted A–F grade
+│   │   └── analysis.py      both, for one article
 │   ├── pipeline/
 │   │   ├── run.py           one source, end to end
 │   │   ├── normalize.py     raw item → Article, URL canonicalisation
@@ -149,7 +163,8 @@ NEWS-SENTIMENT/
 │   └── utils/logging.py
 ├── config/
 │   ├── sources/             one YAML per source, named after its id
-│   └── selectors/           CSS selector packs for article / listing pages
+│   ├── selectors/           CSS selector packs for article / listing pages
+│   └── criticality.yaml     terms, weights and A–F thresholds
 ├── certs/                   public CA intermediates for sites with broken chains
 ├── scripts/                 new_source.py, gen_sources.py
 ├── tests/                   offline tests; fixtures/ holds saved payloads
@@ -182,7 +197,8 @@ The orchestrator is [app/pipeline/run.py](app/pipeline/run.py).
    language from config, simhash.
 6. **Near-duplicate check** against recent simhashes, which catches the same
    agency copy on another outlet.
-7. **Upsert** — `INSERT … ON CONFLICT (url_hash) DO NOTHING`.
+7. **Upsert, then analyse** — `INSERT … ON CONFLICT (url_hash) DO NOTHING`;
+   each newly inserted article gets keywords and a criticality grade.
 8. **Record state** — new ETag, `next_run_at`, and a `fetch_log` row. On
    failure the interval doubles per consecutive failure, capped at 6 h.
 
@@ -201,6 +217,80 @@ source id and recorded in `fetch_log`.
 | `articles` | `source_id`, canonical `url`, unique `url_hash`, `title`, `body`, `summary`, `author`, `lang`, `category`, `published_at`, `published_estimated`, `fetched_at`, `image_url`, `simhash` |
 | `source_state` | per-source ETag / Last-Modified, `last_run_at`, `next_run_at`, consecutive failures, last error |
 | `fetch_log` | one row per run: items seen / new / duplicate, not-modified, ok, error |
+| `article_analysis` | per article: `grade` (A–F), `score`, `dampened`, `keywords` and matched terms (JSONB), `analysed_at` |
+
+---
+
+## Keywords and criticality grades
+
+Every article that `ingest` or the worker stores gets keywords and a
+criticality grade in `article_analysis`. It is plain Python — no model
+download, no API, no network.
+
+### Keywords
+
+The method follows
+[Hindi POS tagging and keyword extraction](https://github.com/pemagrg1/Hindi-POS-Tagging-and-Keyword-Extraction):
+tag each word, then take runs of nouns (`NP:{<NN.*>}`) as keywords. Adapted
+for Nepali:
+
+| Hindi approach | Here |
+|---|---|
+| NLTK TnT tagger trained on the tagged `hindi.pos` corpus | Rule-based tagging, since NLTK has no tagged Nepali corpus: closed lists of function words and verb forms, plus verb endings ([app/nlp/nepali.py](app/nlp/nepali.py)) |
+| Postpositions are separate words (के, ने) | Nepali attaches them (नेपालका, मन्त्रालयमा), so they are stripped to a stem — and a stripped marker ends the phrase |
+| Google Translate for unknown words | Not used; unknown words count as noun-like |
+
+```
+गृह मन्त्रालय र काठमाडौं विश्वविद्यालयको मानसिक स्वास्थ्य विभागबीच ...
+→ गृह मन्त्रालय · काठमाडौं विश्वविद्यालय · मानसिक स्वास्थ्य विभाग
+```
+
+Phrases are capped at four words and ranked by count × length, doubled when
+the phrase is in the title. Language is decided per word, so English articles
+and English names inside Nepali stories work too.
+
+### Grades
+
+| Grade | Score ≥ | Typically |
+|:--:|--:|---|
+| **A** | 15 | deaths, disasters, explosions, curfews |
+| **B** | 9 | injuries, arrests, violent protests, serious accidents |
+| **C** | 5 | disputes, shortages, resignations, several lesser signals |
+| **D** | 2.5 | a single warning, dispute or legal action |
+| **E** | 1 | routine governance: decisions, budgets, elections |
+| **F** | 0 | nothing critical |
+
+The score comes from [config/criticality.yaml](config/criticality.yaml), which
+sorts terms into four tiers (critical 5, high 3, medium 1.5, low 0.5). Each
+matched term scores weight × mentions, capped at 3 mentions, with a title
+mention counting double. A story about prevention, awareness or training
+(न्यूनीकरण, सचेतना, तालिम, MoU …) has its score halved and its grade capped at C,
+so a suicide-prevention agreement does not grade like a suicide.
+
+A term matches a whole word or its stem (`मृत्यु` matches मृत्युको), and a
+trailing `*` makes it a prefix (`बाढी*` matches बाढीपीडित). `बम` never fires on
+बमोजिम, and each word counts once, for its most severe term. Lexicon edits apply
+on the worker's next cycle; re-grade what is already stored with
+`analyse --all`.
+
+```bash
+python -m app.main analyse --file story.txt     # first line is the title
+python -m app.main analyse --missing            # stored articles with no grade yet
+```
+
+```sql
+select a.published_at, a.title, x.grade, x.score, x.keywords
+from articles a join article_analysis x on x.article_id = a.id
+where x.grade in ('A', 'B')
+order by a.published_at desc
+limit 20;
+```
+
+**Limits.** This is weighted keyword matching, not language understanding:
+"no casualties" still matches *casualties*, and a word missing from the lexicon
+scores nothing. eKantipur provincial pages only serve a lede, so their grades
+rest on less text. `probe` prints each item's grade and keywords, which is the
+quickest way to tune the lexicon against a live outlet.
 
 ---
 
@@ -314,6 +404,7 @@ All variables are optional; see [.env.example](.env.example).
 | `INGEST_CONCURRENCY` | `4` | sources polled in parallel |
 | `LOG_LEVEL` | `INFO` | |
 | `SOURCES_DIR` / `SELECTORS_DIR` / `CA_CERTS_DIR` | `config/sources`, `config/selectors`, `certs` | path overrides |
+| `CRITICALITY_FILE` | `config/criticality.yaml` | criticality lexicon |
 
 Compose-only: `COMPOSE_PROJECT_NAME`, `POSTGRES_PORT`, `POSTGRES_USER`,
 `POSTGRES_PASSWORD`, `POSTGRES_DB`. Change the password outside a local machine.
@@ -385,3 +476,5 @@ certificate expires.
 | `429` from a host | polling too hard | raise `rate_limit` in the source config |
 | `sources` fails | malformed YAML | the error names the file |
 | `worker` exits immediately in Docker | `migrate` failed | `docker compose logs migrate` |
+| A story's grade looks wrong | a term missing, too broad, or in the wrong tier | `analyse --text` on it, edit `config/criticality.yaml`, then `analyse --all` |
+| Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file, then `analyse --missing` |
