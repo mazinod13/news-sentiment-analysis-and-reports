@@ -35,6 +35,7 @@ class Settings:
     sources_dir: Path
     selectors_dir: Path
     ca_certs_dir: Path
+    criticality_file: Path
 
 
 def load_settings() -> Settings:
@@ -57,4 +58,8 @@ def load_settings() -> Settings:
         # Extra CA intermediates for sites that serve an incomplete chain.
         # See certs/README.md -- this augments verification, never skips it.
         ca_certs_dir=Path(os.getenv("CA_CERTS_DIR", str(ROOT / "certs"))),
+        # Terms, weights and A-F thresholds for criticality grading.
+        criticality_file=Path(
+            os.getenv("CRITICALITY_FILE", str(ROOT / "config" / "criticality.yaml"))
+        ),
     )

@@ -1,0 +1,94 @@
+# Criticality lexicon: which words make a news story critical, and how much.
+#
+# Grade A is the most critical, F is routine. An article's score is the sum,
+# over every matched term, of
+#
+#   weight x min(body hits + title_multiplier x title hits, per_term_cap)
+#
+# multiplied by dampeners.multiplier -- and the grade capped at
+# dampeners.max_grade -- when the story is about prevention, awareness or
+# training (a dampener in the title, or two in the body).
+#
+# Term syntax
+#   मृत्यु        the word or its stem: मृत्यु, मृत्युको, मृत्युमा
+#   बाढी*        prefix: बाढी, बाढीले, बाढीपीडित
+#   shot dead    consecutive words, each following the same rules
+# Matching is by whole word, never substring, and each word counts for one term
+# only -- the most severe -- so संकटकाल is not also counted as संकट.
+#
+# Edits apply on the worker's next cycle. Re-grade stored articles with:
+#   python -m app.main analyse --all
+
+grades:
+  A: 15     # deaths, disasters, explosions, curfews
+  B: 9      # injuries, arrests, violent protest, serious accidents
+  C: 5      # disputes, shortages, resignations, several lesser signals
+  D: 2.5    # a single warning, dispute or legal action
+  E: 1      # routine governance: decisions, budgets, elections
+  F: 0      # nothing critical
+
+per_term_cap: 3
+title_multiplier: 2
+
+tiers:
+  critical:
+    weight: 5
+    terms:
+      ne: [मृत्यु, मृत्यू, मारिए*, मारिन*, मारियो, मरे, मर्ने*, ज्यान गुमा*, शव, हत्या*,
+           भूकम्प*, भुकम्प*, बाढी*, पहिरो*, डुबान*, हिमपहिरो*, विस्फोट*, बम, गोली*,
+           कर्फ्यु*, कर्फ्यू*, निषेधाज्ञा*, आतङ्क*, आतंक*, अपहरण*, बलात्कार*, महामारी*,
+           बेपत्ता*, दंगा*, दङ्गा*, संकटकाल*, सङ्कटकाल*, हताहत*]
+      en: [death, deaths, dead, died, dies, kill, kills, killed, killing*, murder*, homicide*,
+           earthquake*, quake*, flood*, landslide*, avalanche*, explosion*, blast*, bomb*,
+           gunfire, shooting*, shot dead, curfew*, terror*, abduct*, kidnap*, rape, raped,
+           epidemic*, pandemic*, outbreak*, riot*, plane crash*, helicopter crash*,
+           state of emergency, fatalit*, casualt*, massacre*]
+
+  high:
+    weight: 3
+    terms:
+      ne: [घाइते*, पक्राउ*, दुर्घटना*, आगलागी*, डढे*, आन्दोलन*, प्रदर्शन, प्रदर्शनकारी*,
+           हड्ताल*, नाकाबन्दी*, झडप*, भ्रष्टाचार*, घुस*, घूस*, तस्करी*, ठगी*, लुटपाट*,
+           डकैती*, हिंसा*, खडेरी*, विपद्*, उद्धार*, विस्थापित*, क्षति*, संकट*, सङ्कट*,
+           अवरुद्ध*, आत्महत्या*, महाअभियोग*, लाठीचार्ज*, अश्रुग्यास*, डेंगु*, डेङ्गु*, हैजा*,
+           संक्रमण, संक्रमित*, बन्धक*, आक्रमण*, हमला*]
+      en: [injur*, wounded, arrest*, detain*, accident*, crash, crashed, crashes, fire, fires,
+           blaze*, wildfire*, protest*, demonstrators, strike, strikes, shutdown*, blockade*,
+           clash*, corrupt*, brib*, smuggl*, fraud*, scam*, robber*, loot*, violen*,
+           drought*, disaster*, rescue*, displac*, damage*, destroy*, crisis, crises,
+           suicide*, impeach*, dengue*, cholera*, infect*, hostage*, attack*, missing]
+
+  medium:
+    weight: 1.5
+    terms:
+      ne: [राजीनामा*, अविश्वास*, विश्वासको मत, महँगी*, महङ्गी*, मूल्यवृद्धि*, अभाव*,
+           निलम्बन*, बर्खास्त*, विवाद*, विरोध*, चेतावनी*, सतर्क*, उजुरी*, मुद्दा*, जरिवाना*,
+           कारबाही*, कारवाही*, घाटा*, बेरोजगार*, लोडसेडिङ*, अवरोध*, अनियमितता*,
+           दुरुपयोग*, हिरासत*, बहिष्कार*, धम्की*, विघटन*, प्रतिबन्ध*, प्रतिबंध*]
+      en: [resign*, no-confidence, no confidence, price hike*, inflation, shortage*,
+           suspend*, suspension*, sacked, dismissed, dispute*, warning*, alert*, complaint*,
+           lawsuit*, fined, penalt*, deficit*, unemploy*, load-shedding, load shedding,
+           obstruct*, irregularit*, misuse*, custody, boycott*, threat*, dissolv*,
+           dissolution, sanction*, ban, banned, bans]
+
+  low:
+    weight: 0.5
+    terms:
+      ne: [निर्णय*, मन्त्रिपरिषद्*, बजेट*, नीति, निर्वाचन*, चुनाव*, ब्याजदर*, सुरक्षा*,
+           अनुगमन*, छानबिन*, अनुसन्धान*, अदालत*, सर्वोच्च*, संसद*, विधेयक*, अध्यादेश*,
+           ऋण*, कर, राजस्व*]
+      en: [decision*, cabinet, budget*, policy, policies, election*, interest rate*, security,
+           investigat*, probe, court, parliament*, bill, ordinance*, debt*, tax, taxes,
+           revenue, monetary]
+
+# Stories about preparing for or preventing harm, not about harm happening.
+dampeners:
+  multiplier: 0.5
+  max_grade: C      # such a story never grades above this
+  terms:
+    ne: [न्यूनीकरण*, न्युनीकरण*, रोकथाम*, सचेतना*, जनचेतना*, तालिम*, प्रशिक्षण*, अभ्यास*,
+         कार्यशाला*, गोष्ठी*, समझदारीपत्र*, पूर्वतयारी*, पूर्व तयारी, स्मृति*, वार्षिकोत्सव*,
+         जागरण*]
+    en: [prevention, awareness, training*, drill*, workshop*, seminar*,
+         memorandum of understanding, mou, preparedness, anniversar*, commemorat*, mock,
+         simulation*]
