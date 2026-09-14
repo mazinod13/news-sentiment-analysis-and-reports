@@ -1,5 +1,6 @@
 .git
 .gitignore
+.gitattributes
 .venv
 venv
 __pycache__
@@ -8,5 +9,11 @@ __pycache__
 .pytest_cache
 .ruff_cache
 .mypy_cache
+.idea
+.vscode
+.gemini
+.DS_Store
 data
 .env
+docker-compose.yml
+Dockerfile
