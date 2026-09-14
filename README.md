@@ -30,6 +30,7 @@ generated inventory and the wider catalogue.
 - [Scraping rules](#scraping-rules)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
+- [Credits](#credits)
 
 ---
 
@@ -478,3 +479,19 @@ certificate expires.
 | `worker` exits immediately in Docker | `migrate` failed | `docker compose logs migrate` |
 | A story's grade looks wrong | a term missing, too broad, or in the wrong tier | `analyse --text` on it, edit `config/criticality.yaml`, then `analyse --all` |
 | Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file, then `analyse --missing` |
+
+---
+
+## Credits
+
+This project builds on two open-source repositories:
+
+- **[nlethetech/nepal-osint-skeleton](https://github.com/nlethetech/nepal-osint-skeleton)** —
+  NepalOSINT, an open-source intelligence dashboard for Nepal. The source
+  catalogue in [DATA_SOURCES.md](DATA_SOURCES.md) — news feeds, government and
+  financial portals, and social accounts — is drawn from its
+  `backend-v5/config/sources.yaml` and backend scrapers.
+- **[pemagrg1/Hindi-POS-Tagging-and-Keyword-Extraction](https://github.com/pemagrg1/Hindi-POS-Tagging-and-Keyword-Extraction)** —
+  Hindi POS tagging with NLTK's TnT tagger and noun-phrase keyword extraction.
+  The keyword method in [app/nlp/](app/nlp/) adapts its tag-then-chunk approach
+  to Nepali; see [Keywords](#keywords).
