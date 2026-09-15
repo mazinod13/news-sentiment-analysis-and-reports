@@ -9,6 +9,8 @@
     python -m app.main bipad --since 2026-08-01 --out incidents.csv
     python -m app.main analyse --file story.txt   keywords + A-F grade, no database
     python -m app.main analyse --missing          grade stored articles not graded yet
+    python -m app.main stories --hours 24         top stories, one row per event
+    python -m app.main cluster                    group unclustered articles into stories
 """
 
 from __future__ import annotations
@@ -66,6 +68,18 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     analyse.add_argument("--top", type=int, default=10, help="keywords to keep (default 10)")
     analyse.add_argument("--limit", type=int, help="stop after this many stored articles")
+
+    cluster = sub.add_parser("cluster", help="group unclustered articles into stories")
+    cluster.add_argument("--limit", type=int, help="stop after this many articles")
+    cluster.add_argument(
+        "--rebuild-terms", action="store_true",
+        help="recount term statistics over every stored article first",
+    )
+
+    stories = sub.add_parser("stories", help="list recent stories, one row per event")
+    stories.add_argument("--hours", type=int, default=24, help="look-back window (default 24)")
+    stories.add_argument("--limit", type=int, default=20, help="rows to show (default 20)")
+    stories.add_argument("--min-sources", type=int, default=1, help="only stories this wide")
 
     return parser
 
@@ -174,6 +188,10 @@ def cmd_ingest(settings, args) -> int:
     reports = run_once(settings, selected)
     for report in reports:
         print(report)
+    if any(r.new for r in reports):
+        from app.pipeline.cluster import cluster_pending
+
+        print(cluster_pending(settings))
     return 0 if all(r.ok for r in reports) else 1
 
 
@@ -306,6 +324,47 @@ def cmd_analyse(settings, args) -> int:
     return 0
 
 
+def cmd_cluster(settings, args) -> int:
+    from app.pipeline.cluster import cluster_pending
+
+    if args.rebuild_terms:
+        from app.storage import repositories as repo
+        from app.storage.db import session_scope
+
+        with session_scope(settings) as session:
+            counted = repo.rebuild_term_stats(session)
+        print(f"term statistics recounted over {counted} article(s)")
+
+    report = cluster_pending(settings, limit=args.limit)
+    print(report)
+    return 1 if report.locked_out and not report.clustered else 0
+
+
+def cmd_stories(settings, args) -> int:
+    from datetime import datetime, timedelta
+
+    from app.settings import NPT
+    from app.storage import repositories as repo
+    from app.storage.db import session_scope
+
+    since = datetime.now(NPT) - timedelta(hours=args.hours)
+    with session_scope(settings) as session:
+        rows = repo.top_stories(
+            session, since=since, limit=args.limit, min_sources=args.min_sources
+        )
+    if not rows:
+        print(f"no stories in the last {args.hours}h -- run `python -m app.main cluster`?")
+        return 0
+    print(f"{'outlets':>7} {'articles':>8} {'grade':>5}  {'last seen':<16} story")
+    for row in rows:
+        last = row.last_published_at.astimezone(NPT).strftime("%Y-%m-%d %H:%M")
+        print(f"{row.source_count:>7} {row.article_count:>8} {row.grade or '-':>5}  {last:<16} "
+              f"{row.title}")
+        if row.source_count > 1:
+            print(f"{'':>41}{', '.join(row.sources)}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     settings = load_settings()
@@ -321,6 +380,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_bipad(settings, args)
     if args.command == "analyse":
         return cmd_analyse(settings, args)
+    if args.command == "cluster":
+        return cmd_cluster(settings, args)
+    if args.command == "stories":
+        return cmd_stories(settings, args)
     if args.command == "worker":
         from app.scheduler.worker import run_forever
 

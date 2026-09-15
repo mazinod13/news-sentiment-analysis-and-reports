@@ -95,6 +95,66 @@ class ArticleAnalysis(Base):
     analysed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
+class StoryCluster(Base):
+    """One news event, however many outlets reported it (see app/nlp/stories.py).
+
+    New tables rather than columns on `articles`, so `db upgrade` adds them to
+    an existing database as is.
+    """
+
+    __tablename__ = "story_clusters"
+    __table_args__ = (Index("ix_story_clusters_last_published", "last_published_at"),)
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    lang: Mapped[str] = mapped_column(String(2))
+    # Headline of the article that started the story -- a label, not a summary.
+    title: Mapped[str] = mapped_column(Text)
+    first_published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    last_published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    article_count: Mapped[int] = mapped_column(Integer, default=1)
+    source_count: Mapped[int] = mapped_column(Integer, default=1)
+    # Distinct source ids, in the order they joined.
+    sources: Mapped[list] = mapped_column(JSONB, default=list)
+
+
+class ArticleCluster(Base):
+    """Which story an article belongs to, plus the terms it was matched on."""
+
+    __tablename__ = "article_clusters"
+    __table_args__ = (
+        Index("ix_article_clusters_window", "lang", "published_at"),
+        # Candidate lookup is "shares any of these terms": JSONB ?| needs GIN.
+        Index("ix_article_clusters_terms", "terms", postgresql_using="gin"),
+    )
+
+    article_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("articles.id", ondelete="CASCADE"), primary_key=True
+    )
+    cluster_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("story_clusters.id", ondelete="CASCADE"), index=True
+    )
+    # Cosine similarity to the best-matching article; 1.0 for a story's founder.
+    similarity: Mapped[float] = mapped_column(Float)
+    # {stem: count}, the article's top terms
+    terms: Mapped[dict] = mapped_column(JSONB, default=dict)
+    # Copied from articles so the candidate query needs no join.
+    lang: Mapped[str] = mapped_column(String(2))
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class TermStat(Base):
+    """Document frequency per term over every STORED article, for IDF.
+
+    Counted at ingest, not at clustering, so IDF describes the whole corpus
+    from the first story onwards (see app/nlp/stories.py).
+    """
+
+    __tablename__ = "term_stats"
+
+    term: Mapped[str] = mapped_column(String(200), primary_key=True)
+    df: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class FetchLog(Base):
     __tablename__ = "fetch_log"
 

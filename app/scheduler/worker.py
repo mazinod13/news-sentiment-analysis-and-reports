@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 from app.ingestion.fetcher import Fetcher
+from app.pipeline.cluster import cluster_pending
 from app.pipeline.run import RunReport, run_source
 from app.settings import NPT, Settings
 from app.sources import Source, load_sources
@@ -51,4 +52,15 @@ def run_forever(settings: Settings) -> None:
             failed = [r.source_id for r in reports if not r.ok]
             log.info("cycle done: %d new article(s)%s", new,
                      f", failed: {', '.join(failed)}" if failed else "")
+            if new:
+                cluster_new_articles(settings)
         time.sleep(TICK_SECONDS)
+
+
+def cluster_new_articles(settings: Settings) -> None:
+    """Group this cycle's articles into stories. A failure here never stops
+    ingestion; unclustered articles are picked up next cycle."""
+    try:
+        log.info("%s", cluster_pending(settings))
+    except Exception:
+        log.exception("story clustering failed; will retry next cycle")

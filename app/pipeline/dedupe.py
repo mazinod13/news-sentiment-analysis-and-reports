@@ -5,10 +5,10 @@ sites within the hour, and the same story often reappears in a feed under a
 second URL. Two layers here:
 
   1. exact:  canonical url_hash (enforced by a unique index in the database)
-  2. near:   64-bit simhash over word shingles, Hamming distance <= 3
+  2. near:   64-bit simhash over word shingles, Hamming distance <= 8
 
-Story-level clustering across outlets comes later with embeddings; simhash is
-enough to stop the same text being stored twice.
+simhash stops the same *text* being stored twice. The same *event* written up
+differently by several outlets is grouped afterwards, by app/nlp/stories.py.
 """
 
 from __future__ import annotations
