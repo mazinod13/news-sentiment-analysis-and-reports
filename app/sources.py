@@ -39,6 +39,9 @@ class Source:
     inactive_reason: str | None = None
     rate_limit: float | None = None
     notes: str | None = None
+    # Id of the outlet whose site this is a section of (e.g. its economy page).
+    # Stories it lists that are already stored as `news` take its category.
+    section_of: str | None = None
     path: Path | None = field(default=None, compare=False)
 
     @property
@@ -48,7 +51,7 @@ class Source:
 
 _ALLOWED_KEYS = {
     "id", "name", "url", "method", "lang", "category", "priority", "active",
-    "homepage", "selectors", "inactive_reason", "rate_limit", "notes",
+    "homepage", "selectors", "inactive_reason", "rate_limit", "notes", "section_of",
 }
 _REQUIRED_KEYS = {"id", "name", "url", "method", "lang", "category", "priority", "active"}
 
@@ -86,6 +89,14 @@ def parse_source(data: dict, path: Path) -> Source:
         fail("inactive_reason is required when active: false")
     if data["method"] == "html" and not data.get("selectors"):
         fail("html sources need a `selectors` pack")
+    if "section_of" in data:
+        section_of = data["section_of"]
+        if not isinstance(section_of, str) or not section_of.strip():
+            fail("section_of must be the id of the outlet this is a section of")
+        if section_of == data["id"]:
+            fail("section_of cannot name the source itself")
+        if data["category"] == "news":
+            fail("a section source needs its own category (e.g. economic), not news")
 
     return Source(path=path, **data)
 
@@ -104,6 +115,12 @@ def load_sources(directory: Path, *, active_only: bool = False) -> dict[str, Sou
     for path in sorted(directory.glob("*.yaml")):
         source = load_source(path)
         sources[source.id] = source
+    for source in sources.values():
+        if source.section_of and source.section_of not in sources:
+            name = source.path.name if source.path else source.id
+            raise SourceConfigError(
+                f"{name}: section_of {source.section_of!r} is not a configured source"
+            )
     if active_only:
         return {k: v for k, v in sources.items() if v.active}
     return sources

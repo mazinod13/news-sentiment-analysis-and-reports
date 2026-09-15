@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -21,6 +21,24 @@ def existing_url_hashes(session: Session, hashes: list[str]) -> set[str]:
         select(Article.url_hash).where(Article.url_hash.in_(hashes))
     ).scalars()
     return set(rows)
+
+
+def relabel_category(session: Session, hashes: set[str], category: str) -> int:
+    """Give already-stored articles a section's category, e.g. `economic`.
+
+    A finance story usually appears in an outlet's main feed as well as its
+    economy section, and it is stored once, by whichever feed ran first. Only
+    rows still in the generic `news` category move, so a govt or disaster label
+    is never overwritten. Returns how many rows changed.
+    """
+    if not hashes:
+        return 0
+    result = session.execute(
+        update(Article)
+        .where(Article.url_hash.in_(hashes), Article.category == "news")
+        .values(category=category)
+    )
+    return result.rowcount or 0
 
 
 def recent_simhashes(session: Session, *, since: datetime, limit: int = 5000) -> list[int]:

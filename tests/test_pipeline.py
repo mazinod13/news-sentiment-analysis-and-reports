@@ -129,6 +129,34 @@ class TestSourceConfig:
         with pytest.raises(SourceConfigError, match="must match the filename"):
             parse_source(data, path)
 
+    SECTION = """
+        id: example-economy
+        name: Example Economy
+        url: https://x.test/economy/feed
+        method: rss
+        lang: ne
+        category: economic
+        priority: 2
+        active: true
+        section_of: example
+        """
+
+    def test_section_source_parses(self, tmp_path):
+        source = parse_source(yaml.safe_load(self.SECTION), tmp_path / "example-economy.yaml")
+        assert source.section_of == "example"
+
+    def test_section_source_needs_its_own_category(self, tmp_path):
+        """Relabelling `news` stories as `news` would silently do nothing."""
+        data = yaml.safe_load(self.SECTION)
+        data["category"] = "news"
+        with pytest.raises(SourceConfigError, match="own category"):
+            parse_source(data, tmp_path / "example-economy.yaml")
+
+    def test_section_of_must_name_a_configured_source(self, tmp_path):
+        (tmp_path / "example-economy.yaml").write_text(self.SECTION, encoding="utf-8")
+        with pytest.raises(SourceConfigError, match="not a configured source"):
+            load_sources(tmp_path)
+
     def test_inactive_needs_a_reason(self, tmp_path):
         data = yaml.safe_load(
             """
