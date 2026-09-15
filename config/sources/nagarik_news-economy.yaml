@@ -1,0 +1,21 @@
+id: nagarik_news-economy
+name: Nagarik News (अर्थ)
+url: https://nagariknews.nagariknetwork.com/economy
+homepage: https://nagariknews.nagariknetwork.com/economy
+method: html
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: nagarik_news
+selectors: nagarik_news-economy
+
+notes: |
+  - TRAP: the economy page advertises an Atom feed at /feed/economy. It returns
+    200 XML, but it is byte-identical to the main /feed, and /feed/<anything>
+    returns some unrelated category (/feed/Bazar gives राजनीति). The listing
+    page is the item source.
+  - Cards carry a machine date in time.npdate@data-pdate ("2026-09-15 13:02:07",
+    Nepal local time, no zone); the visible text is a date-only BS string.
+  - A separate बजार section (/Bazar) is mostly forex and gold rates; not added.

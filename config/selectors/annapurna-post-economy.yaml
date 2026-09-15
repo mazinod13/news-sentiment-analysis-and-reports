@@ -1,0 +1,28 @@
+# Selector pack for Annapurna Post's अर्थतन्त्र section (https://annapurnapost.com/category/economy/).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # The lead banner card plus the grid. A bare "div.grid__card" matches 24,
+  # including the 4 cards of the "लोकप्रिय" popular rail (div.ap__relatedNews);
+  # dropping the banner loses the newest story.
+  item: "div.category__banner div.grid__card, div.category__news div.grid__card"
+  link: "h3.card__title a@href"
+  title: "h3.card__title a"
+  # No `published`: cards carry no date. It comes from the article page below.
+
+# Same article template as the main annapurna-post pack.
+article:
+  body: "div.news__details p"
+  author: "p.author__name a"
+  published: "p.date span"
+  published_format: bs
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "div.ap__pollSection"
+  - "div.adalyticsblock"
+  - "[campaign]"
+  - "div.shareThis"
+  - "aside"

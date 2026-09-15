@@ -1,0 +1,27 @@
+# Selector pack for Nagarik News's अर्थ section (https://nagariknews.nagariknetwork.com/economy).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # Scoped to div#economy: the popular rail and page chrome link other sections.
+  item: "div#economy article.list-group-item"
+  # The h1 anchor, not the first anchor: each card also has a thumbnail link and
+  # share-menu links whose facebook/twitter sharer URLs contain /economy/.
+  link: "h1 a@href"
+  title: "h1 a"
+  # Machine-readable local time; the visible text is date-only Bikram Sambat.
+  published: "time.npdate@data-pdate"
+  published_format: auto
+
+# Same article template as the main nagarik_news pack.
+article:
+  title: "h1"
+  body: "span.subscriber-content-check"
+  author: "a.author-name"
+  published: ".byline time:first-of-type"
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"

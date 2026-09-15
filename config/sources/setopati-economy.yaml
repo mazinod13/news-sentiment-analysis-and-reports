@@ -1,0 +1,22 @@
+id: setopati-economy
+name: Setopati (बजार अर्थतन्त्र)
+url: https://www.setopati.com/kinmel
+homepage: https://www.setopati.com/kinmel
+method: html
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: setopati
+selectors: setopati-economy
+
+notes: |
+  - No section feed: /kinmel/feed 404s, and the main /feed is site-wide with
+    only 5 items. The listing page is the item source.
+  - Sub-sections (banking, economy, construction, jewellery, IT, tourism...) all
+    live under /kinmel/, so every item URL must contain it.
+  - IMPORTANT: this pack does NOT exclude `aside`. Setopati wraps the whole
+    article column in <aside class="left-side ...">, so the main setopati pack
+    (which excludes aside) extracts an empty body and no date from this
+    template -- see the test that pins it.

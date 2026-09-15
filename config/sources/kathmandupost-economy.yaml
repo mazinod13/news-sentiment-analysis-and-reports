@@ -1,0 +1,23 @@
+id: kathmandupost-economy
+name: The Kathmandu Post (Money)
+url: https://kathmandupost.com/money
+homepage: https://kathmandupost.com/money
+method: html
+lang: en
+category: economic
+priority: 2
+active: true
+
+section_of: kathmandupost
+selectors: kathmandupost-economy
+
+notes: |
+  - No section feed. /money/rss and /money/feed return 200 text/html -- the
+    HOMEPAGE, not a feed -- and /rss/money is the Money listing page. The main
+    /rss is real RSS served as text/html, with no pubDate. The listing page is
+    the item source.
+  - Cards carry no date. The article page's only dates are human-readable:
+    "Published at : September 15, 2026" (date only) and "Updated at : ... 09:07".
+    This pack reads the first one; the shared date parser strips the label.
+  - Also noticed: the main kathmandupost pack's `published` selector reaches the
+    "Updated at" line, so it records the edit time rather than publish time.

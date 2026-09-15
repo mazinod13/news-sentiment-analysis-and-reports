@@ -1,0 +1,29 @@
+# Selector pack for The Kathmandu Post's Money section (https://kathmandupost.com/money).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # Scoped to the "more news" block. A bare "article.article-image" matches 30,
+  # picking up other rails; the nav's trending-topics list also links /money/.
+  item: "div.block--morenews article.article-image"
+  # The first anchor in the card; the figure's image link repeats the same href.
+  link: "a@href"
+  title: "h3"
+  summary: "p"
+  # No `published`: cards carry no date. It comes from the article page below.
+
+# Same article template as the main kathmandupost pack, except `published`.
+article:
+  title: "#mainContent > main > div > div:nth-child(2) > div.col-sm-8 > h1"
+  body: "section:nth-child(1)"
+  author: "h5 > a"
+  # The FIRST div.updated-time is "Published at : September 15, 2026". The main
+  # pack's positional selector reaches the second one, "Updated at : ... 09:07",
+  # which is the edit time. Date only, but it is the publish date.
+  published: "div.updated-time"
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
