@@ -1,0 +1,24 @@
+# Selector pack for Bizmandu article pages (https://bizmandu.com/content/<id>.html).
+# Shared by every bizmandu* source: the site uses one article template.
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+article:
+  # The first <h1> is the article; later ones are related-story cards.
+  title: "h1"
+  # Paragraphs, not the container: an ad block (div.bigyapan-inside-content)
+  # sits between the first and second paragraph.
+  body: "div.news-text p"
+  # div.author holds two spans: the name (left-icon) and the Bikram Sambat +
+  # English date (right-icon). Reading the whole div glues them together.
+  author: "div.author div.left-icon span"
+  # Machine-readable, in UTC ("2026-09-15T09:41:11+00:00"); the byline shows the
+  # same instant as "२०८३ भदौ ३० गते १५:२६".
+  published: "meta[property='article:published_time']@content"
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "div.bigyapan-inside-content"

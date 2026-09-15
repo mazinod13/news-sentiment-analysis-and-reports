@@ -1,0 +1,28 @@
+id: bizmandu
+name: Bizmandu
+url: https://bizmandu.com/feed
+homepage: https://bizmandu.com/
+method: rss
+lang: ne
+category: news
+priority: 2
+active: true
+
+selectors: bizmandu
+
+notes: |
+  - Successor to Pahilo Post, which suspended publishing in July 2023 and moved
+    its content here (see the pahilopost source).
+  - Business-first, but the main feed is site-wide: politics, sports and
+    lifestyle stories sit alongside finance, so this source is `news`. The
+    finance desks are section sources (bizmandu-market, bizmandu-corporate,
+    bizmandu-banking) that relabel their stories `economic`.
+  - Only 15 items, all from the same day when checked -- hence the 30-minute poll.
+  - Category pages are /content/category/<slug>.html; their feeds are
+    /content/category/<slug>/feed. TRAP: /category/<slug>/feed (without
+    /content) is a 200 HTML page, not a feed.
+  - The feed carries full text in content:encoded, but the RSS scraper takes
+    bodies from the article page through the selector pack.
+  - The old pahilopost pack does not match this template: body, author and date
+    all came back empty.
+  - robots.txt carries only content-signal comments, no rules.

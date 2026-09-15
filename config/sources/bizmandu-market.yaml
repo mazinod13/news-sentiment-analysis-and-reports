@@ -1,0 +1,20 @@
+id: bizmandu-market
+name: Bizmandu (Market)
+url: https://bizmandu.com/content/category/market/feed
+homepage: https://bizmandu.com/content/category/market.html
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: bizmandu
+# Same site and article template as the main outlet.
+selectors: bizmandu
+
+notes: |
+  - Share market, NEPSE, gold, retail and consumer prices. 15 items covering
+    about a week when checked.
+  - 12 of 15 items carry the Market tag; the rest are filed under sub-topics
+    (NEPSE, Gold, Retail) without it -- the feed itself is the section.
+  - TRAP: /category/market/feed (without /content) is a 200 HTML page.

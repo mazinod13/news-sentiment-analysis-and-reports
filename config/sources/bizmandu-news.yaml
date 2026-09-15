@@ -1,0 +1,21 @@
+id: bizmandu-news
+name: Bizmandu (News)
+url: https://bizmandu.com/content/category/news/feed
+homepage: https://bizmandu.com/content/category/news.html
+method: rss
+lang: ne
+category: news
+priority: 2
+active: true
+
+# No section_of: this desk is NOT finance-only -- it carries sports sponsorship,
+# politics and lifestyle alongside business news. As `economic` it would
+# relabel politics stories. It is a plain news source that widens coverage
+# beyond the main feed's 15 items.
+selectors: bizmandu
+
+notes: |
+  - Overlaps the main feed heavily (7 of 15 items when checked); url_hash keeps
+    each story stored once.
+  - Every item is tagged News; other tags seen include Energy, Sports,
+    Politics, Life Style, Auto and Real State.
