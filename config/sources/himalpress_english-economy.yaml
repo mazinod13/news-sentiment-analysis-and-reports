@@ -1,0 +1,23 @@
+id: himalpress_english-economy
+name: Himal Press English (Business)
+url: https://en.himalpress.com/category/business/feed/
+homepage: https://en.himalpress.com/category/business/
+method: rss
+lang: en
+category: economic
+priority: 3
+active: true
+
+# No section_of: the English site is only configured as province feeds, so
+# there is no main English feed whose stories this could relabel.
+# en.himalpress.com shares one article template, so the province pack applies.
+selectors: himalpress-province-1
+
+notes: |
+  - Nav "Business"; there is no separate economy category.
+  - 10 items covering about six days.
+  - KNOWN LIMITATION, inherited from the himalpress-province-1 pack: its author
+    selector uses `@directtext`, which the extractor does not implement (it is
+    read as an attribute named "directtext"), so author is always None.
+  - Also noticed: the himalpress-province-* configs say `lang: ne`, but
+    en.himalpress.com publishes in English.

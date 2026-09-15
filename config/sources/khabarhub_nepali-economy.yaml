@@ -1,0 +1,20 @@
+id: khabarhub_nepali-economy
+name: Khabarhub Nepali (आर्थिक)
+url: https://khabarhub.com/category/business/feed/
+homepage: https://khabarhub.com/category/business/
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: khabarhub_nepali
+# Same site and article template as the main outlet.
+selectors: khabarhub_nepali
+
+notes: |
+  - Nav "आर्थिक" links to /?cat=4, which 301s to /category/business/.
+  - The feed is very short -- 10 items covering under a day -- so it needs the
+    30-minute poll to avoid missing stories.
+  - Many items are corporate press releases (4 of 10 tagged उपभोक्ता in the
+    fixture), which is noise for sentiment.

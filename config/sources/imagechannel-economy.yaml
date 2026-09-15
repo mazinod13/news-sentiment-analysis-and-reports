@@ -1,0 +1,22 @@
+id: imagechannel-economy
+name: Image Khabar (अर्थ)
+url: https://www.imagekhabar.com/news/category/economy/feed/
+homepage: https://www.imagekhabar.com/news/category/economy/
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: imagechannel
+# Same site and article template as the main outlet.
+selectors: imagechannel
+
+notes: |
+  - Nav "अर्थ" links to /?cat=2, which redirects to /news/category/economy/.
+  - Only the latest 10 items and no content:encoded, so bodies are fetched and
+    the 30-minute poll is needed.
+  - Every item is tagged अर्थ, alongside BREAKING / Hot News / banner-N tags --
+    filter on अर्थ, never on the first tag.
+  - KNOWN LIMITATION, inherited from the imagechannel pack: the body ends with
+    the post's tag text (div.tag-btn-ah); excluding it in that pack fixes it.

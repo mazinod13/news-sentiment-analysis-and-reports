@@ -1,0 +1,20 @@
+id: gandaknews-economy
+name: Gandak News (अर्थ/व्यापार)
+url: https://www.gandaknews.com/category/business/feed/
+homepage: https://www.gandaknews.com/category/business/
+method: rss
+lang: ne
+category: economic
+priority: 4
+active: true
+
+section_of: gandaknews
+# Same site and article template as the main outlet.
+selectors: gandaknews
+
+notes: |
+  - Low volume: 2 stories in the 30 days before 2026-09-15, which is why it is
+    polled every 6 hours rather than hourly like the main feed.
+  - Mostly Syangja budget, revenue and farm income, plus bank CSR releases.
+  - The page date is a date-only Bikram Sambat string; the feed pubDate has
+    the time and wins in the date ladder.
