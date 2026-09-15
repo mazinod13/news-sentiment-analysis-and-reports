@@ -63,6 +63,12 @@ _BS_NUMERIC = re.compile(r"(?<!\d)(\d{4})[-/.।](\d{1,2})[-/.।](\d{1,2})(?!\d
 # read as Bikram Sambat -- see _numeric_bs below.
 _DEVANAGARI_DIGITS = frozenset("०१२३४५६७८९")
 
+# A leading English label: "Published at : September 15, 2026" (Kathmandu Post),
+# "Publish Date :\n15 September 2026 11:55 AM" (Khabarhub English). dateutil
+# rejects both. Letters and spaces only before the colon, so a clock ("09:07")
+# or an ISO date can never be mistaken for a label.
+_LABEL_RE = re.compile(r"^\s*[A-Za-z][A-Za-z ]{1,30}:\s+")
+
 
 class DateParseError(ValueError):
     pass
@@ -132,7 +138,7 @@ def parse_datetime(text: str, *, fmt: str = "auto") -> datetime:
             except DateParseError:
                 pass
         try:
-            parsed = dateutil_parser.parse(text)
+            parsed = dateutil_parser.parse(_LABEL_RE.sub("", text, count=1))
         except (ValueError, OverflowError) as exc:
             raise DateParseError(f"unparseable date {text!r}") from exc
         return parsed if parsed.tzinfo else parsed.replace(tzinfo=NPT)
