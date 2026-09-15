@@ -1,0 +1,24 @@
+id: risingnepal-economy
+name: The Rising Nepal (Business)
+url: https://risingnepaldaily.com/rss/business
+homepage: https://risingnepaldaily.com/categories/business
+method: rss
+lang: en
+category: economic
+priority: 2
+active: true
+
+section_of: risingnepal
+# Same site and article template as the main outlet.
+selectors: risingnepal
+
+notes: |
+  - Section feeds are /rss/<slug>, NOT /categories/<slug>/rss (404). An unknown
+    slug 404s, so the routing is real rather than a catch-all.
+  - The channel title is the generic site title and items carry no category,
+    so the feed cannot prove it is section-only on its own; its items were
+    checked against the /categories/business listing order.
+  - Mostly finance, with some off-topic items (village relocation, climbing).
+  - /rss/market also exists but was stale when checked; not added.
+  - KNOWN LIMITATION, inherited from the risingnepal pack: `author` returns the
+    dateline ("Kathmandu, Sept. 15:").

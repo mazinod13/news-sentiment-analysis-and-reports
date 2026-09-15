@@ -1,0 +1,21 @@
+id: spotlightnepal-economy
+name: Spotlight Nepal (Economy)
+url: https://www.spotlightnepal.com/topic/economy/
+homepage: https://www.spotlightnepal.com/topic/economy/
+method: html
+lang: en
+category: economic
+priority: 3
+active: true
+
+section_of: spotlightnepal
+selectors: spotlightnepal-economy
+
+notes: |
+  - Not WordPress: /topic/economy/feed/ and /category/economy/feed/ both 404,
+    and the main /feed carries no categories. The topic page is the item source.
+  - LOOSE TAGGING: the economy topic also carries political stories, a drone
+    donation and tunnel rescues, plus many bank CSR releases. That is why it
+    polls hourly rather than every 30 minutes.
+  - Also noticed: the main spotlightnepal config has `homepage:` set to the feed
+    URL rather than the site.

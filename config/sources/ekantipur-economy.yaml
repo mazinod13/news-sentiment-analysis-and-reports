@@ -1,0 +1,22 @@
+id: ekantipur-economy
+name: eKantipur (अर्थ / वाणिज्य)
+url: https://ekantipur.com/business
+homepage: https://ekantipur.com/business
+method: html
+lang: ne
+category: economic
+priority: 2
+active: true
+
+# No section_of: eKantipur is only configured as province listings, and none of
+# them is the national feed this section belongs to.
+selectors: ekantipur-economy
+
+notes: |
+  - No RSS anywhere on eKantipur: /business/rss and /business/feed return 200
+    text/html. The section listing is the item source.
+  - Same card markup as the province pages. Cards carry no date; author and a
+    full timestamp come from the article's JSON-LD.
+  - LIMITATION, same as every eKantipur source: article bodies are rendered
+    client-side, so `body` is the lede only (~120 chars).
+  - A separate बजार nav section (/market) exists; not added.

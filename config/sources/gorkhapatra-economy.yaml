@@ -1,0 +1,27 @@
+id: gorkhapatra-economy
+name: Gorkhapatra (अर्थ)
+url: https://gorkhapatraonline.com/rss/economy
+homepage: https://gorkhapatraonline.com/categories/economy
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: gorkhapatra
+# Same site and article template as the main outlet.
+selectors: gorkhapatra
+
+notes: |
+  - Section feeds are /rss/<slug>. It is really filtered: an unknown slug 404s
+    and the items match the /categories/economy listing order. The channel
+    title is generic and items carry no category.
+  - TRAP: /rss?category=economy ignores the parameter and returns the main feed.
+  - Only 10 items, covering under a day, so it needs the 30-minute poll.
+  - /rss/share also exists but was stale when checked; not added.
+  - KNOWN LIMITATION, inherited from the gorkhapatra pack: the body starts with
+    the author/date/share/font-size blocks and ends with related-story titles.
+    Tested fix for that pack: body
+    ".single-blog-box-layout3 .single-blog-content > div.blog-details:not(.meta)"
+    plus exclude "div.related-item". Do NOT exclude div.blog-details.meta --
+    excludes run before any field is read, so author and date would vanish.

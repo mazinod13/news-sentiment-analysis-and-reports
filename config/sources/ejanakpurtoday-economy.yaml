@@ -1,0 +1,26 @@
+id: ejanakpurtoday-economy
+name: Janakpur Today (अर्थ/वाणीज्य)
+url: https://ejanakpurtoday.com/category/economics/feed/
+homepage: https://ejanakpurtoday.com/category/economics/
+method: rss
+lang: ne
+category: economic
+priority: 3
+active: true
+
+section_of: ejanakpurtoday
+# Same site and article template as the main outlet.
+selectors: ejanakpurtoday
+
+notes: |
+  - Category name is misspelled on the site ("अर्थ/वाणीज्य"); the slug is
+    `economics`.
+  - Active (34 stories in the 30 days before 2026-09-15) but 24 of those were
+    daily gold/silver price posts (सुनको भाउ). Expect repetitive titles.
+  - Every item is also tagged समाचार, so most overlap with the main feed and
+    get relabelled rather than inserted.
+  - Parent is `ejanakpurtoday`, not `janakpurtoday`: both configs point at the
+    same main feed, and the janakpurtoday pack no longer extracts a body.
+  - KNOWN LIMITATION, inherited from the ejanakpurtoday pack: the body starts
+    with the byline and Bikram Sambat date line; "div.post-header-area p"
+    would give the clean body.

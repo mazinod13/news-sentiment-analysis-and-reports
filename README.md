@@ -9,8 +9,9 @@ criticality grade.
 fetch → parse → fetch body → normalise → dedupe → store → keywords + grade
 ```
 
-**59 sources are configured** — RSS feeds and HTML listing pages, national,
-provincial and government. [DATA_SOURCES.md](DATA_SOURCES.md) has the
+**77 sources are configured** — RSS feeds and HTML listing pages: national,
+provincial and government outlets, plus 18 dedicated economy and business
+sections (see [Section sources](#section-sources)). [DATA_SOURCES.md](DATA_SOURCES.md) has the
 generated inventory and the wider catalogue.
 
 ---
@@ -329,6 +330,25 @@ notes: |
 | `homepage` | no | site root |
 | `rate_limit` | no | seconds between requests; overrides `PER_HOST_DELAY` |
 | `notes` | no | quirks worth keeping |
+| `section_of` | no | id of the outlet whose site this is a section of, e.g. its economy page |
+
+### Section sources
+
+An outlet's economy or business page is configured as its own source, with its
+own category and `section_of` pointing at the main outlet:
+
+```yaml
+id: onlinekhabar_english-economy
+url: https://english.onlinekhabar.com/category/economy/feed
+category: economic
+section_of: onlinekhabar_english
+```
+
+The same finance story usually appears in the main feed too, and articles are
+stored once per URL. So when a section source lists a story that is already
+stored as `news`, it relabels it with its own category — whichever feed runs
+first, finance stories end up `economic`. Only `news` rows move; a `govt` or
+`disaster` label is never overwritten.
 
 ### Selector packs
 

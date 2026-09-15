@@ -1,0 +1,22 @@
+id: onlinekhabar_english-economy
+name: OnlineKhabar English (Economy)
+url: https://english.onlinekhabar.com/category/economy/feed
+homepage: https://english.onlinekhabar.com/category/economy
+method: rss
+lang: en
+category: economic
+priority: 2
+active: true
+
+section_of: onlinekhabar_english
+# Same site and article template as the main outlet.
+selectors: onlinekhabar_english
+
+notes: |
+  - The nav label is "Economy"; its WordPress category feed is section-only
+    (19 of 20 items tagged Economy in the fixture).
+  - TRAP: /category/business/feed also returns 200 and valid RSS, but with ZERO
+    items, and /category/business itself 404s. A status check alone would
+    accept the empty feed.
+  - Published dates from the article page are date-only; the feed pubDate
+    carries the time and wins in the date ladder.

@@ -1,0 +1,20 @@
+id: annapurna-post-economy
+name: Annapurna Post (अर्थतन्त्र)
+url: https://annapurnapost.com/category/economy/
+homepage: https://annapurnapost.com/category/economy/
+method: html
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: annapurna-post
+selectors: annapurna-post-economy
+
+notes: |
+  - TRAP: /rss/economy/ returns valid RSS, but it is the main feed --
+    /rss/<anything>/ returns the same items. /category/economy/feed/ 404s.
+    The listing page is the item source.
+  - Cards carry no date; it comes from the article page's Bikram Sambat
+    string, exactly as for the main feed.
+  - The सेयर बजार nav item is a tag page (/tag/4888), not a section; not added.

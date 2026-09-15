@@ -1,0 +1,28 @@
+# Selector pack for eKantipur's अर्थ / वाणिज्य section (https://ekantipur.com/business).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # The section page has no sidebar or trending rails; each card links its
+  # story twice (title and image), which the scraper de-duplicates.
+  item: "div.category"
+  link: "h2 a@href"
+  title: "h2"
+  # CHILD combinator: a descendant "p" matches the author's <p> first and stores
+  # the journalist's name as the summary.
+  summary: "div.category-description > p"
+  # No `published`: cards show only "2 MINS READ". JSON-LD on the article has it.
+
+# Same article template as the eKantipur province packs.
+article:
+  body: "section.news-section-wrap > p"
+  author: "jsonld:author.name"
+  published: "jsonld:datePublished"
+  published_format: iso
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"
+  - "header"
+  - "footer"

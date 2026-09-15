@@ -1,0 +1,30 @@
+# Selector pack for Setopati's बजार अर्थतन्त्र section (https://www.setopati.com/kinmel).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # Scoped to the section list. A bare "div.items" matches 38 blocks on this
+  # page, 8 of them header and footer widgets.
+  item: "section.cat-list div.news-cat-list div.items"
+  # The first anchor in the card is the story link.
+  link: "a@href"
+  # span.main-title, not the anchor text: the anchor also contains the
+  # sub-section chip, which would be glued onto the headline.
+  title: "span.main-title"
+  # e.g. "मंगलबार, भदौ ३०, २०८३" -- date only; the article page adds the time.
+  published: ".time-stamp"
+  published_format: bs
+
+# Same article template as the main setopati pack.
+article:
+  title: "h1"
+  body: "div.editor-box"
+  author: ".author-pic h2 > a"
+  published: "span.pub-date"
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+# Deliberately no "aside": this template wraps the whole article column in
+# <aside class="left-side ...">, and excludes run before any field is read.
+exclude:
+  - "script"
+  - "style"

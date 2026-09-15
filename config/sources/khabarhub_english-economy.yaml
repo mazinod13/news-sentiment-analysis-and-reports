@@ -1,0 +1,21 @@
+id: khabarhub_english-economy
+name: Khabarhub English (Business)
+url: https://english.khabarhub.com/category/business/feed/
+homepage: https://english.khabarhub.com/category/business/
+method: rss
+lang: en
+category: economic
+priority: 2
+active: true
+
+section_of: khabarhub_english
+# Same site and article template as the main outlet.
+selectors: khabarhub_english
+
+notes: |
+  - Nav "Business" links to /?cat=4, which 301s to /category/business/.
+  - The feed is short -- 12 items covering about two days -- so it needs the
+    30-minute poll to avoid missing stories.
+  - The page date reads "Publish Date :\n15 September 2026 11:55 AM". The shared
+    date parser strips that label; before it did, every page date failed.
+  - Article URLs are /YYYY/DD/<id>/ -- the middle segment is the DAY.

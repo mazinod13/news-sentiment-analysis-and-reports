@@ -1,0 +1,33 @@
+# Selector pack for Ratopati's economy category (https://www.ratopati.com/category/economy).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # SCOPED to the section's lead card and grid. The page holds 94 story links:
+  #   41 section cards (kept)
+  #    8 "just in" links in the section's own side column (div.dn__side--add)
+  #   28 mega-menu province links, which ALSO use div.columnnews
+  #   16 site-wide just-in/trending links (div.fixed-tab)
+  # A bare "div.columnnews" or "a[href*='/story/']" pulls in the menu and
+  # trending stories, and the first /story/ link on the page is a politics story.
+  item: "section.section-default-news div.article-excerpt__content--wrap,
+         section.section-default-news div.dn__news--wrap div.columnnews"
+  link: "a[href*='/story/']@href"
+  # Match the class, not the tag -- same as the province packs.
+  title: ".news-title"
+  summary: "p"
+  # No `published`: cards carry no date. It comes from the article page below.
+
+# Same article template as the Ratopati province packs.
+article:
+  body: "div.the-content p"
+  author: "div.news-container div.user a"
+  published: "div.news-container div.post-hour > span"
+  # Dates are right; times land at midnight ("०५ : १७" has spaces around the
+  # colon, which app/parsing/dates.py does not match) -- a known shared issue.
+  published_format: bs
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"

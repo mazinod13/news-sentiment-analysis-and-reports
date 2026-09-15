@@ -95,6 +95,30 @@ class TestFeedDates:
         assert parse_feed_datetime(feed.entries[0]) is None
 
 
+class TestLabelledDates:
+    """English page dates behind a label. Kathmandu Post writes "Published at :
+    September 15, 2026" and Khabarhub English "Publish Date :\\n15 September 2026
+    11:55 AM". dateutil rejected both, so those articles fell back to fetch time."""
+
+    @pytest.mark.parametrize(
+        ("raw", "expected"),
+        [
+            ("Published at : September 15, 2026 ", "2026-09-15T00:00:00+05:45"),
+            ("Updated at : September 15, 2026 09:07 ", "2026-09-15T09:07:00+05:45"),
+            ("Publish Date :\n 15 September 2026 11:55 AM", "2026-09-15T11:55:00+05:45"),
+        ],
+    )
+    def test_label_is_stripped(self, raw, expected):
+        assert parse_datetime(raw).isoformat() == expected
+
+    def test_a_clock_is_not_mistaken_for_a_label(self):
+        assert parse_datetime("Sep 15, 2026 09:07").isoformat() == "2026-09-15T09:07:00+05:45"
+
+    def test_unlabelled_text_still_fails(self):
+        with pytest.raises(DateParseError):
+            parse_datetime("Published at : soon")
+
+
 class TestNumericBikramSambat:
     """All-numeric BS dates, added for moha.gov.np and traffic.nepalpolice.gov.np.
 

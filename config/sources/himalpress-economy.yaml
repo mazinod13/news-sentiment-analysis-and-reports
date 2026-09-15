@@ -1,0 +1,24 @@
+id: himalpress-economy
+name: Himal Press (अर्थतन्त्र)
+url: https://himalpress.com/category/finance/feed/
+homepage: https://himalpress.com/finance/
+method: rss
+lang: ne
+category: economic
+priority: 2
+active: true
+
+section_of: himalpress
+# Same site and article template as the main outlet.
+selectors: himalpress
+
+notes: |
+  - Nav "अर्थतन्त्र" -> /finance/; the WordPress category is /category/finance/
+    with sub-categories bank, share, bazzar, urja. www. redirects to the bare
+    domain.
+  - 50 items covering about five days. Some infrastructure and flood stories
+    are filed under finance.
+  - The feed's <language> says en-US; the content is Nepali.
+  - KNOWN LIMITATION, inherited from the himalpress pack: `.news--author` also
+    contains the date span, so author comes out as
+    "हिमाल प्रेस\n३० भदौ २०८३ १५:४९ | Tuesday, September 15, 2026".

@@ -1,0 +1,27 @@
+# Selector pack for Spotlight Nepal's Economy topic (https://www.spotlightnepal.com/topic/economy/).
+# Syntax: a CSS selector, optionally suffixed with @attribute.
+
+listing:
+  # Scoped to the 70%-width main column; the image link in each card repeats
+  # the same href, and the side column is a different rail.
+  item: "div.fl.w-100.w-70-l.pa2 div.bt.b--black-10"
+  link: "div.w-60-ns > a@href"
+  title: "h1"
+  summary: "div.w-60-ns > a > p"
+  # e.g. "Sep 15, 2026" -- date only; the article page adds the time.
+  published: "span.bl"
+  published_format: auto
+
+# Same article template as the main spotlightnepal pack.
+article:
+  title: "body > div.cf.mw8.mt2.mt4-ns.mb2.ph2.center.black-90 > h1"
+  body: "div.rich-text"
+  author: "a.link.dim.lh-title"
+  published: "span:nth-child(3)"
+  published_format: auto
+  image: "meta[property='og:image']@content"
+
+exclude:
+  - "script"
+  - "style"
+  - "aside"

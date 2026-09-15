@@ -41,6 +41,8 @@ class RunReport:
     seen: int = 0
     new: int = 0
     duplicate: int = 0
+    # Already-stored stories moved to this section source's category.
+    relabelled: int = 0
     not_modified: bool = False
     ok: bool = True
     error: str | None = None
@@ -51,9 +53,8 @@ class RunReport:
             return f"{self.source_id}: FAILED - {self.error}"
         if self.not_modified:
             return f"{self.source_id}: unchanged (304)"
-        return (
-            f"{self.source_id}: {self.seen} seen, {self.new} new, {self.duplicate} duplicate"
-        )
+        summary = f"{self.source_id}: {self.seen} seen, {self.new} new, {self.duplicate} duplicate"
+        return summary + (f", {self.relabelled} relabelled" if self.relabelled else "")
 
 
 def run_source(
@@ -94,11 +95,14 @@ def run_source(
         # 2. duplicates inside this one batch
         items = dedupe_batch(items, key=lambda item: url_hash(item.url))
 
-        # 3. drop what we already have
+        # 3. drop what we already have -- a section source (e.g. an economy page)
+        #    first moves those stories from `news` to its own category
         if not dry_run:
             hashes = [url_hash(item.url) for item in items]
             with session_scope(settings) as session:
                 known = repo.existing_url_hashes(session, hashes)
+                if source.section_of:
+                    report.relabelled = repo.relabel_category(session, known, source.category)
             fresh = [item for item in items if url_hash(item.url) not in known]
             report.duplicate += len(items) - len(fresh)
             items = fresh

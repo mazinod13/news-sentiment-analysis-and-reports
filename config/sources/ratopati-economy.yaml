@@ -1,0 +1,28 @@
+id: ratopati-economy
+name: Ratopati (अर्थतन्त्र)
+url: https://www.ratopati.com/category/economy
+homepage: https://www.ratopati.com/economy
+method: html
+lang: ne
+category: economic
+priority: 3
+active: true
+# robots.txt sets Crawl-delay: 20. The fetcher honours allow/disallow but not
+# Crawl-delay, so it is enforced here.
+rate_limit: 20
+
+# No section_of: Ratopati is only configured as province portals, whose item
+# selectors are scoped to province rails and never take national economy stories.
+selectors: ratopati-economy
+
+notes: |
+  - Use /category/economy (a flat, newest-first list), NOT the nav's /economy,
+    which is a hub of 11 rails that repeats stories and shows older ones.
+  - /feed exists but is site-wide (2 of 30 items tagged अर्थ); the category
+    feeds 404. The listing page is the item source.
+  - At 20 s per request, a cycle with MAX_BODIES_PER_RUN=25 new stories takes
+    about 8 minutes, which is why this polls hourly.
+  - Never infer a story's topic from its slug -- they can be wrong (story 592288
+    has a marijuana-arrest slug on a real-estate story).
+  - Also noticed: the ratopati-<province> sources hit the same host without a
+    20 s rate_limit.

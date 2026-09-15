@@ -28,7 +28,7 @@ Everything between the markers is overwritten — edit the outlet's YAML instead
 
 <!-- BEGIN GENERATED: news-outlets -->
 
-_59 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
+_77 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Generated from `config/sources/` — do not edit by hand._
 
 | # | Source | Link | Lang | Cat | Prio | Method |
 |---|--------|------|:----:|:---:|:----:|:------:|
@@ -40,57 +40,75 @@ _59 outlet(s) wired up. Priority drives poll frequency (1 = every ~15 min). Gene
 | 6 | OnlineKhabar (Nepali) | <https://www.onlinekhabar.com/feed> | ne | news | 1 | rss |
 | 7 | Setopati | <https://www.setopati.com/feed> | ne | news | 1 | rss |
 | 8 | The Kathmandu Post | <https://kathmandupost.com/rss> | en | news | 1 | rss |
-| 9 | BBC Asia | <https://feeds.bbci.co.uk/news/world/asia/rss.xml> | en | news | 2 | rss |
-| 10 | BBC Nepali | <https://feeds.bbci.co.uk/nepali/rss.xml> | ne | news | 2 | rss |
-| 11 | Gorkhapatra | <https://gorkhapatraonline.com/rss> | ne | news | 2 | rss |
-| 12 | Himal Press | <https://www.himalpress.com/feed/> | ne | news | 2 | rss |
-| 13 | Image Channel | <https://www.imagekhabar.com/feed> | ne | news | 2 | rss |
-| 14 | Khabarhub (English) | <https://english.khabarhub.com/feed> | en | news | 2 | rss |
-| 15 | Khabarhub (Nepali) | <https://khabarhub.com/feed/> | ne | news | 2 | rss |
-| 16 | MeroLagani | <https://merolagani.com/NewsList.aspx?id=7&type=latest> | ne | economic | 2 | html |
-| 17 | Nepal Rastra Bank | <https://www.nrb.org.np/feed/> | ne | economic | 2 | rss |
-| 18 | Pahilopost | <https://pahilopost.com/feed> | ne | news | 2 | rss |
-| 19 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
-| 20 | ShareSansar | <https://www.sharesansar.com/category/latest> | en | economic | 2 | html |
-| 21 | The Rising Nepal | <https://risingnepaldaily.com/rss> | en | news | 2 | rss |
-| 22 | eKantipur Bagmati | <https://ekantipur.com/pradesh-3> | ne | news | 3 | html |
-| 23 | eKantipur Gandaki | <https://ekantipur.com/pradesh-4> | ne | news | 3 | html |
-| 24 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
-| 25 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
-| 26 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
-| 27 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
-| 28 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
-| 29 | Gandak News | <https://www.gandaknews.com/feed/> | ne | news | 3 | rss |
-| 30 | Gandaki Province OCMCM | <https://ocmcm.gandaki.gov.np/list/news> | ne | govt | 3 | html |
-| 31 | Himal Press (Bagmati Province) | <https://en.himalpress.com/category/province/province-3/feed/> | en | news | 3 | rss |
-| 32 | Himalpress-gandaki | <https://en.himalpress.com/category/province/province-4/feed> | ne | news | 3 | rss |
-| 33 | Himalpress-karnali | <https://en.himalpress.com/category/province/province-6/feed> | ne | news | 3 | rss |
-| 34 | Himalpress-Koshi | <https://en.himalpress.com/category/province/province-1/feed> | ne | news | 3 | rss |
-| 35 | Himalpress-lumbini | <https://en.himalpress.com/category/province/province-5/feed> | ne | news | 3 | rss |
-| 36 | Himalpress-madhesh | <https://en.himalpress.com/category/province/province-2/feed> | ne | news | 3 | rss |
-| 37 | Himalpress-sudurpaschim | <https://en.himalpress.com/category/province/province-7/feed> | ne | news | 3 | rss |
-| 38 | Inland Revenue Department | <https://ird.gov.np/category/notice/> | ne | govt | 3 | html |
-| 39 | Janakpur Today | <https://ejanakpurtoday.com/feed/> | ne | news | 3 | rss |
-| 40 | janakpur-today | <https://ejanakpurtoday.com/feed/> | ne | news | 3 | rss |
-| 41 | Karnali Mission | <https://karnalimission.com/feed> | ne | news | 3 | rss |
-| 42 | Karnali Province OCMCM | <https://ocmcm.karnali.gov.np/category/cabinet-decisions/> | ne | govt | 3 | html |
-| 43 | Koshi Province OCMCM | <https://ocmcm.koshi.gov.np/category/notice-publication/> | ne | govt | 3 | html |
-| 44 | Lumbini Province OCMCM | <https://ocmcm.lumbini.gov.np/notices> | ne | govt | 3 | html |
-| 45 | Madhesh Province OCMCM | <https://ocmcm.madhesh.gov.np/category/notifications/> | ne | govt | 3 | html |
-| 46 | Ministry of Foreign Affairs | <https://mofa.gov.np/category/presscategory/> | en | govt | 3 | html |
-| 47 | Ministry of Home Affairs | <https://moha.gov.np/page/news> | ne | govt | 3 | html |
-| 48 | Nepal Police Traffic Directorate | <https://traffic.nepalpolice.gov.np/news/latest-news/> | ne | govt | 3 | html |
-| 49 | Office of PM & Council of Ministers | <https://opmcm.gov.np/category/cabinet-decision/> | ne | govt | 3 | html |
-| 50 | Public Debt Management Office | <https://pdmo.gov.np/category/cb-notice> | ne | economic | 3 | html |
-| 51 | ratopati-bagmati | <https://bagmati.ratopati.com> | ne | news | 3 | html |
-| 52 | ratopati-gandaki | <https://gandaki.ratopati.com> | ne | news | 3 | html |
-| 53 | ratopati-karnali | <https://karnali.ratopati.com> | ne | news | 3 | html |
-| 54 | ratopati-koshi | <https://koshi.ratopati.com> | ne | news | 3 | html |
-| 55 | ratopati-lumbini | <https://lumbini.ratopati.com> | ne | news | 3 | html |
-| 56 | ratopati-madhesh | <https://madhesh.ratopati.com> | ne | news | 3 | html |
-| 57 | ratopati-sudurpashchim | <https://sudurpashchim.ratopati.com> | ne | news | 3 | html |
-| 58 | Spotlight Nepal | <https://www.spotlightnepal.com/feed/> | en | news | 3 | rss |
-| 59 | Sudurpashchim Province OCMCM | <https://ocmcm.sudurpashchim.gov.np/category/information> | ne | govt | 3 | html |
+| 9 | Annapurna Post (अर्थतन्त्र) | <https://annapurnapost.com/category/economy/> | ne | economic | 2 | html |
+| 10 | BBC Asia | <https://feeds.bbci.co.uk/news/world/asia/rss.xml> | en | news | 2 | rss |
+| 11 | BBC Nepali | <https://feeds.bbci.co.uk/nepali/rss.xml> | ne | news | 2 | rss |
+| 12 | eKantipur (अर्थ / वाणिज्य) | <https://ekantipur.com/business> | ne | economic | 2 | html |
+| 13 | Gorkhapatra | <https://gorkhapatraonline.com/rss> | ne | news | 2 | rss |
+| 14 | Gorkhapatra (अर्थ) | <https://gorkhapatraonline.com/rss/economy> | ne | economic | 2 | rss |
+| 15 | Himal Press | <https://www.himalpress.com/feed/> | ne | news | 2 | rss |
+| 16 | Himal Press (अर्थतन्त्र) | <https://himalpress.com/category/finance/feed/> | ne | economic | 2 | rss |
+| 17 | Image Channel | <https://www.imagekhabar.com/feed> | ne | news | 2 | rss |
+| 18 | Image Khabar (अर्थ) | <https://www.imagekhabar.com/news/category/economy/feed/> | ne | economic | 2 | rss |
+| 19 | Khabarhub (English) | <https://english.khabarhub.com/feed> | en | news | 2 | rss |
+| 20 | Khabarhub (Nepali) | <https://khabarhub.com/feed/> | ne | news | 2 | rss |
+| 21 | Khabarhub English (Business) | <https://english.khabarhub.com/category/business/feed/> | en | economic | 2 | rss |
+| 22 | Khabarhub Nepali (आर्थिक) | <https://khabarhub.com/category/business/feed/> | ne | economic | 2 | rss |
+| 23 | MeroLagani | <https://merolagani.com/NewsList.aspx?id=7&type=latest> | ne | economic | 2 | html |
+| 24 | Nagarik News (अर्थ) | <https://nagariknews.nagariknetwork.com/economy> | ne | economic | 2 | html |
+| 25 | Nepal Rastra Bank | <https://www.nrb.org.np/feed/> | ne | economic | 2 | rss |
+| 26 | OnlineKhabar English (Economy) | <https://english.onlinekhabar.com/category/economy/feed> | en | economic | 2 | rss |
+| 27 | OnlineKhabar Nepali (Business) | <https://www.onlinekhabar.com/content/business/feed> | ne | economic | 2 | rss |
+| 28 | Pahilopost | <https://pahilopost.com/feed> | ne | news | 2 | rss |
+| 29 | Pokhara Hotline | <https://pokharahotline.com/feed/> | ne | news | 2 | rss |
+| 30 | Setopati (बजार अर्थतन्त्र) | <https://www.setopati.com/kinmel> | ne | economic | 2 | html |
+| 31 | ShareSansar | <https://www.sharesansar.com/category/latest> | en | economic | 2 | html |
+| 32 | The Kathmandu Post (Money) | <https://kathmandupost.com/money> | en | economic | 2 | html |
+| 33 | The Rising Nepal | <https://risingnepaldaily.com/rss> | en | news | 2 | rss |
+| 34 | The Rising Nepal (Business) | <https://risingnepaldaily.com/rss/business> | en | economic | 2 | rss |
+| 35 | eKantipur Bagmati | <https://ekantipur.com/pradesh-3> | ne | news | 3 | html |
+| 36 | eKantipur Gandaki | <https://ekantipur.com/pradesh-4> | ne | news | 3 | html |
+| 37 | eKantipur Karnali | <https://ekantipur.com/pradesh-6> | ne | news | 3 | html |
+| 38 | eKantipur Koshi | <https://ekantipur.com/pradesh-1> | ne | news | 3 | html |
+| 39 | eKantipur Lumbini | <https://ekantipur.com/pradesh-5> | ne | news | 3 | html |
+| 40 | eKantipur Madhesh | <https://ekantipur.com/pradesh-2> | ne | news | 3 | html |
+| 41 | eKantipur Sudurpashchim | <https://ekantipur.com/pradesh-7> | ne | news | 3 | html |
+| 42 | Gandak News | <https://www.gandaknews.com/feed/> | ne | news | 3 | rss |
+| 43 | Gandaki Province OCMCM | <https://ocmcm.gandaki.gov.np/list/news> | ne | govt | 3 | html |
+| 44 | Himal Press (Bagmati Province) | <https://en.himalpress.com/category/province/province-3/feed/> | en | news | 3 | rss |
+| 45 | Himal Press English (Business) | <https://en.himalpress.com/category/business/feed/> | en | economic | 3 | rss |
+| 46 | Himalpress-gandaki | <https://en.himalpress.com/category/province/province-4/feed> | ne | news | 3 | rss |
+| 47 | Himalpress-karnali | <https://en.himalpress.com/category/province/province-6/feed> | ne | news | 3 | rss |
+| 48 | Himalpress-Koshi | <https://en.himalpress.com/category/province/province-1/feed> | ne | news | 3 | rss |
+| 49 | Himalpress-lumbini | <https://en.himalpress.com/category/province/province-5/feed> | ne | news | 3 | rss |
+| 50 | Himalpress-madhesh | <https://en.himalpress.com/category/province/province-2/feed> | ne | news | 3 | rss |
+| 51 | Himalpress-sudurpaschim | <https://en.himalpress.com/category/province/province-7/feed> | ne | news | 3 | rss |
+| 52 | Inland Revenue Department | <https://ird.gov.np/category/notice/> | ne | govt | 3 | html |
+| 53 | Janakpur Today | <https://ejanakpurtoday.com/feed/> | ne | news | 3 | rss |
+| 54 | Janakpur Today (अर्थ/वाणीज्य) | <https://ejanakpurtoday.com/category/economics/feed/> | ne | economic | 3 | rss |
+| 55 | janakpur-today | <https://ejanakpurtoday.com/feed/> | ne | news | 3 | rss |
+| 56 | Karnali Mission | <https://karnalimission.com/feed> | ne | news | 3 | rss |
+| 57 | Karnali Province OCMCM | <https://ocmcm.karnali.gov.np/category/cabinet-decisions/> | ne | govt | 3 | html |
+| 58 | Koshi Province OCMCM | <https://ocmcm.koshi.gov.np/category/notice-publication/> | ne | govt | 3 | html |
+| 59 | Lumbini Province OCMCM | <https://ocmcm.lumbini.gov.np/notices> | ne | govt | 3 | html |
+| 60 | Madhesh Province OCMCM | <https://ocmcm.madhesh.gov.np/category/notifications/> | ne | govt | 3 | html |
+| 61 | Ministry of Foreign Affairs | <https://mofa.gov.np/category/presscategory/> | en | govt | 3 | html |
+| 62 | Ministry of Home Affairs | <https://moha.gov.np/page/news> | ne | govt | 3 | html |
+| 63 | Nepal Police Traffic Directorate | <https://traffic.nepalpolice.gov.np/news/latest-news/> | ne | govt | 3 | html |
+| 64 | Office of PM & Council of Ministers | <https://opmcm.gov.np/category/cabinet-decision/> | ne | govt | 3 | html |
+| 65 | Public Debt Management Office | <https://pdmo.gov.np/category/cb-notice> | ne | economic | 3 | html |
+| 66 | Ratopati (अर्थतन्त्र) | <https://www.ratopati.com/category/economy> | ne | economic | 3 | html |
+| 67 | ratopati-bagmati | <https://bagmati.ratopati.com> | ne | news | 3 | html |
+| 68 | ratopati-gandaki | <https://gandaki.ratopati.com> | ne | news | 3 | html |
+| 69 | ratopati-karnali | <https://karnali.ratopati.com> | ne | news | 3 | html |
+| 70 | ratopati-koshi | <https://koshi.ratopati.com> | ne | news | 3 | html |
+| 71 | ratopati-lumbini | <https://lumbini.ratopati.com> | ne | news | 3 | html |
+| 72 | ratopati-madhesh | <https://madhesh.ratopati.com> | ne | news | 3 | html |
+| 73 | ratopati-sudurpashchim | <https://sudurpashchim.ratopati.com> | ne | news | 3 | html |
+| 74 | Spotlight Nepal | <https://www.spotlightnepal.com/feed/> | en | news | 3 | rss |
+| 75 | Spotlight Nepal (Economy) | <https://www.spotlightnepal.com/topic/economy/> | en | economic | 3 | html |
+| 76 | Sudurpashchim Province OCMCM | <https://ocmcm.sudurpashchim.gov.np/category/information> | ne | govt | 3 | html |
+| 77 | Gandak News (अर्थ/व्यापार) | <https://www.gandaknews.com/category/business/feed/> | ne | economic | 4 | rss |
 
 <!-- END GENERATED: news-outlets -->
 
