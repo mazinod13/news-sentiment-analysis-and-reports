@@ -17,6 +17,7 @@ Steps 1-6 need no database, which is what `probe` runs.
 from __future__ import annotations
 
 import logging
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
@@ -25,6 +26,7 @@ from app.ingestion.fetcher import Fetcher
 from app.ingestion.registry import build_scraper
 from app.nlp.analysis import Analysis, analyse
 from app.nlp.criticality import Lexicon, LexiconError, load_lexicon
+from app.nlp.stories import story_terms
 from app.pipeline.dedupe import dedupe_batch, is_near_duplicate
 from app.pipeline.normalize import Article, normalize, url_hash
 from app.settings import NPT, Settings
@@ -127,6 +129,8 @@ def run_source(
         lexicon = _load_lexicon(settings, extra)
         with session_scope(settings) as session:
             recent = repo.recent_simhashes(session, since=started - timedelta(days=2))
+            # Story-clustering IDF counts every stored article, so count here.
+            stored_terms: Counter[str] = Counter()
             for article in articles:
                 if is_near_duplicate(article.simhash, recent):
                     report.duplicate += 1
@@ -141,6 +145,11 @@ def run_source(
                 analysis = _analyse(article, lexicon, extra)
                 if analysis is not None:
                     repo.save_analysis(session, article_id, analysis, analysed_at=started)
+                # .keys(): one per distinct term per article -- a document frequency.
+                stored_terms.update(
+                    story_terms(article.title, article.body or article.summary).keys()
+                )
+            repo.count_terms(session, stored_terms)
 
             repo.save_state(
                 session,

@@ -1,0 +1,18 @@
+id: bizmandu-corporate
+name: Bizmandu (Corporate)
+url: https://bizmandu.com/content/category/corporate/feed
+homepage: https://bizmandu.com/content/category/corporate.html
+method: rss
+lang: ne
+category: economic
+priority: 3
+active: true
+
+section_of: bizmandu
+# Same site and article template as the main outlet.
+selectors: bizmandu
+
+notes: |
+  - Industry, business-association and government-private-sector news. Slow:
+    15 items covered 12 days when checked, so it polls hourly.
+  - 14 of 15 items carry the Corporate tag.

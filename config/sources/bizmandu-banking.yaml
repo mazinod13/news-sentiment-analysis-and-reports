@@ -1,0 +1,18 @@
+id: bizmandu-banking
+name: Bizmandu (Banking)
+url: https://bizmandu.com/content/category/banking/feed
+homepage: https://bizmandu.com/content/category/banking.html
+method: rss
+lang: ne
+category: economic
+priority: 3
+active: true
+
+section_of: bizmandu
+# Same site and article template as the main outlet.
+selectors: bizmandu
+
+notes: |
+  - Banks, NRB policy, dividends and lending. 15 items covered 10 days when
+    checked, so it polls hourly.
+  - Every item carries the Banking tag.

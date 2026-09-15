@@ -2,16 +2,30 @@
 
 from __future__ import annotations
 
+from collections import Counter
+from collections.abc import Iterable
 from datetime import datetime, timedelta
 
-from sqlalchemy import select, update
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import delete, func, select, text, update
+from sqlalchemy.dialects.postgresql import array, insert
 from sqlalchemy.orm import Session
 
 from app.nlp.analysis import Analysis
+from app.nlp.stories import Member, StoryArticle, story_terms
 from app.pipeline.dedupe import from_signed64, to_signed64
 from app.pipeline.normalize import Article as ArticleDTO
-from app.storage.models import Article, ArticleAnalysis, FetchLog, SourceState
+from app.storage.models import (
+    Article,
+    ArticleAnalysis,
+    ArticleCluster,
+    FetchLog,
+    SourceState,
+    StoryCluster,
+    TermStat,
+)
+
+# Arbitrary constant naming the "one clusterer at a time" advisory lock.
+CLUSTER_LOCK_KEY = 725_001
 
 
 def existing_url_hashes(session: Session, hashes: list[str]) -> set[str]:
@@ -115,6 +129,181 @@ def articles_to_analyse(
         )
     rows = session.execute(query.order_by(Article.id).limit(limit)).all()
     return [(row.id, row.title, row.body or row.summary) for row in rows]
+
+
+def try_lock_clustering(session: Session) -> bool:
+    """Transaction-scoped advisory lock. Two clusterers running at once could
+    each start a separate story for the same event."""
+    return bool(session.scalar(select(func.pg_try_advisory_xact_lock(CLUSTER_LOCK_KEY))))
+
+
+def articles_to_cluster(session: Session, *, limit: int) -> list:
+    """Stored articles with no story yet, oldest first so stories form in order."""
+    return session.execute(
+        select(
+            Article.id, Article.source_id, Article.title, Article.body, Article.summary,
+            Article.lang, Article.published_at,
+        )
+        .outerjoin(ArticleCluster, ArticleCluster.article_id == Article.id)
+        .where(ArticleCluster.article_id.is_(None))
+        .order_by(Article.published_at, Article.id)
+        .limit(limit)
+    ).all()
+
+
+def top_stories(session: Session, *, since: datetime, limit: int, min_sources: int) -> list:
+    """Recent stories, most outlets first, with the most critical member grade."""
+    top_grade = (
+        select(func.min(ArticleAnalysis.grade))
+        .join(ArticleCluster, ArticleCluster.article_id == ArticleAnalysis.article_id)
+        .where(ArticleCluster.cluster_id == StoryCluster.id)
+        .scalar_subquery()
+    )
+    return session.execute(
+        select(
+            StoryCluster.id, StoryCluster.title, StoryCluster.article_count,
+            StoryCluster.source_count, StoryCluster.sources, StoryCluster.first_published_at,
+            StoryCluster.last_published_at, top_grade.label("grade"),
+        )
+        .where(StoryCluster.last_published_at >= since, StoryCluster.source_count >= min_sources)
+        .order_by(
+            StoryCluster.source_count.desc(),
+            StoryCluster.article_count.desc(),
+            StoryCluster.last_published_at.desc(),
+        )
+        .limit(limit)
+    ).all()
+
+
+class DbClusterStore:
+    """app.nlp.stories.ClusterStore on Postgres, inside one session."""
+
+    def __init__(self, session: Session) -> None:
+        self.session = session
+        self._corpus_size: int | None = None
+
+    def corpus_size(self) -> int:
+        # Every stored article: term_stats is counted at ingest, not at clustering.
+        if self._corpus_size is None:
+            self._corpus_size = self.session.scalar(select(func.count()).select_from(Article)) or 0
+        return self._corpus_size
+
+    def document_frequencies(self, terms: Iterable[str]) -> dict[str, int]:
+        wanted = list(set(terms))
+        found: dict[str, int] = {}
+        for start in range(0, len(wanted), 1000):   # keep IN lists bounded
+            chunk = wanted[start:start + 1000]
+            rows = self.session.execute(
+                select(TermStat.term, TermStat.df).where(TermStat.term.in_(chunk))
+            )
+            found.update({row.term: row.df for row in rows})
+        return found
+
+    def candidates(
+        self, *, lang: str, start: datetime, end: datetime, any_of_terms: list[str], limit: int
+    ) -> list[Member]:
+        if not any_of_terms:
+            return []
+        rows = self.session.execute(
+            select(ArticleCluster.article_id, ArticleCluster.cluster_id, ArticleCluster.terms)
+            .where(
+                ArticleCluster.lang == lang,
+                ArticleCluster.published_at.between(start, end),
+                ArticleCluster.terms.has_any(array(any_of_terms)),
+            )
+            .order_by(ArticleCluster.published_at.desc())
+            .limit(limit)
+        ).all()
+        return [Member(row.article_id, row.cluster_id, row.terms) for row in rows]
+
+    def create_cluster(self, article: StoryArticle) -> int:
+        cluster = StoryCluster(
+            lang=article.lang,
+            title=article.title,
+            first_published_at=article.published_at,
+            last_published_at=article.published_at,
+            article_count=1,
+            source_count=1,
+            sources=[article.source_id],
+        )
+        self.session.add(cluster)
+        self.session.flush()
+        return cluster.id
+
+    def join_cluster(self, cluster_id: int, article: StoryArticle) -> None:
+        cluster = self.session.get(StoryCluster, cluster_id, with_for_update=True)
+        cluster.article_count += 1
+        cluster.first_published_at = min(cluster.first_published_at, article.published_at)
+        cluster.last_published_at = max(cluster.last_published_at, article.published_at)
+        if article.source_id not in cluster.sources:
+            # Reassign rather than append: in-place JSONB mutation is not tracked.
+            cluster.sources = [*cluster.sources, article.source_id]
+            cluster.source_count = len(cluster.sources)
+
+    def add_member(self, article: StoryArticle, cluster_id: int, similarity: float) -> None:
+        self.session.add(
+            ArticleCluster(
+                article_id=article.article_id,
+                cluster_id=cluster_id,
+                similarity=similarity,
+                terms=article.terms,
+                lang=article.lang,
+                published_at=article.published_at,
+            )
+        )
+        self.session.flush()
+
+
+def count_terms(session: Session, document_frequencies: Counter[str]) -> None:
+    """Add newly stored articles' terms to the IDF statistics.
+
+    Called once per source run, in the transaction that stores the articles.
+    One statement with rows in sorted term order: concurrent sources then lock
+    shared term rows in the same order and cannot deadlock each other.
+    """
+    if not document_frequencies:
+        return
+    rows = [{"term": term, "df": n} for term, n in sorted(document_frequencies.items())]
+    statement = insert(TermStat).values(rows)
+    session.execute(
+        statement.on_conflict_do_update(
+            index_elements=["term"],
+            set_={"df": TermStat.__table__.c.df + statement.excluded.df},
+        )
+    )
+
+
+def rebuild_term_stats(session: Session, *, batch: int = 1000) -> int:
+    """Recount document frequencies over every stored article. Returns how many.
+
+    For a database that held articles before story clustering existed; ingest
+    keeps the counts current afterwards. The table lock makes concurrent
+    ingest wait rather than lose its increments to the delete below.
+    """
+    session.execute(text("LOCK TABLE term_stats IN SHARE ROW EXCLUSIVE MODE"))
+    counts: Counter[str] = Counter()
+    documents = after_id = 0
+    while True:
+        rows = session.execute(
+            select(Article.id, Article.title, Article.body, Article.summary)
+            .where(Article.id > after_id)
+            .order_by(Article.id)
+            .limit(batch)
+        ).all()
+        if not rows:
+            break
+        for row in rows:
+            counts.update(story_terms(row.title, row.body or row.summary).keys())
+        documents += len(rows)
+        after_id = rows[-1].id
+
+    session.execute(delete(TermStat))
+    items = sorted(counts.items())
+    for start in range(0, len(items), 5000):
+        session.execute(
+            insert(TermStat), [{"term": t, "df": n} for t, n in items[start:start + 5000]]
+        )
+    return documents
 
 
 def get_state(session: Session, source_id: str) -> SourceState:

@@ -5,12 +5,12 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.settings import Settings
-from app.storage.models import Base
+from app.storage.models import Base, TermStat
 
 _engine: Engine | None = None
 _Session: sessionmaker[Session] | None = None
@@ -44,5 +44,15 @@ def create_all(settings: Settings) -> None:
 
     Additive only: new tables are created, existing ones are never altered.
     A column change to an existing table needs a migration.
+
+    When term_stats is created on a database that already holds articles, their
+    terms are counted here, so story clustering starts with a warm IDF.
     """
-    Base.metadata.create_all(get_engine(settings))
+    engine = get_engine(settings)
+    seed_term_stats = not inspect(engine).has_table(TermStat.__tablename__)
+    Base.metadata.create_all(engine)
+    if seed_term_stats:
+        from app.storage.repositories import rebuild_term_stats
+
+        with session_scope(settings) as session:
+            rebuild_term_stats(session)
