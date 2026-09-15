@@ -6,11 +6,11 @@ stores the corpus in Postgres, and gives every article keywords and an A–F
 criticality grade.
 
 ```
-fetch → parse → fetch body → normalise → dedupe → store → keywords + grade
+fetch → parse → fetch body → normalise → dedupe → store → keywords + grade → stories
 ```
 
-**77 sources are configured** — RSS feeds and HTML listing pages: national,
-provincial and government outlets, plus 18 dedicated economy and business
+**82 sources are configured** — RSS feeds and HTML listing pages: national,
+provincial and government outlets, plus 21 dedicated economy and business
 sections (see [Section sources](#section-sources)). [DATA_SOURCES.md](DATA_SOURCES.md) has the
 generated inventory and the wider catalogue.
 
@@ -24,6 +24,7 @@ generated inventory and the wider catalogue.
 - [Project layout](#project-layout)
 - [How one ingest works](#how-one-ingest-works)
 - [Keywords and criticality grades](#keywords-and-criticality-grades)
+- [Story clusters](#story-clusters)
 - [Configuring sources](#configuring-sources)
 - [Adding a source](#adding-a-source)
 - [Configuration (environment)](#configuration-environment)
@@ -67,6 +68,7 @@ docker compose run --rm app python -m app.main probe annapurna-post
 docker compose run --rm app python -m app.main ingest --priority 1
 docker compose run --rm app python -m app.main bipad --since 2026-08-01 --out data/incidents.csv
 docker compose run --rm app python -m app.main analyse --missing
+docker compose run --rm app python -m app.main stories --hours 24
 ```
 
 Files written under `data/` land in `./data` on the host.
@@ -124,6 +126,9 @@ Postgres — start just that with
 | `python -m app.main analyse --file story.txt` (or `--text "..."`) | no | keywords and A–F grade for any text; the first line is the title |
 | `python -m app.main analyse --missing [--limit N]` | yes | grade stored articles that have no grade yet |
 | `python -m app.main analyse --all` | yes | re-grade every stored article, e.g. after editing the lexicon |
+| `python -m app.main stories [--hours 24] [--min-sources N]` | yes | recent stories, one row per event, most outlets first |
+| `python -m app.main cluster [--limit N]` | yes | group articles not yet in a story (the worker does this after each cycle) |
+| `python -m app.main cluster --rebuild-terms` | yes | recount term statistics over every stored article first |
 | `python scripts/new_source.py --id ...` | no | scaffold config, selector pack, test and fixture for a new source |
 | `python scripts/gen_sources.py [--check]` | no | regenerate (or verify) the tables in DATA_SOURCES.md |
 
@@ -155,11 +160,13 @@ NEWS-SENTIMENT/
 │   │   ├── tokens.py        mixed-script tokenizer
 │   │   ├── keywords.py      noun-phrase keywords
 │   │   ├── criticality.py   lexicon-weighted A–F grade
-│   │   └── analysis.py      both, for one article
+│   │   ├── analysis.py      both, for one article
+│   │   └── stories.py       group articles about one event (TF-IDF cosine)
 │   ├── pipeline/
 │   │   ├── run.py           one source, end to end
 │   │   ├── normalize.py     raw item → Article, URL canonicalisation
-│   │   └── dedupe.py        url_hash + simhash
+│   │   ├── dedupe.py        url_hash + simhash
+│   │   └── cluster.py       post-ingest story grouping
 │   ├── storage/             SQLAlchemy models, session, all queries
 │   ├── scheduler/worker.py  priority-driven polling loop
 │   └── utils/logging.py
@@ -212,6 +219,10 @@ Ingest is idempotent: running the same source twice stores nothing the second
 time. One source failing never stops a cycle — the error is logged with the
 source id and recorded in `fetch_log`.
 
+After a cycle stores new articles, the worker groups them into stories, so one
+event reported by several outlets counts once — see
+[Story clusters](#story-clusters).
+
 ### Stored tables
 
 | Table | Holds |
@@ -220,6 +231,9 @@ source id and recorded in `fetch_log`.
 | `source_state` | per-source ETag / Last-Modified, `last_run_at`, `next_run_at`, consecutive failures, last error |
 | `fetch_log` | one row per run: items seen / new / duplicate, not-modified, ok, error |
 | `article_analysis` | per article: `grade` (A–F), `score`, `dampened`, `keywords` and matched terms (JSONB), `analysed_at` |
+| `story_clusters` | one row per event: `title` (first headline), `article_count`, `source_count`, `sources`, first/last published |
+| `article_clusters` | which story each article is in, its `similarity` to its best match, and the `terms` it matched on |
+| `term_stats` | document frequency per term over every stored article, for IDF |
 
 ---
 
@@ -293,6 +307,78 @@ limit 20;
 scores nothing. eKantipur provincial pages only serve a lede, so their grades
 rest on less text. `probe` prints each item's grade and keywords, which is the
 quickest way to tune the lexicon against a live outlet.
+
+---
+
+## Story clusters
+
+Deduplication stops the same *text* being stored twice: `url_hash` for the same
+URL, simhash for near-copies. It cannot see the same *event* written up by
+several outlets in their own words — five outlets on one NEPSE jump measured
+22–36 simhash bits apart, far past its threshold of 8 — so each was stored and
+counted as a separate event. After every worker cycle (and after `ingest`), new
+articles are therefore grouped into **stories**:
+
+1. **Terms** — the noun-like word stems of title and body, title counted twice,
+   from the same Nepali/English tagger as keywords.
+2. **Weights** — TF-IDF. Filler every finance story shares (प्रतिशत, करोड,
+   कारोबार) counts for little; words that identify the event (नेप्से, घरजग्गा,
+   कार्ययोजना) count for a lot.
+3. **Join** — an article joins the story of its most similar article published
+   within 48 hours either side, in the same language, when their cosine
+   similarity is **at least 0.25**. Otherwise it starts a new story.
+
+Term statistics (`term_stats`) cover **every stored article** and are counted
+when an article is stored, not when it is clustered. Counted at clustering
+time, the first stories after a deploy would see IDF from a handful of articles,
+unable to tell filler from event words. `db upgrade` counts the articles already
+in an existing database when it creates the table.
+
+Only articles sharing one of the new article's 12 most distinctive terms are
+compared (a GIN index on `article_clusters.terms`), so each assignment stays
+cheap as the corpus grows. A Postgres advisory lock keeps it to one clusterer at
+a time, so two outlets' versions of an event arriving together cannot each
+found a story.
+
+**Measured on the 34 saved article pages** (`tests/test_stories.py`), this
+forms exactly the three real multi-outlet stories — six Nepali outlets on the
+15 September NEPSE jump, two English outlets on the same jump, and two outlets
+on the same central-bank real-estate figures — and nothing else. Joins scored
+0.30–0.48. The closest articles that did not join scored 0.23 (a capital-gains
+tax cut against the market's reaction — both from the same reform plan, but
+different stories), 0.20 (the plan's announcement against that reaction) and
+0.18. Plain keyword overlap could not separate the two groups.
+
+```bash
+python -m app.main stories --hours 24                  # one row per event, most outlets first
+python -m app.main stories --hours 24 --min-sources 3  # only widely covered events
+python -m app.main cluster                             # group anything left over
+```
+
+```sql
+select title, source_count, article_count, sources
+from story_clusters
+where last_published_at > now() - interval '24 hours'
+order by source_count desc
+limit 20;
+```
+
+**Upgrading an existing database:** `docker compose up -d --build` runs
+`db upgrade`, which creates the tables and counts existing articles' terms;
+the worker then groups new articles each cycle. Group the articles already
+stored with `python -m app.main cluster`.
+
+**Limits.**
+- The margin is narrow: the closest non-join sits 0.02 below 0.25 and the
+  weakest join 0.05 above it, on a few dozen pages.
+  Revisit `JOIN_THRESHOLD` in `app/nlp/stories.py` once real volume builds up;
+  `tests/test_stories.py` shows what a change does.
+- An article joins through its single best match, so a long-running story can
+  drift across 48-hour steps.
+- Nepali and English coverage of the same event are separate stories.
+- Copies dropped by simhash at ingest are not stored, so `source_count` counts
+  outlets whose version was kept.
+- eKantipur's lede-only bodies give it fewer terms to match on.
 
 ---
 
@@ -499,6 +585,8 @@ certificate expires.
 | `worker` exits immediately in Docker | `migrate` failed | `docker compose logs migrate` |
 | A story's grade looks wrong | a term missing, too broad, or in the wrong tier | `analyse --text` on it, edit `config/criticality.yaml`, then `analyse --all` |
 | Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file, then `analyse --missing` |
+| One event shows up as several stories | worded too differently (below 0.25), or published more than 48 h apart | `JOIN_THRESHOLD` / `WINDOW` in `app/nlp/stories.py`; check against `tests/test_stories.py` |
+| Unrelated articles share a story | threshold too low, or term statistics missing for older articles | `cluster --rebuild-terms`, then review `JOIN_THRESHOLD` |
 
 ---
 
