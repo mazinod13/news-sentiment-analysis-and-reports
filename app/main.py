@@ -6,6 +6,7 @@
     python -m app.main ingest --priority 1
     python -m app.main worker                     service: wait for db, upgrade, catch up, poll
     python -m app.main health                     exit 0 if the worker's heartbeat is recent
+    python -m app.main api                        serve the read-only HTTP API
     python -m app.main db upgrade
     python -m app.main bipad --since 2026-08-01 --out incidents.csv
     python -m app.main analyse --file story.txt   keywords + A-F grade, no database
@@ -45,6 +46,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "worker", help="run the service: wait for the database, upgrade, catch up, poll forever"
     )
     sub.add_parser("health", help="exit 0 if the worker's heartbeat is recent (healthcheck)")
+
+    api = sub.add_parser("api", help="serve the read-only HTTP API")
+    api.add_argument("--host", help="bind address (default API_BIND, 127.0.0.1)")
+    api.add_argument("--port", type=int, help="port (default API_PORT, 8000)")
 
     db = sub.add_parser("db", help="database management")
     db.add_argument("action", choices=["upgrade"])
@@ -366,6 +371,18 @@ def main(argv: list[str] | None = None) -> int:
         from app.scheduler.worker import run_forever
 
         run_forever(settings)
+        return 0
+    if args.command == "api":
+        import uvicorn
+
+        from app.api.app import create_app
+
+        uvicorn.run(
+            create_app(settings),
+            host=args.host or settings.api_bind,
+            port=args.port or settings.api_port,
+            log_level=settings.log_level.lower(),
+        )
         return 0
     if args.command == "health":
         from app.scheduler.health import check

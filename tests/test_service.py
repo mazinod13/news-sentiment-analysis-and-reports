@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import dataclasses
 import os
+import ssl
 import time
 from datetime import datetime, timedelta
 
@@ -81,17 +82,27 @@ class TestDatabaseSsl:
     def test_no_tls_requested(self, clean_env, mode):
         assert connect_args(self._settings(clean_env, mode)) == {}
 
-    def test_require_encrypts_without_verifying(self, clean_env):
-        args = connect_args(self._settings(clean_env, "require"))
-        assert "ssl" in args and not args.get("ssl_verify_cert")
+    def _context(self, clean_env, mode):
+        """Build the context PyMySQL itself would, from our options."""
+        from pymysql.connections import Connection
 
-    def test_verify_full_checks_certificate_and_hostname(self, clean_env):
-        args = connect_args(self._settings(clean_env, "verify-full"))
-        assert args["ssl_verify_cert"] and args["ssl_verify_identity"]
+        args = connect_args(self._settings(clean_env, mode))
+        return Connection._create_ssl_ctx(None, args["ssl"]), args
+
+    def test_require_encrypts_without_verifying(self, clean_env):
+        """A server using its own auto-generated certificate is self-signed:
+        demanding a trusted chain here would refuse every such connection."""
+        context, args = self._context(clean_env, "require")
+        assert "ca" not in args["ssl"]
+        assert context.verify_mode == ssl.CERT_NONE and not context.check_hostname
 
     def test_verify_ca_checks_the_certificate_only(self, clean_env):
-        args = connect_args(self._settings(clean_env, "verify-ca"))
-        assert args["ssl_verify_cert"] and "ssl_verify_identity" not in args
+        context, _ = self._context(clean_env, "verify-ca")
+        assert context.verify_mode == ssl.CERT_REQUIRED and not context.check_hostname
+
+    def test_verify_full_checks_certificate_and_hostname(self, clean_env):
+        context, _ = self._context(clean_env, "verify-full")
+        assert context.verify_mode == ssl.CERT_REQUIRED and context.check_hostname
 
     def test_private_ca_bundle_is_used(self, clean_env, tmp_path):
         """A managed server with its own CA: the bundle must be passed, not ignored."""
@@ -101,6 +112,11 @@ class TestDatabaseSsl:
         settings = self._settings(clean_env, "verify-full")
         assert dataclasses.replace(settings).database_ssl_root_cert == str(bundle)
         assert connect_args(settings)["ssl"]["ca"] == str(bundle)
+
+    def test_a_private_bundle_is_ignored_by_require(self, clean_env, tmp_path):
+        """require never verifies, so it must not load a CA at all."""
+        clean_env.setenv("MYSQL_SSLROOTCERT", str(tmp_path / "ca.pem"))
+        assert "ca" not in connect_args(self._settings(clean_env, "require"))["ssl"]
 
 
 class TestHealthcheck:

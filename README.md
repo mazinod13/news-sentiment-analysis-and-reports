@@ -25,6 +25,7 @@ generated inventory and the wider catalogue.
 - [How one ingest works](#how-one-ingest-works)
 - [Keywords and criticality grades](#keywords-and-criticality-grades)
 - [Story clusters](#story-clusters)
+- [HTTP API](#http-api)
 - [Configuring sources](#configuring-sources)
 - [Adding a source](#adding-a-source)
 - [Configuration (environment)](#configuration-environment)
@@ -44,8 +45,9 @@ docker compose up -d        # one container; nothing else to run
 docker compose logs -f worker
 ```
 
-That is the whole deployment: a single `worker` container against **your own
-MySQL 8 server**. On start it
+That is the whole deployment: two small containers against **your own MySQL 8
+server** — `worker`, which fills the corpus, and `api`, which serves it
+(see [HTTP API](#http-api)). The worker, on start,
 
 1. waits for the database, retrying while it is unreachable rather than dying;
 2. creates any missing tables, counting terms for articles already stored;
@@ -67,8 +69,9 @@ For development, an opt-in throwaway server is available:
 |---|---|
 | Database credentials | `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB` |
 | TLS to the database | `MYSQL_SSLMODE=require`, or `verify-full` (+ `MYSQL_SSLROOTCERT` for a private CA) |
-| Memory / CPU ceiling | `WORKER_MEMORY` (512m), `WORKER_CPUS` (1.0) |
+| Memory / CPU ceiling | `WORKER_MEMORY` (512m), `WORKER_CPUS` (1.0), `API_MEMORY`, `API_CPUS` |
 | Health tolerance | `HEALTH_MAX_AGE` seconds (1800) |
+| API access | `API_BIND` (127.0.0.1), `API_PORT` (8000), `API_KEYS` (optional) |
 
 **In Portainer.** The container reports health from a heartbeat the worker
 writes *only after work succeeds*, so one that cannot reach the database turns
@@ -153,6 +156,7 @@ database. `ingest`, `worker`, `db upgrade`, `cluster`, `stories` and
 | `python -m app.main ingest --due` | yes | ingest only sources past their `next_run_at` |
 | `python -m app.main worker` | yes | the service: wait for the database, create tables, catch up, then poll on schedule |
 | `python -m app.main health` | no | exit 0 if the worker's heartbeat is recent (the container healthcheck) |
+| `python -m app.main api [--host H] [--port P]` | yes | serve the read-only HTTP API |
 | `python -m app.main db upgrade` | yes | create missing tables (the worker does this itself) |
 | `python -m app.main bipad --since YYYY-MM-DD [--until] [--province] [--out file.csv\|.jsonl]` | no | pull BIPAD Portal disaster incidents |
 | `python -m app.main analyse --file story.txt` (or `--text "..."`) | no | keywords and A–F grade for any text; the first line is the title |
@@ -186,6 +190,7 @@ NEWS-SENTIMENT/
 │   │   ├── article.py       article extraction from a selector pack
 │   │   ├── dates.py         Bikram Sambat / Devanagari / feed dates
 │   │   └── clean.py         text cleanup
+│   ├── api/                 read-only HTTP API (Starlette + uvicorn)
 │   ├── nlp/                 keywords + criticality grade; pure Python, offline
 │   │   ├── nepali.py        rule-based Nepali tagging and case-marker stemming
 │   │   ├── english.py       English stopwords
@@ -215,7 +220,7 @@ NEWS-SENTIMENT/
 ├── data/                    gitignored export target
 ├── Dockerfile               Alpine; build → test → runtime (default)
 ├── docker-compose.yml       worker; app (cli), test and local-db profiles
-├── .env.example             every environment variable, documented
+├── .env.example             the few settings you must provide
 ├── pyproject.toml           dependencies + ruff/pytest config (source of truth)
 ├── requirements.txt         runtime deps, mirrors pyproject (test-enforced)
 ├── requirements-dev.txt     + pytest, ruff
@@ -417,6 +422,77 @@ its first cycle.
 
 ---
 
+## HTTP API
+
+A read-only API over the stored corpus, so other systems can consume the
+articles, their criticality grades and their sources without touching the
+database. It runs as its own container (`api`) from the same image.
+
+```bash
+curl "http://127.0.0.1:8000/api/v1/articles?grade=A,B&limit=20"
+# with API_KEYS set:
+curl -H "X-API-Key: $API_KEY" "http://127.0.0.1:8000/api/v1/articles?grade=A,B"
+```
+
+| Endpoint | Returns |
+|---|---|
+| `GET /api/v1/articles` | newest first, cursor-paged; filter by `grade`, `source`, `lang`, `category`, `since`, `until`; `?body=true` includes full text |
+| `GET /api/v1/articles/{id}` | one article, with full text, keywords and grade |
+| `GET /api/v1/stories` | one row per event: `?hours=`, `?min_sources=`; outlets that covered it, and its most critical grade |
+| `GET /api/v1/sources` | the configured outlets, straight from the YAML — no database needed |
+| `GET /api/v1/stats` | counts by grade and by outlet for a window |
+| `GET /healthz` | liveness and database reachability; no key, used by the container healthcheck |
+
+Each article carries its grade inline:
+
+```json
+{
+  "id": 4412,
+  "source_id": "kathmandupost-economy",
+  "url": "https://kathmandupost.com/money/2026/09/15/...",
+  "published_at": "2026-09-15T09:41:11+00:00",
+  "criticality": {
+    "grade": "B",
+    "score": 9.5,
+    "dampened": false,
+    "keywords": [{"text": "capital market", "score": 6.0, "count": 4}],
+    "matched_terms": [{"term": "flood*", "tier": "critical", "count": 2, "points": 10.0}]
+  },
+  "story_id": 87
+}
+```
+
+**Authentication is opt-in.** With `API_KEYS` empty — the default — the API is
+open to anyone who can reach the port, which is the intent on a trusted
+network: the corpus is public reporting and every endpoint is read-only. Set
+one or more comma-separated keys to require an `X-API-Key` header on every path
+except `/healthz`, which the container healthcheck calls and which is never
+keyed.
+
+**Paging.** Responses carry `next_cursor`; pass it back as `?before=` for the
+next page. `null` means the last page. Paging by id rather than offset keeps a
+cursor correct while new articles are being written.
+
+**Times** are UTC ISO-8601 both ways. Nepal is +05:45, so convert on your side;
+the API never guesses a zone. `published_estimated: true` marks articles whose
+publish time is a fallback — exclude those from precise time series.
+
+**Exposure.** `API_BIND` chooses the host interface the port is published on:
+`127.0.0.1` (default) keeps it on the machine, and `0.0.0.0` publishes it on
+every interface, so anything on the LAN reaches it at `http://<host-ip>:8000`.
+
+With no keys configured, reaching the port is the only requirement, so:
+
+- keep the port off the public internet (firewall, and no router port-forward) —
+  that boundary is what stands in for authentication;
+- set `API_KEYS` before exposing it any wider, giving each consumer its own key
+  so one can be rotated out without downtime;
+- put a reverse proxy with TLS in front if traffic leaves the trusted network;
+- list browser origins in `API_CORS_ORIGINS`; server-to-server callers need
+  nothing.
+
+---
+
 ## Configuring sources
 
 Every source is one file in `config/sources/`, named after its `id`.
@@ -531,7 +607,9 @@ is a YAML change, not a code change.
 
 ## Configuration (environment)
 
-All variables are optional; see [.env.example](.env.example).
+Only the MySQL settings are required — [.env.example](.env.example) holds those
+and nothing else. Everything below has a working default, and this table is the
+full list.
 
 | Variable | Default | Purpose |
 |---|---|---|
@@ -543,6 +621,10 @@ All variables are optional; see [.env.example](.env.example).
 | `DATABASE_URL` | built from the parts above | a complete URL, escaped by you; overrides them |
 | `HEARTBEAT_FILE` | system temp dir | file the worker touches after work succeeds |
 | `HEALTH_MAX_AGE` | `1800` | heartbeat age, in seconds, at which `health` reports unhealthy |
+| `API_KEYS` | — | comma-separated keys for the `X-API-Key` header; empty means no key is needed |
+| `API_BIND` / `API_PORT` | `127.0.0.1`, `8000` | where the API port is published |
+| `API_MAX_LIMIT` | `200` | largest page a caller may request |
+| `API_CORS_ORIGINS` | — | browser origins allowed to call the API; empty means server-to-server only |
 | `USER_AGENT` | `NepalNewsSentiment/0.1` | identify honestly, with a contact URL |
 | `REQUEST_TIMEOUT` | `20` | seconds |
 | `PER_HOST_DELAY` | `1.0` | seconds between requests to one host |
@@ -628,6 +710,8 @@ certificate expires.
 | `worker` shows unhealthy in Portainer | the database is unreachable, or every cycle is failing | `docker compose logs worker`; the heartbeat only advances after work succeeds |
 | `database not reachable` repeating in the logs | wrong `MYSQL_*` values, or the server is unreachable | fix `.env`; check the server allows the container's IP |
 | `cryptography is required for sha256_password or caching_sha2_password` | MySQL 8 password login over an unencrypted connection | set `MYSQL_SSLMODE=require`, or add `cryptography` to `requirements.txt` and rebuild |
+| TLS handshake error connecting to MySQL | the server has TLS turned off (MySQL 8 enables it by default) | turn it on, or set `MYSQL_SSLMODE=disable` and add `cryptography` to `requirements.txt` |
+| API unreachable from another machine | `API_BIND` is `127.0.0.1`, or the host firewall blocks the port | set `API_BIND=0.0.0.0`, `docker compose up -d api`, then allow the port |
 | Devanagari stored as `?` or mojibake | the database or a column is not utf8mb4 | `CREATE DATABASE … CHARACTER SET utf8mb4`; the app's own tables are utf8mb4 already |
 | A story's grade looks wrong | a term missing, too broad, or in the wrong tier | `analyse --text` on it, edit `config/criticality.yaml`, then `analyse --all` |
 | Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file; the worker catches up within 30 min, or run `analyse --missing` |

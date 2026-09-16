@@ -29,3 +29,7 @@ SQLAlchemy>=2.0.30
 # unencrypted connection, and it costs ~16 MB with cffi. Connect with TLS
 # (MYSQL_SSLMODE) instead -- see app/storage/db.py.
 PyMySQL>=1.1
+# The read-only HTTP API. Starlette + uvicorn is ~2 MB installed; FastAPI would
+# add Pydantic v2, whose compiled core is larger than everything else here.
+starlette>=0.37
+uvicorn>=0.30
