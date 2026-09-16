@@ -284,9 +284,10 @@ def top_stories(session: Session, *, since: datetime, limit: int, min_sources: i
     )
     return session.execute(
         select(
-            StoryCluster.id, StoryCluster.title, StoryCluster.article_count,
-            StoryCluster.source_count, StoryCluster.sources, StoryCluster.first_published_at,
-            StoryCluster.last_published_at, top_grade.label("grade"),
+            StoryCluster.id, StoryCluster.title, StoryCluster.lang,
+            StoryCluster.article_count, StoryCluster.source_count, StoryCluster.sources,
+            StoryCluster.first_published_at, StoryCluster.last_published_at,
+            top_grade.label("grade"),
         )
         .where(StoryCluster.last_published_at >= since, StoryCluster.source_count >= min_sources)
         .order_by(
