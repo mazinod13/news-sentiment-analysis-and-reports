@@ -26,9 +26,10 @@ def connect_args(settings: Settings) -> dict:
     """TLS options for PyMySQL, which takes an `ssl` dict rather than a URL mode.
 
     `{}` means "connect without TLS". The modes mirror MySQL's own: `require`
-    encrypts without checking the certificate, `verify-ca` checks it, and
-    `verify-full` also checks the hostname -- against certifi's roots, since the
-    Alpine image ships no system CA bundle.
+    encrypts without checking the certificate -- which is what a server using
+    its own auto-generated certificate needs -- while `verify-ca` checks the
+    certificate and `verify-full` also checks the hostname, against certifi's
+    roots unless MYSQL_SSLROOTCERT names a bundle.
 
     TLS is not just good practice here: MySQL 8 authenticates with
     caching_sha2_password, and over an encrypted connection PyMySQL can do that
@@ -40,13 +41,17 @@ def connect_args(settings: Settings) -> dict:
     mode = (settings.database_sslmode or "").strip().lower()
     if mode in ("", "disable"):
         return {}
-    options: dict = {"ssl": {"ca": settings.database_ssl_root_cert or certifi.where()}}
-    if mode in ("verify-ca", "verify_ca"):
-        options["ssl_verify_cert"] = True
-    elif mode in ("verify-full", "verify_full", "verify-identity"):
-        options["ssl_verify_cert"] = True
-        options["ssl_verify_identity"] = True
-    return options
+    if mode in ("require", "prefer"):
+        # Encrypt, verify nothing. Both keys are spelled out because PyMySQL
+        # treats "a CA was given" as "verify the certificate and the hostname"
+        # (connections.py::_create_ssl_ctx), and a MySQL server's own
+        # auto-generated certificate is self-signed -- it would be rejected.
+        return {"ssl": {"check_hostname": False, "verify_mode": False}}
+    ca = settings.database_ssl_root_cert or certifi.where()
+    # verify-ca checks the certificate chain; verify-full also checks that the
+    # hostname matches, which a self-signed server certificate will fail.
+    return {"ssl": {"ca": ca, "check_hostname": mode.startswith("verify-full"),
+                    "verify_mode": True}}
 
 
 def get_engine(settings: Settings) -> Engine:
