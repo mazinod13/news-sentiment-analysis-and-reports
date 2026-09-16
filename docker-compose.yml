@@ -1,6 +1,13 @@
-# docker compose up -d            postgres + schema migration + continuous worker
-# docker compose run --rm app python -m app.main <command>     one-off CLI
-# docker compose run --rm test                                 test suite
+# One container against your own MySQL 8 server:
+#
+#   cp .env.example .env     # put the database credentials in it
+#   docker compose up -d     # that is the whole deployment
+#
+# The worker waits for the database, creates missing tables, grades and groups
+# whatever is pending, then polls on schedule. Nothing to run by hand.
+#
+#   docker compose run --rm app python -m app.main stories --hours 24
+#   docker compose run --rm test
 name: ${COMPOSE_PROJECT_NAME:-news-sentiment}
 
 x-app: &app
@@ -12,63 +19,47 @@ x-app: &app
   env_file:
     - path: .env
       required: false
-  environment:
-    DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-news}:${POSTGRES_PASSWORD:-news}@postgres:5432/${POSTGRES_DB:-news_sentiment}
   volumes:
     # Source and selector YAML are mounted read-only, so adding or fixing an
     # outlet takes effect on the next cycle without rebuilding the image.
     - ./config:/app/config:ro
     # Export target for CLI output, e.g. `bipad --out data/incidents.csv`.
     - ./data:/app/data
+  logging:
+    driver: json-file
+    options:
+      # A small VM must not fill its disk with logs.
+      max-size: "10m"
+      max-file: "3"
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-news}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-news}
-      POSTGRES_DB: ${POSTGRES_DB:-news_sentiment}
-    ports:
-      # Loopback only -- the database is never exposed beyond this machine.
-      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-news} -d ${POSTGRES_DB:-news_sentiment}"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
-  # Creates any missing tables, then exits. Everything that needs the
-  # database waits for it to finish successfully.
-  migrate:
-    <<: *app
-    command: ["python", "-m", "app.main", "db", "upgrade"]
-    restart: "no"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  # Continuous, priority-driven scheduler.
   worker:
     <<: *app
+    container_name: ${COMPOSE_PROJECT_NAME:-news-sentiment}-worker
     command: ["python", "-m", "app.main", "worker"]
     restart: unless-stopped
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
+    # Let a long cycle finish on `docker stop` instead of being killed mid-write.
+    stop_grace_period: 2m
+    # Green/red in Portainer. The worker only beats after work succeeds, so a
+    # worker that cannot reach the database goes red instead of looking idle.
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.main", "health"]
+      interval: 5m
+      timeout: 30s
+      start_period: 10m
+      retries: 2
+    mem_limit: ${WORKER_MEMORY:-512m}
+    cpus: ${WORKER_CPUS:-1.0}
 
-  # One-off CLI runner; never started by `up`.
+  # One-off CLI; never started by `up`.
+  #   docker compose run --rm app python -m app.main sources
   app:
     <<: *app
     profiles: ["cli"]
     command: ["python", "-m", "app.main", "--help"]
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
 
   # Offline test suite; needs no database.
+  #   docker compose run --rm test
   test:
     build:
       context: .
@@ -77,5 +68,27 @@ services:
     profiles: ["test"]
     command: ["pytest"]
 
+  # Development only: a throwaway local database, never started by `up`.
+  #   docker compose --profile local-db up -d mysql
+  # Then set MYSQL_HOST=mysql in .env (or 127.0.0.1 from the host), and
+  # MYSQL_SSLMODE=disable -- a local container needs no TLS.
+  mysql:
+    image: mysql:8.4
+    profiles: ["local-db"]
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-news}
+      MYSQL_USER: ${MYSQL_USER:-news}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-news}
+      MYSQL_DATABASE: ${MYSQL_DB:-news_sentiment}
+    # utf8mb4 everywhere, or Devanagari does not survive the round trip.
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+
 volumes:
-  pgdata:
+  mysqldata:
