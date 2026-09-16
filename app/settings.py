@@ -42,6 +42,10 @@ def database_url() -> str:
     return f"mysql+{driver}://{user}:{password}@{host}:{port}/{name}?charset={DB_CHARSET}"
 
 
+def _csv_set(name: str) -> frozenset[str]:
+    return frozenset(item.strip() for item in os.getenv(name, "").split(",") if item.strip())
+
+
 def _bool(name: str, default: bool) -> bool:
     raw = os.getenv(name)
     if raw is None:
@@ -70,6 +74,12 @@ class Settings:
     # disable | require | verify-ca | verify-full; None means no TLS requested.
     database_sslmode: str | None
     database_ssl_root_cert: str | None
+    # Keys accepted in the API's X-API-Key header. Empty means the API is open.
+    api_keys: frozenset[str]
+    api_max_limit: int
+    api_cors_origins: tuple[str, ...]
+    api_bind: str
+    api_port: int
 
 
 def load_settings() -> Settings:
@@ -101,4 +111,9 @@ def load_settings() -> Settings:
         health_max_age=int(os.getenv("HEALTH_MAX_AGE", "1800")),
         database_sslmode=os.getenv("MYSQL_SSLMODE") or None,
         database_ssl_root_cert=os.getenv("MYSQL_SSLROOTCERT") or None,
+        api_keys=_csv_set("API_KEYS"),
+        api_max_limit=int(os.getenv("API_MAX_LIMIT", "200")),
+        api_cors_origins=tuple(sorted(_csv_set("API_CORS_ORIGINS"))),
+        api_bind=os.getenv("API_BIND", "127.0.0.1"),
+        api_port=int(os.getenv("API_PORT", "8000")),
     )

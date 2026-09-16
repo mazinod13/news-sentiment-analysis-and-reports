@@ -17,7 +17,7 @@ from collections import Counter
 from collections.abc import Iterable
 from datetime import datetime, timedelta
 
-from sqlalchemy import Connection, delete, func, select, update
+from sqlalchemy import Connection, delete, func, select, text, update
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.orm import Session
 
@@ -39,6 +39,106 @@ from app.storage.models import (
 # Names the "one clusterer at a time" lock. MySQL lock names are global to the
 # server, so this is specific rather than "cluster".
 CLUSTER_LOCK_NAME = "news_sentiment_cluster"
+
+
+# Cheapest possible "is the database answering?" for the API health check.
+PING = text("SELECT 1")
+
+
+def api_articles(
+    session: Session,
+    *,
+    since: datetime | None = None,
+    until: datetime | None = None,
+    grades: list[str] | None = None,
+    sources: list[str] | None = None,
+    langs: list[str] | None = None,
+    categories: list[str] | None = None,
+    before_id: int | None = None,
+    limit: int = 50,
+) -> list:
+    """Stored articles with their grade and story, newest first.
+
+    Paged by id rather than offset: a cursor stays correct while new articles
+    are being written, and never re-reads a page.
+    """
+    query = (
+        select(
+            Article.id, Article.source_id, Article.url, Article.title, Article.body,
+            Article.summary, Article.author, Article.lang, Article.category,
+            Article.image_url, Article.published_at, Article.published_estimated,
+            Article.fetched_at,
+            ArticleAnalysis.grade, ArticleAnalysis.score, ArticleAnalysis.dampened,
+            ArticleAnalysis.keywords, ArticleAnalysis.matches,
+            ArticleCluster.cluster_id,
+        )
+        .outerjoin(ArticleAnalysis, ArticleAnalysis.article_id == Article.id)
+        .outerjoin(ArticleCluster, ArticleCluster.article_id == Article.id)
+        .order_by(Article.id.desc())
+        .limit(limit)
+    )
+    if since is not None:
+        query = query.where(Article.published_at >= since)
+    if until is not None:
+        query = query.where(Article.published_at < until)
+    if grades:
+        query = query.where(ArticleAnalysis.grade.in_(grades))
+    if sources:
+        query = query.where(Article.source_id.in_(sources))
+    if langs:
+        query = query.where(Article.lang.in_(langs))
+    if categories:
+        query = query.where(Article.category.in_(categories))
+    if before_id:
+        query = query.where(Article.id < before_id)
+    return session.execute(query).all()
+
+
+def api_article(session: Session, article_id: int):
+    """One article with its grade and story, or None."""
+    return session.execute(
+        select(
+            Article.id, Article.source_id, Article.url, Article.title, Article.body,
+            Article.summary, Article.author, Article.lang, Article.category,
+            Article.image_url, Article.published_at, Article.published_estimated,
+            Article.fetched_at,
+            ArticleAnalysis.grade, ArticleAnalysis.score, ArticleAnalysis.dampened,
+            ArticleAnalysis.keywords, ArticleAnalysis.matches,
+            ArticleCluster.cluster_id,
+        )
+        .outerjoin(ArticleAnalysis, ArticleAnalysis.article_id == Article.id)
+        .outerjoin(ArticleCluster, ArticleCluster.article_id == Article.id)
+        .where(Article.id == article_id)
+    ).first()
+
+
+def api_stats(session: Session, *, since: datetime) -> dict:
+    """Corpus summary for a window: totals, grades, and the busiest outlets."""
+    articles = session.scalar(
+        select(func.count()).select_from(Article).where(Article.published_at >= since)
+    ) or 0
+    by_grade = session.execute(
+        select(ArticleAnalysis.grade, func.count())
+        .join(Article, Article.id == ArticleAnalysis.article_id)
+        .where(Article.published_at >= since)
+        .group_by(ArticleAnalysis.grade)
+    ).all()
+    by_source = session.execute(
+        select(Article.source_id, func.count().label("n"))
+        .where(Article.published_at >= since)
+        .group_by(Article.source_id)
+        .order_by(func.count().desc())
+    ).all()
+    stories = session.scalar(
+        select(func.count()).select_from(StoryCluster)
+        .where(StoryCluster.last_published_at >= since)
+    ) or 0
+    return {
+        "articles": articles,
+        "stories": stories,
+        "by_grade": {grade: count for grade, count in by_grade},
+        "by_source": [{"source_id": source, "articles": count} for source, count in by_source],
+    }
 
 
 def existing_url_hashes(session: Session, hashes: list[str]) -> set[str]:
