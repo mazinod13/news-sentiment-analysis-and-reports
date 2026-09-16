@@ -168,6 +168,67 @@ class TestValidation:
         assert response.status_code == 400 and "ISO-8601" in response.json()["error"]
 
 
+class TestSerialisersMatchTheQueries:
+    """Every attribute a serialiser reads must be a column its query selects.
+
+    Faked rows cannot catch this: a hand-built row has whatever fields the test
+    author remembered, so `story_json` reading `row.lang` while `top_stories`
+    never selected it passed here and 500'd against the real database.
+    """
+
+    class Recorder:
+        """Answers any attribute, truthily, and remembers what was asked for."""
+
+        def __init__(self) -> None:
+            self.seen: set[str] = set()
+
+        def __getattr__(self, name: str):
+            self.seen.add(name)
+            return self
+
+        def isoformat(self) -> str:   # stands in for a datetime column
+            return "2026-09-15T00:00:00+00:00"
+
+        def __bool__(self) -> bool:   # so optional branches are taken
+            return True
+
+    class CapturingSession:
+        def __init__(self) -> None:
+            self.statement = None
+
+        def execute(self, statement, *args, **kwargs):
+            self.statement = statement
+            return SimpleNamespace(all=list, first=lambda: None)
+
+        def scalar(self, *args, **kwargs):
+            return 0
+
+    def selected(self, run) -> set[str]:
+        session = self.CapturingSession()
+        run(session)
+        return set(session.statement.selected_columns.keys())
+
+    def test_story_serialiser(self):
+        recorder = self.Recorder()
+        api.story_json(recorder)
+        columns = self.selected(
+            lambda s: api.repo.top_stories(s, since=WHEN, limit=1, min_sources=1)
+        )
+        assert recorder.seen <= columns, f"not selected: {sorted(recorder.seen - columns)}"
+
+    def test_article_serialiser(self):
+        recorder = self.Recorder()
+        api.article_json(recorder, include_body=True)
+        columns = self.selected(lambda s: api.repo.api_articles(s, limit=1))
+        assert recorder.seen <= columns, f"not selected: {sorted(recorder.seen - columns)}"
+
+    def test_single_article_query_matches_too(self):
+        recorder = self.Recorder()
+        api.article_json(recorder, include_body=True)
+        columns = self.selected(lambda s: api.repo.api_article(s, 1))
+        assert recorder.seen <= columns, f"not selected: {sorted(recorder.seen - columns)}"
+
+
 class TestStoriesAndSources:
     def test_stories(self, client, monkeypatch):
         story = SimpleNamespace(

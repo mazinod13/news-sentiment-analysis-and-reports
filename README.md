@@ -224,6 +224,7 @@ NEWS-SENTIMENT/
 ├── pyproject.toml           dependencies + ruff/pytest config (source of truth)
 ├── requirements.txt         runtime deps, mirrors pyproject (test-enforced)
 ├── requirements-dev.txt     + pytest, ruff
+├── API.md                   endpoint reference for API consumers
 └── DATA_SOURCES.md          source inventory
 ```
 
@@ -427,6 +428,9 @@ its first cycle.
 A read-only API over the stored corpus, so other systems can consume the
 articles, their criticality grades and their sources without touching the
 database. It runs as its own container (`api`) from the same image.
+
+**[API.md](API.md) is the reference to hand to whoever consumes it** — every
+endpoint, field and error. What follows here is the operator's view.
 
 ```bash
 curl "http://127.0.0.1:8000/api/v1/articles?grade=A,B&limit=20"
