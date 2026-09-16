@@ -4,7 +4,8 @@
     python -m app.main probe annapurna-post       fetch, parse, print, store nothing
     python -m app.main ingest --source annapurna-post
     python -m app.main ingest --priority 1
-    python -m app.main worker
+    python -m app.main worker                     service: wait for db, upgrade, catch up, poll
+    python -m app.main health                     exit 0 if the worker's heartbeat is recent
     python -m app.main db upgrade
     python -m app.main bipad --since 2026-08-01 --out incidents.csv
     python -m app.main analyse --file story.txt   keywords + A-F grade, no database
@@ -21,8 +22,6 @@ import sys
 from app.settings import load_settings
 from app.sources import SourceConfigError, load_sources
 from app.utils.logging import setup_logging
-
-ANALYSE_BATCH = 200
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -42,7 +41,10 @@ def _build_parser() -> argparse.ArgumentParser:
     group.add_argument("--priority", type=int, choices=[1, 2, 3, 4])
     group.add_argument("--due", action="store_true", help="only sources past next_run_at")
 
-    sub.add_parser("worker", help="run the scheduler continuously")
+    sub.add_parser(
+        "worker", help="run the service: wait for the database, upgrade, catch up, poll forever"
+    )
+    sub.add_parser("health", help="exit 0 if the worker's heartbeat is recent (healthcheck)")
 
     db = sub.add_parser("db", help="database management")
     db.add_argument("action", choices=["upgrade"])
@@ -277,7 +279,7 @@ def cmd_bipad(settings, args) -> int:
 
 def cmd_analyse(settings, args) -> int:
     from app.nlp.analysis import analyse
-    from app.nlp.criticality import GRADES, LexiconError, load_lexicon
+    from app.nlp.criticality import LexiconError, load_lexicon
 
     try:
         lexicon = load_lexicon(settings.criticality_file)
@@ -294,33 +296,9 @@ def cmd_analyse(settings, args) -> int:
         _print_analysis(analyse(title, body, lexicon, top_n=args.top))
         return 0
 
-    from collections import Counter
-    from datetime import datetime
+    from app.pipeline.grading import grade_stored
 
-    from app.settings import NPT
-    from app.storage import repositories as repo
-    from app.storage.db import session_scope
-
-    analysed_at = datetime.now(NPT)
-    grades: Counter[str] = Counter()
-    done = after_id = 0
-    while args.limit is None or done < args.limit:
-        batch = ANALYSE_BATCH if args.limit is None else min(ANALYSE_BATCH, args.limit - done)
-        with session_scope(settings) as session:
-            rows = repo.articles_to_analyse(
-                session, after_id=after_id, limit=batch, only_missing=args.missing
-            )
-            for article_id, title, text in rows:
-                analysis = analyse(title, text, lexicon, top_n=args.top)
-                repo.save_analysis(session, article_id, analysis, analysed_at=analysed_at)
-                grades[analysis.grade] += 1
-        if not rows:
-            break
-        done += len(rows)
-        after_id = rows[-1][0]
-
-    summary = ", ".join(f"{grade} {grades[grade]}" for grade in GRADES if grades[grade])
-    print(f"analysed {done} article(s)" + (f": {summary}" if summary else ""))
+    print(grade_stored(settings, only_missing=args.missing, limit=args.limit, top_n=args.top))
     return 0
 
 
@@ -389,6 +367,12 @@ def main(argv: list[str] | None = None) -> int:
 
         run_forever(settings)
         return 0
+    if args.command == "health":
+        from app.scheduler.health import check
+
+        healthy, message = check(settings.heartbeat_file, settings.health_max_age)
+        print(message)
+        return 0 if healthy else 1
     if args.command == "db":
         from app.storage.db import create_all
 

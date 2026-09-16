@@ -3,14 +3,43 @@
 from __future__ import annotations
 
 import os
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 # Nepal is UTC+05:45. Never assume +05:30.
 NPT = ZoneInfo("Asia/Kathmandu")
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# PyMySQL is pure Python: 0.15 MB, against 14 MB for a driver that bundles a
+# client library.
+DEFAULT_DB_DRIVER = "pymysql"
+# Devanagari needs real 4-byte UTF-8; MySQL's "utf8" is only three.
+DB_CHARSET = "utf8mb4"
+
+
+def database_url() -> str:
+    """DATABASE_URL if set; otherwise built from MYSQL_* parts.
+
+    Each part is URL-escaped, so a password containing @, /, : or # works as
+    typed in .env -- pasted raw into a URL, those characters break it.
+
+    TLS is not in the URL: PyMySQL takes it as connect arguments, built in
+    app/storage/db.py from MYSQL_SSLMODE.
+    """
+    explicit = os.getenv("DATABASE_URL")
+    if explicit:
+        return explicit
+    driver = os.getenv("MYSQL_DRIVER", DEFAULT_DB_DRIVER)
+    user = quote(os.getenv("MYSQL_USER", "news"), safe="")
+    password = quote(os.getenv("MYSQL_PASSWORD", "news"), safe="")
+    host = os.getenv("MYSQL_HOST", "localhost")
+    port = os.getenv("MYSQL_PORT", "3306")
+    name = quote(os.getenv("MYSQL_DB", "news_sentiment"), safe="")
+    return f"mysql+{driver}://{user}:{password}@{host}:{port}/{name}?charset={DB_CHARSET}"
 
 
 def _bool(name: str, default: bool) -> bool:
@@ -36,14 +65,16 @@ class Settings:
     selectors_dir: Path
     ca_certs_dir: Path
     criticality_file: Path
+    heartbeat_file: Path
+    health_max_age: int
+    # disable | require | verify-ca | verify-full; None means no TLS requested.
+    database_sslmode: str | None
+    database_ssl_root_cert: str | None
 
 
 def load_settings() -> Settings:
     return Settings(
-        database_url=os.getenv(
-            "DATABASE_URL",
-            "postgresql+psycopg://news:news@localhost:5433/news_sentiment",
-        ),
+        database_url=database_url(),
         user_agent=os.getenv("USER_AGENT", "NepalNewsSentiment/0.1"),
         request_timeout=float(os.getenv("REQUEST_TIMEOUT", "20")),
         per_host_delay=float(os.getenv("PER_HOST_DELAY", "1.0")),
@@ -62,4 +93,12 @@ def load_settings() -> Settings:
         criticality_file=Path(
             os.getenv("CRITICALITY_FILE", str(ROOT / "config" / "criticality.yaml"))
         ),
+        # Touched by the worker after successful work; read by `health`.
+        heartbeat_file=Path(
+            os.getenv("HEARTBEAT_FILE", str(Path(tempfile.gettempdir()) / "news-worker.heartbeat"))
+        ),
+        # Generous: one Ratopati-heavy cycle can legitimately take ~10 minutes.
+        health_max_age=int(os.getenv("HEALTH_MAX_AGE", "1800")),
+        database_sslmode=os.getenv("MYSQL_SSLMODE") or None,
+        database_ssl_root_cert=os.getenv("MYSQL_SSLROOTCERT") or None,
     )

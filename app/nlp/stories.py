@@ -24,7 +24,7 @@ counted when an article is STORED (app/pipeline/run.py), and `db upgrade`
 counts every article already in the database.
 
 The algorithm talks to a ClusterStore, so the tests run exactly this code in
-memory and production runs it against Postgres (app/storage/repositories.py).
+memory and production runs it against MySQL (app/storage/repositories.py).
 """
 
 from __future__ import annotations

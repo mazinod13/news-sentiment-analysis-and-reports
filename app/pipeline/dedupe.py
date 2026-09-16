@@ -65,7 +65,7 @@ def hamming(a: int, b: int) -> int:
 
 
 def to_signed64(value: int) -> int:
-    """simhash is unsigned 64-bit; Postgres bigint is signed. Wrap on the way in."""
+    """simhash is unsigned 64-bit; a BIGINT column is signed. Wrap on the way in."""
     return value - (1 << 64) if value >= (1 << 63) else value
 
 

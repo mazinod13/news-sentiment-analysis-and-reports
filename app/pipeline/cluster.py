@@ -3,18 +3,19 @@
 Runs as its own step rather than inside run_source: sources ingest in parallel
 threads, and two outlets' versions of one event arriving in the same cycle
 would each start a story. Here articles are taken oldest first, one clusterer
-at a time (a Postgres advisory lock), so the first version founds the story
+at a time (a MySQL named lock), so the first version founds the story
 and later ones join it.
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from app.nlp.stories import StoryArticle, assign, story_terms
 from app.settings import Settings
 from app.storage import repositories as repo
-from app.storage.db import session_scope
+from app.storage.db import get_engine, session_scope
 
 CLUSTER_BATCH = 200
 
@@ -35,28 +36,45 @@ class ClusterReport:
         )
 
 
-def cluster_pending(settings: Settings, *, limit: int | None = None) -> ClusterReport:
-    """Assign every unclustered article to a story. Commits once per batch."""
+def cluster_pending(
+    settings: Settings,
+    *,
+    limit: int | None = None,
+    on_batch: Callable[[], None] | None = None,
+) -> ClusterReport:
+    """Assign every unclustered article to a story. Commits once per batch;
+    `on_batch` runs after each committed batch."""
     report = ClusterReport()
-    while limit is None or report.clustered < limit:
-        batch = CLUSTER_BATCH if limit is None else min(CLUSTER_BATCH, limit - report.clustered)
-        with session_scope(settings) as session:
-            if not repo.try_lock_clustering(session):
-                report.locked_out = True
-                return report
-            rows = repo.articles_to_cluster(session, limit=batch)
-            store = repo.DbClusterStore(session)
-            for row in rows:
-                article = StoryArticle(
-                    article_id=row.id,
-                    source_id=row.source_id,
-                    title=row.title,
-                    lang=row.lang,
-                    published_at=row.published_at,
-                    terms=story_terms(row.title, row.body or row.summary),
+    # MySQL's GET_LOCK belongs to the connection, so the lock is taken on a
+    # connection of its own and held across every batch, then released.
+    with get_engine(settings).connect() as lock_connection:
+        if not repo.try_lock_clustering(lock_connection):
+            report.locked_out = True
+            return report
+        try:
+            while limit is None or report.clustered < limit:
+                batch = (
+                    CLUSTER_BATCH if limit is None
+                    else min(CLUSTER_BATCH, limit - report.clustered)
                 )
-                report.joined += assign(store, article).joined
-                report.clustered += 1
-        if not rows:
-            break
+                with session_scope(settings) as session:
+                    rows = repo.articles_to_cluster(session, limit=batch)
+                    store = repo.DbClusterStore(session)
+                    for row in rows:
+                        article = StoryArticle(
+                            article_id=row.id,
+                            source_id=row.source_id,
+                            title=row.title,
+                            lang=row.lang,
+                            published_at=row.published_at,
+                            terms=story_terms(row.title, row.body or row.summary),
+                        )
+                        report.joined += assign(store, article).joined
+                        report.clustered += 1
+                if not rows:
+                    break
+                if on_batch:
+                    on_batch()
+        finally:
+            repo.unlock_clustering(lock_connection)
     return report
