@@ -2,7 +2,7 @@
 
 Scrapes Nepali and English news outlets and government portals on a schedule,
 normalises every item into one article schema, deduplicates syndicated copy,
-stores the corpus in Postgres, and gives every article keywords and an A–F
+stores the corpus in MySQL, and gives every article keywords and an A–F
 criticality grade.
 
 ```
@@ -39,18 +39,47 @@ generated inventory and the wider catalogue.
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env        # optional; every value has a default
-docker compose up -d        # postgres → schema migration → worker
+cp .env.example .env        # your MySQL credentials go in here
+docker compose up -d        # one container; nothing else to run
 docker compose logs -f worker
 ```
 
-That is the whole deployment. `up` starts three services:
+That is the whole deployment: a single `worker` container against **your own
+MySQL 8 server**. On start it
 
-| Service | Role |
+1. waits for the database, retrying while it is unreachable rather than dying;
+2. creates any missing tables, counting terms for articles already stored;
+3. grades and groups whatever is pending;
+4. polls sources on schedule, repeating step 3 after each cycle.
+
+So there is no migration step and nothing to run by hand after a deploy or an
+upgrade. There is no database container either — the server is yours, given by
+`MYSQL_*` in `.env`. Create the database once (the app creates its own tables):
+
+```sql
+CREATE DATABASE news_sentiment CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+For development, an opt-in throwaway server is available:
+`docker compose --profile local-db up -d mysql`.
+
+| Want to change | Set in `.env` |
 |---|---|
-| `postgres` | Postgres 16, data in the `pgdata` volume, port bound to `127.0.0.1` only |
-| `migrate` | runs `db upgrade` once and exits |
-| `worker` | the continuous scheduler; starts only after `migrate` succeeds, restarts on failure |
+| Database credentials | `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB` |
+| TLS to the database | `MYSQL_SSLMODE=require`, or `verify-full` (+ `MYSQL_SSLROOTCERT` for a private CA) |
+| Memory / CPU ceiling | `WORKER_MEMORY` (512m), `WORKER_CPUS` (1.0) |
+| Health tolerance | `HEALTH_MAX_AGE` seconds (1800) |
+
+**In Portainer.** The container reports health from a heartbeat the worker
+writes *only after work succeeds*, so one that cannot reach the database turns
+red instead of looking idle. Logs are capped at 10 MB × 3 files, memory and CPU
+are limited, and `docker stop` gets two minutes to let a cycle finish.
+
+**Image.** Alpine, with the dependencies in a virtualenv copied out of a build
+stage — no pip, no build cache, no compiler in what runs. The MySQL driver is
+pure Python (PyMySQL, 0.15 MB), and `cryptography` is left out (~16 MB with its
+dependencies): MySQL 8's `caching_sha2_password` needs it only on an
+**unencrypted** connection, so connect with `MYSQL_SSLMODE=require` or better.
 
 `config/` is mounted read-only into the containers, so an added or corrected
 outlet takes effect on the worker's next cycle with no rebuild. Rebuild only
@@ -79,14 +108,15 @@ Tests run in their own image and need no database:
 docker compose run --rm test
 ```
 
-Inspect the database:
+Inspect the corpus on your own server:
 
 ```bash
-docker compose exec postgres psql -U news -d news_sentiment -c \
+mysql -h db.example.internal -u news -p news_sentiment -e \
   "select source_id, count(*), max(published_at) from articles group by 1;"
 ```
 
-Stop everything (data is kept in the volume): `docker compose down`.
+Stop the worker: `docker compose down`. Nothing is lost — everything lives on
+your MySQL server.
 
 ---
 
@@ -104,15 +134,16 @@ pytest
 ```
 
 `sources`, `probe`, `bipad`, `analyse --text`/`--file` and `pytest` need no
-database. `ingest`, `worker`, `db upgrade` and `analyse --missing`/`--all` need
-Postgres — start just that with
-`docker compose up -d postgres` and set `DATABASE_URL` (see `.env.example`).
+database. `ingest`, `worker`, `db upgrade`, `cluster`, `stories` and
+`analyse --missing`/`--all` need MySQL: set `MYSQL_*` (or `DATABASE_URL`) as in
+`.env.example`, pointing either at your server or at a local one started with
+`docker compose --profile local-db up -d mysql`.
 
 ---
 
 ## CLI
 
-| Command | Needs Postgres | What it does |
+| Command | Needs MySQL | What it does |
 |---|:---:|---|
 | `python -m app.main sources` | no | list and validate every configured source |
 | `python -m app.main probe <id>` | no | fetch and parse one source, print results, store nothing |
@@ -120,8 +151,9 @@ Postgres — start just that with
 | `python -m app.main ingest --source <id>` | yes | ingest one source |
 | `python -m app.main ingest --priority <1-4>` | yes | ingest a whole priority tier |
 | `python -m app.main ingest --due` | yes | ingest only sources past their `next_run_at` |
-| `python -m app.main worker` | yes | continuous scheduler |
-| `python -m app.main db upgrade` | yes | create missing tables |
+| `python -m app.main worker` | yes | the service: wait for the database, create tables, catch up, then poll on schedule |
+| `python -m app.main health` | no | exit 0 if the worker's heartbeat is recent (the container healthcheck) |
+| `python -m app.main db upgrade` | yes | create missing tables (the worker does this itself) |
 | `python -m app.main bipad --since YYYY-MM-DD [--until] [--province] [--out file.csv\|.jsonl]` | no | pull BIPAD Portal disaster incidents |
 | `python -m app.main analyse --file story.txt` (or `--text "..."`) | no | keywords and A–F grade for any text; the first line is the title |
 | `python -m app.main analyse --missing [--limit N]` | yes | grade stored articles that have no grade yet |
@@ -166,9 +198,12 @@ NEWS-SENTIMENT/
 │   │   ├── run.py           one source, end to end
 │   │   ├── normalize.py     raw item → Article, URL canonicalisation
 │   │   ├── dedupe.py        url_hash + simhash
-│   │   └── cluster.py       post-ingest story grouping
+│   │   ├── cluster.py       post-ingest story grouping
+│   │   └── grading.py       backfill: keywords + grades for ungraded articles
 │   ├── storage/             SQLAlchemy models, session, all queries
-│   ├── scheduler/worker.py  priority-driven polling loop
+│   ├── scheduler/
+│   │   ├── worker.py        the service: wait, upgrade, catch up, poll
+│   │   └── health.py        heartbeat behind the container healthcheck
 │   └── utils/logging.py
 ├── config/
 │   ├── sources/             one YAML per source, named after its id
@@ -178,8 +213,8 @@ NEWS-SENTIMENT/
 ├── scripts/                 new_source.py, gen_sources.py
 ├── tests/                   offline tests; fixtures/ holds saved payloads
 ├── data/                    gitignored export target
-├── Dockerfile               base → test → runtime (default)
-├── docker-compose.yml       postgres, migrate, worker, app (cli), test
+├── Dockerfile               Alpine; build → test → runtime (default)
+├── docker-compose.yml       worker; app (cli), test and local-db profiles
 ├── .env.example             every environment variable, documented
 ├── pyproject.toml           dependencies + ruff/pytest config (source of truth)
 ├── requirements.txt         runtime deps, mirrors pyproject (test-enforced)
@@ -230,9 +265,10 @@ event reported by several outlets counts once — see
 | `articles` | `source_id`, canonical `url`, unique `url_hash`, `title`, `body`, `summary`, `author`, `lang`, `category`, `published_at`, `published_estimated`, `fetched_at`, `image_url`, `simhash` |
 | `source_state` | per-source ETag / Last-Modified, `last_run_at`, `next_run_at`, consecutive failures, last error |
 | `fetch_log` | one row per run: items seen / new / duplicate, not-modified, ok, error |
-| `article_analysis` | per article: `grade` (A–F), `score`, `dampened`, `keywords` and matched terms (JSONB), `analysed_at` |
+| `article_analysis` | per article: `grade` (A–F), `score`, `dampened`, `keywords` and matched terms (JSON), `analysed_at` |
 | `story_clusters` | one row per event: `title` (first headline), `article_count`, `source_count`, `sources`, first/last published |
 | `article_clusters` | which story each article is in, its `similarity` to its best match, and the `terms` it matched on |
+| `article_terms` | one row per (article, term): the indexed lookup behind story candidates |
 | `term_stats` | document frequency per term over every stored article, for IDF |
 
 ---
@@ -335,10 +371,10 @@ unable to tell filler from event words. `db upgrade` counts the articles already
 in an existing database when it creates the table.
 
 Only articles sharing one of the new article's 12 most distinctive terms are
-compared (a GIN index on `article_clusters.terms`), so each assignment stays
-cheap as the corpus grows. A Postgres advisory lock keeps it to one clusterer at
-a time, so two outlets' versions of an event arriving together cannot each
-found a story.
+compared — through the indexed `article_terms` table, since MySQL cannot index
+inside a JSON column — so each assignment stays cheap as the corpus grows. A
+MySQL named lock (`GET_LOCK`) keeps it to one clusterer at a time, so two
+outlets' versions of an event arriving together cannot each found a story.
 
 **Measured on the 34 saved article pages** (`tests/test_stories.py`), this
 forms exactly the three real multi-outlet stories — six Nepali outlets on the
@@ -363,10 +399,9 @@ order by source_count desc
 limit 20;
 ```
 
-**Upgrading an existing database:** `docker compose up -d --build` runs
-`db upgrade`, which creates the tables and counts existing articles' terms;
-the worker then groups new articles each cycle. Group the articles already
-stored with `python -m app.main cluster`.
+**Upgrading an existing database:** nothing to run. On start the worker creates
+the tables, counts the terms of articles already stored, and groups them before
+its first cycle.
 
 **Limits.**
 - The margin is narrow: the closest non-join sits 0.02 below 0.25 and the
@@ -500,7 +535,14 @@ All variables are optional; see [.env.example](.env.example).
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `DATABASE_URL` | `postgresql+psycopg://news:news@localhost:5433/news_sentiment` | set automatically in Docker |
+| `MYSQL_HOST` / `MYSQL_PORT` | `localhost`, `3306` | your MySQL server |
+| `MYSQL_USER` / `MYSQL_PASSWORD` / `MYSQL_DB` | `news`, `news`, `news_sentiment` | credentials; each is URL-escaped, so `@ / : #` in a password are safe |
+| `MYSQL_SSLMODE` | unset (no TLS) | `disable`, `require` (encrypt only), `verify-ca`, `verify-full`. Needed for password login unless you add `cryptography` |
+| `MYSQL_SSLROOTCERT` | certifi's roots | CA bundle for the `verify-*` modes |
+| `MYSQL_DRIVER` | `pymysql` | another SQLAlchemy MySQL driver, if you add it to the image |
+| `DATABASE_URL` | built from the parts above | a complete URL, escaped by you; overrides them |
+| `HEARTBEAT_FILE` | system temp dir | file the worker touches after work succeeds |
+| `HEALTH_MAX_AGE` | `1800` | heartbeat age, in seconds, at which `health` reports unhealthy |
 | `USER_AGENT` | `NepalNewsSentiment/0.1` | identify honestly, with a contact URL |
 | `REQUEST_TIMEOUT` | `20` | seconds |
 | `PER_HOST_DELAY` | `1.0` | seconds between requests to one host |
@@ -513,8 +555,9 @@ All variables are optional; see [.env.example](.env.example).
 | `SOURCES_DIR` / `SELECTORS_DIR` / `CA_CERTS_DIR` | `config/sources`, `config/selectors`, `certs` | path overrides |
 | `CRITICALITY_FILE` | `config/criticality.yaml` | criticality lexicon |
 
-Compose-only: `COMPOSE_PROJECT_NAME`, `POSTGRES_PORT`, `POSTGRES_USER`,
-`POSTGRES_PASSWORD`, `POSTGRES_DB`. Change the password outside a local machine.
+Compose-only: `COMPOSE_PROJECT_NAME`, `WORKER_MEMORY` and `WORKER_CPUS` (the
+container's ceilings). `MYSQL_PORT` also publishes the opt-in `local-db`
+database on `127.0.0.1`.
 
 ---
 
@@ -582,9 +625,12 @@ certificate expires.
 | `unable to get local issuer certificate` | server omits its intermediate | [certs/README.md](certs/README.md) |
 | `429` from a host | polling too hard | raise `rate_limit` in the source config |
 | `sources` fails | malformed YAML | the error names the file |
-| `worker` exits immediately in Docker | `migrate` failed | `docker compose logs migrate` |
+| `worker` shows unhealthy in Portainer | the database is unreachable, or every cycle is failing | `docker compose logs worker`; the heartbeat only advances after work succeeds |
+| `database not reachable` repeating in the logs | wrong `MYSQL_*` values, or the server is unreachable | fix `.env`; check the server allows the container's IP |
+| `cryptography is required for sha256_password or caching_sha2_password` | MySQL 8 password login over an unencrypted connection | set `MYSQL_SSLMODE=require`, or add `cryptography` to `requirements.txt` and rebuild |
+| Devanagari stored as `?` or mojibake | the database or a column is not utf8mb4 | `CREATE DATABASE … CHARACTER SET utf8mb4`; the app's own tables are utf8mb4 already |
 | A story's grade looks wrong | a term missing, too broad, or in the wrong tier | `analyse --text` on it, edit `config/criticality.yaml`, then `analyse --all` |
-| Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file, then `analyse --missing` |
+| Stored articles have no grade | the lexicon failed to load (logged as an error) | fix the file; the worker catches up within 30 min, or run `analyse --missing` |
 | One event shows up as several stories | worded too differently (below 0.25), or published more than 48 h apart | `JOIN_THRESHOLD` / `WINDOW` in `app/nlp/stories.py`; check against `tests/test_stories.py` |
 | Unrelated articles share a story | threshold too low, or term statistics missing for older articles | `cluster --rebuild-terms`, then review `JOIN_THRESHOLD` |
 

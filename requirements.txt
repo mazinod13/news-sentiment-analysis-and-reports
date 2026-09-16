@@ -20,5 +20,12 @@ selectolax>=0.3.21
 PyYAML>=6.0
 python-dateutil>=2.9
 nepali-datetime>=1.0.8
+# The zoneinfo database as a package: Alpine ships no /usr/share/zoneinfo, and
+# Asia/Kathmandu (+05:45) must resolve or every timestamp is wrong.
+tzdata>=2024.1
 SQLAlchemy>=2.0.30
-psycopg[binary]>=3.2
+# PyMySQL is pure Python and 0.15 MB installed. `cryptography` is deliberately
+# NOT a dependency: MySQL 8's caching_sha2_password needs it only on an
+# unencrypted connection, and it costs ~16 MB with cffi. Connect with TLS
+# (MYSQL_SSLMODE) instead -- see app/storage/db.py.
+PyMySQL>=1.1
