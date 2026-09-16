@@ -51,6 +51,26 @@ services:
     mem_limit: ${WORKER_MEMORY:-512m}
     cpus: ${WORKER_CPUS:-1.0}
 
+  # Read-only HTTP API over the stored corpus.
+  # Published on loopback by default: put a reverse proxy with TLS in front, or
+  # set API_BIND=0.0.0.0 to expose it directly.
+  api:
+    <<: *app
+    container_name: ${COMPOSE_PROJECT_NAME:-news-sentiment}-api
+    command: ["python", "-m", "app.main", "api", "--host", "0.0.0.0"]
+    restart: unless-stopped
+    ports:
+      - "${API_BIND:-127.0.0.1}:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=5)"]
+      interval: 1m
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    mem_limit: ${API_MEMORY:-256m}
+    cpus: ${API_CPUS:-0.5}
+
   # One-off CLI; never started by `up`.
   #   docker compose run --rm app python -m app.main sources
   app:
