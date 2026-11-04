@@ -14,7 +14,7 @@ province index page is the item source. Two things make it awkward:
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.base import RawItem
 from app.ingestion.fetcher import FetchResult
@@ -99,7 +99,7 @@ def test_listing_summary_needs_a_child_combinator(fixture_text):
     `div.category-description > p`. A descendant selector matches the byline
     first, so every stored summary becomes a journalist's name.
     """
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
     card = tree.css("div.category")[0]
 
     descendant = select_one(card, "div.category-description p")
@@ -123,7 +123,7 @@ def test_configured_summary_selector_avoids_the_trap(outlet, fixture_text):
 def test_listing_cards_carry_no_date(fixture_text):
     """Cards show only a "1 MIN READ" badge, which is why the article page has
     to be fetched even though it yields no full body."""
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
     card = tree.css("div.category")[0]
 
     assert select_one(card, "div.time-wrapper span") == "1 MIN READ"
@@ -156,7 +156,7 @@ def test_jsonld_timestamp_agrees_with_the_dom_bikram_sambat_date(outlet, fixture
 
     from_jsonld = extract(html, selectors, source_id=SOURCE_ID).published
 
-    dom_raw = select_one(HTMLParser(html), "div.author-date span")
+    dom_raw = select_one(LexborHTMLParser(html), "div.author-date span")
     assert dom_raw == STORY_BS_DATE
     from_dom = parse_datetime(dom_raw, fmt="bs")
 

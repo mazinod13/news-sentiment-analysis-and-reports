@@ -14,8 +14,7 @@
 # dies with "unable to get local issuer certificate".
 
 listing:
-  # `div.row div.col-sm-6` matches 60 nodes for 30 stories -- the bootstrap
-  # grid classes nest. `div.grid-news` is the actual card, one per story.
+  # `div.grid-news` is the actual card, one per story.
   item: "div.grid-news"
   # The card opens with a thumbnail <a> and repeats the same href on the title
   # <a>, so the first anchor is the right one either way.

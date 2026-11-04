@@ -10,7 +10,7 @@ from __future__ import annotations
 from urllib.parse import urlsplit
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -76,7 +76,7 @@ def test_listing_yields_dated_section_stories(outlet, listing_html):
 
 
 def test_item_selector_is_scoped_to_the_section_list(listing_html):
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
     assert len(tree.css("div.items")) == 38, "a bare div.items also takes header/footer widgets"
     assert len(tree.css("section.cat-list div.news-cat-list div.items")) == 30
 

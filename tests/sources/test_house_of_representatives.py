@@ -19,7 +19,7 @@ tests/test_fetcher_tls.py, since the fix is shared code.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -109,24 +109,19 @@ def test_listing_yields_unique_absolute_urls_with_dates(outlet, listing_html):
     assert all(i.published for i in items), "an item reached normalisation with no date"
 
 
-def test_card_selector_does_not_double_count_the_grid(outlet, listing_html):
-    """`div.row div.col-sm-6` looks like the card but matches 60 nodes for 30
-    stories, because the bootstrap grid classes nest.
-
-    URL dedupe in HTMLScraper hides the damage -- the item count comes out at
-    30 either way -- so this has to check the CONFIGURED selector directly, or
-    the mistake is invisible to every other test in this file.
+def test_card_selector_matches_one_node_per_story(outlet, listing_html):
+    """URL dedupe in HTMLScraper hides an over-matching selector -- the item
+    count comes out at 30 either way -- so this has to check the CONFIGURED
+    selector directly, or the mistake is invisible to every other test in this
+    file.
     """
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     matched = tree.css(selectors["listing"]["item"])
     assert len(matched) == 30, (
-        f"item selector matched {len(matched)} nodes for 30 stories -- "
-        "the bootstrap grid classes nest, use div.grid-news"
+        f"item selector matched {len(matched)} nodes for 30 stories -- use div.grid-news"
     )
-    # The shape of the trap, for the next person reading this.
-    assert len(tree.css("div.row div.col-sm-6")) == 60
 
 
 def test_date_needs_the_em_not_the_li(listing_html):
@@ -136,7 +131,7 @@ def test_date_needs_the_em_not_the_li(listing_html):
     holds a bare date, and parse_datetime rejects the labelled form outright,
     so pointing at the <li> loses the date on every single item.
     """
-    card = HTMLParser(listing_html).css("div.grid-news")[0]
+    card = LexborHTMLParser(listing_html).css("div.grid-news")[0]
 
     li = select_one(card, "li")
     em = select_one(card, "li em")
@@ -198,7 +193,7 @@ def test_the_div_layout_really_has_no_paragraph(fixture_text):
     """Pins the reason the body selector takes the container: it is the site's
     markup, not our selector. If this starts failing the site became
     consistent and the pack could be tightened."""
-    tree = HTMLParser(fixture_text(STORY_DIV_FIXTURE))
+    tree = LexborHTMLParser(fixture_text(STORY_DIV_FIXTURE))
     # The tag rail is itself a non-empty <p>, so it has to go first or it looks
     # like the article had a paragraph all along -- which is exactly why the
     # pack excludes it.

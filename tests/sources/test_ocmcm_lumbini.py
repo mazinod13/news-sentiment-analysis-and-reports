@@ -11,7 +11,7 @@ sections, so both of the obvious guesses are wrong.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -105,7 +105,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -132,7 +132,7 @@ def test_listing_is_the_notices_table(outlet, listing_html):
     The real list is the table on /notices.
     """
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     assert selectors["listing"]["item"] == "tbody.table-hover-css tr"
     assert tree.css("div.slider__item"), "expected the shared CMS widget to be present"
@@ -146,7 +146,7 @@ def test_link_avoids_the_attached_pdf(outlet, listing_html):
     """The third cell of every row links to the attached PDF. A looser anchor
     selector than th a@href eventually stores a .pdf URL as the article."""
     _, selectors = outlet
-    row = HTMLParser(listing_html).css("tbody.table-hover-css tr")[0]
+    row = LexborHTMLParser(listing_html).css("tbody.table-hover-css tr")[0]
 
     assert selectors["listing"]["link"] == "th a@href"
     assert [a for a in row.css("a[href]") if ".pdf" in (a.attributes.get("href") or "")], (

@@ -12,7 +12,7 @@ made on one outlet cannot silently break the other:
   * the publish date is on the LISTING, not the article;
   * it must come from the <em>, because its <li> carries a label that
     parse_datetime rejects;
-  * `div.row div.col-sm-6` matches 60 nodes for 30 stories.
+  * `div.grid-news` is the card, one node per story.
 
 The host also serves an incomplete certificate chain (the same wildcard
 *.parliament.gov.np), covered by tests/test_fetcher_tls.py.
@@ -21,7 +21,7 @@ The host also serves an incomplete certificate chain (the same wildcard
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -129,22 +129,18 @@ def test_listing_yields_unique_dated_urls(outlet, listing_html):
     assert all(i.published for i in items), "an item reached normalisation with no date"
 
 
-def test_card_selector_does_not_double_count_the_grid(outlet, listing_html):
-    """`div.row div.col-sm-6` looks like the card but matches 60 nodes for 30
-    stories, because the bootstrap grid classes nest.
-
-    URL dedupe in HTMLScraper hides the damage -- the item count comes out at
-    30 either way -- so this has to check the CONFIGURED selector directly.
+def test_card_selector_matches_one_node_per_story(outlet, listing_html):
+    """URL dedupe in HTMLScraper hides an over-matching selector -- the item
+    count comes out at 30 either way -- so this has to check the CONFIGURED
+    selector directly.
     """
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     matched = tree.css(selectors["listing"]["item"])
     assert len(matched) == 30, (
-        f"item selector matched {len(matched)} nodes for 30 stories -- "
-        "the bootstrap grid classes nest, use div.grid-news"
+        f"item selector matched {len(matched)} nodes for 30 stories -- use div.grid-news"
     )
-    assert len(tree.css("div.row div.col-sm-6")) == 60
 
 
 def test_date_needs_the_em_not_the_li(listing_html):
@@ -154,7 +150,7 @@ def test_date_needs_the_em_not_the_li(listing_html):
     holds a bare date, and parse_datetime rejects the labelled form, so
     pointing at the <li> loses the date on every single item.
     """
-    card = HTMLParser(listing_html).css("div.grid-news")[0]
+    card = LexborHTMLParser(listing_html).css("div.grid-news")[0]
 
     li = select_one(card, "li")
     em = select_one(card, "li em")

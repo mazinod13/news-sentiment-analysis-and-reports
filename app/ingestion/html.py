@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 from urllib.parse import urljoin
 
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.base import BaseScraper, RawItem, ScrapeError
 from app.ingestion.fetcher import FetchError
@@ -51,7 +51,7 @@ class HTMLScraper(BaseScraper):
         if response.not_modified:
             return []
 
-        tree = HTMLParser(response.text)
+        tree = LexborHTMLParser(response.text)
         items: list[RawItem] = []
         seen: set[str] = set()
 

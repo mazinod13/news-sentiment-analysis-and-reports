@@ -11,7 +11,7 @@ on an element whose text is empty.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -105,7 +105,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -127,7 +127,7 @@ def test_date_lives_in_an_attribute_on_an_empty_element(outlet, listing_html):
     outlet whose machine-readable date is cleaner than the human-readable one.
     """
     _, selectors = outlet
-    card = HTMLParser(listing_html).css("li.tap-box-list")[0]
+    card = LexborHTMLParser(listing_html).css("li.tap-box-list")[0]
 
     assert selectors["listing"]["published"] == "span.nepaliDate@englishdate"
     span = card.css_first("span.nepaliDate")
@@ -140,7 +140,7 @@ def test_this_is_not_the_gon_cms_pack(outlet, listing_html):
     """Gandaki does NOT run the same CMS as the other six provincial OCMCMs.
     Copying the ocmcm-koshi pack here yields zero items."""
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     assert selectors["listing"]["item"] == "li.tap-box-list"
     assert not tree.css("div.grid__card"), "no GoN CMS card grid on this host"
