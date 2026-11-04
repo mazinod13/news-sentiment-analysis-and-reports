@@ -18,7 +18,7 @@ from __future__ import annotations
 import re
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.base import RawItem
 from app.ingestion.fetcher import FetchResult
@@ -112,7 +112,7 @@ def test_listing_summary_needs_a_child_combinator(fixture_text):
     no error and no empty field. Checked on two cards so a single coincidence
     cannot make this pass.
     """
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
     cards = tree.css("div.category")
 
     for index, byline in ((0, "शंकर आचार्य"), (1, "शिव पुरी")):
@@ -138,7 +138,7 @@ def test_configured_summary_selector_avoids_the_trap(outlet, fixture_text):
 def test_listing_cards_carry_no_date(fixture_text):
     """Cards show only a read-time badge, which is why the article page has to
     be fetched even though it yields no full body."""
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_listing.html"))
     card = tree.css("div.category")[0]
 
     badge = select_one(card, "div.time-wrapper span")
@@ -176,7 +176,7 @@ def test_jsonld_timestamp_agrees_with_the_dom_bikram_sambat_date(outlet, fixture
 
     from_jsonld = extract(html, selectors, source_id=SOURCE_ID).published
 
-    dom_raw = select_one(HTMLParser(html), "div.author-date span")
+    dom_raw = select_one(LexborHTMLParser(html), "div.author-date span")
     assert dom_raw == STORY_BS_DATE
     assert " " not in dom_raw.split(",")[0], "the no-space month/day form is the point here"
     from_dom = parse_datetime(dom_raw, fmt="bs")

@@ -11,7 +11,7 @@ the obvious card selector wrong.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -95,7 +95,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -117,7 +117,7 @@ def test_card_is_not_the_surrounding_section(outlet, listing_html):
     `div.featured-news-list` is the actual card.
     """
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     assert selectors["listing"]["item"] == "div.featured-news-list"
 
@@ -134,7 +134,7 @@ def test_listing_page_is_fully_server_rendered(listing_html):
     list. Worth pinning: if the listing ever moves behind Angular, every
     selector in this pack goes quiet at once rather than erroring.
     """
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     assert len((tree.body.text() or "").strip()) > 50_000
     assert len(tree.css("div.featured-news-list")) == EXPECTED_ITEMS

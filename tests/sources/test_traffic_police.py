@@ -11,7 +11,7 @@ carries the FULL story text, and two thirds of its cards are hidden behind a
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -105,7 +105,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -132,7 +132,7 @@ def test_hidden_cards_are_still_ingested(listing_html):
     "fix" this by filtering on visibility -- it would drop two thirds of the
     feed.
     """
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     total = tree.css("div.textbox-04")
     hidden = [c for c in total if "d-none" in (c.attributes.get("class") or "")]
@@ -143,7 +143,7 @@ def test_hidden_cards_are_still_ingested(listing_html):
 
 def test_date_is_all_numeric_bikram_sambat(listing_html):
     """Same numeric BS shape as moha -- see app/parsing/dates.py."""
-    raw = select_one(HTMLParser(listing_html).css("div.textbox-04")[0], "a span")
+    raw = select_one(LexborHTMLParser(listing_html).css("div.textbox-04")[0], "a span")
 
     assert any(d in raw for d in "०१२३४५६७८९")
     assert parse_datetime(raw, fmt="bs").year < 2030

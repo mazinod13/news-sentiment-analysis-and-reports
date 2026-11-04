@@ -23,7 +23,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.parsing.clean import clean
 from app.parsing.dates import DateParseError, parse_datetime
@@ -51,7 +51,7 @@ def _split_selector(selector: str) -> tuple[str, str | None]:
     return selector.strip(), None
 
 
-def select_one(tree: HTMLParser, selector: str) -> str | None:
+def select_one(tree: LexborHTMLParser, selector: str) -> str | None:
     css, attr = _split_selector(selector)
     node = tree.css_first(css)
     if node is None:
@@ -60,7 +60,7 @@ def select_one(tree: HTMLParser, selector: str) -> str | None:
     return clean(value) or None
 
 
-def select_all(tree: HTMLParser, selector: str) -> list[str]:
+def select_all(tree: LexborHTMLParser, selector: str) -> list[str]:
     css, attr = _split_selector(selector)
     out = []
     for node in tree.css(css):
@@ -71,7 +71,7 @@ def select_all(tree: HTMLParser, selector: str) -> list[str]:
     return out
 
 
-def load_jsonld(tree: HTMLParser) -> list[dict]:
+def load_jsonld(tree: LexborHTMLParser) -> list[dict]:
     """Every JSON-LD object on the page, flattened out of @graph wrappers.
 
     A malformed block is skipped rather than fatal -- sites ship broken JSON-LD
@@ -151,7 +151,7 @@ def extract(html: str, selectors: dict, *, source_id: str = "") -> ExtractedArti
     Missing fields yield None rather than raising: one absent author must not
     cost us the article. A missing body is reported by the caller.
     """
-    tree = HTMLParser(html)
+    tree = LexborHTMLParser(html)
     article = selectors.get("article", {})
 
     # Read JSON-LD BEFORE exclusions: nearly every pack excludes "script", which

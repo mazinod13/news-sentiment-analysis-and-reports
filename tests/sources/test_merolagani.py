@@ -11,7 +11,7 @@ real clock rather than landing at midnight.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -95,7 +95,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -115,7 +115,7 @@ def test_link_takes_the_title_anchor_not_the_thumbnail(outlet, listing_html):
     _, selectors = outlet
 
     assert selectors["listing"]["link"] == "h4.media-title a@href"
-    card = HTMLParser(listing_html).css("div.media-news")[0]
+    card = LexborHTMLParser(listing_html).css("div.media-news")[0]
     assert card.css_first("div.media-wrap a"), "fixture card has no thumbnail anchor"
 
 

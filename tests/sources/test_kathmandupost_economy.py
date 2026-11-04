@@ -10,7 +10,7 @@ from __future__ import annotations
 from urllib.parse import urlsplit
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -67,7 +67,7 @@ def test_listing_yields_money_stories_with_summaries(outlet, listing_html):
 
 def test_item_selector_skips_the_other_rails(outlet, listing_html):
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
     assert len(tree.css("article.article-image")) == 30
     assert len(tree.css(selectors["listing"]["item"])) == 20
 

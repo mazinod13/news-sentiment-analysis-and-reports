@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -59,7 +59,7 @@ class StubFetcher:
         return FetchResult(url=self._url, status=200, text=self._text, content=b"")
 
 
-def story_hrefs(tree: HTMLParser, scope: str) -> set[str]:
+def story_hrefs(tree: LexborHTMLParser, scope: str) -> set[str]:
     """Every /story/<id> href inside the given sections."""
     return {
         a.attributes["href"]
@@ -123,7 +123,7 @@ def test_listing_takes_only_the_province_rails(outlet, listing_html):
     attributed to whichever province ingested first. Province attribution then
     depends on scheduler order rather than on what Ratopati published.
     """
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
     province = story_hrefs(tree, PROVINCE_RAILS)
     national = story_hrefs(tree, NATIONAL_RAILS)
     assert province and national, "fixture is missing the rails this test is about"
@@ -146,7 +146,7 @@ def test_widening_the_item_selector_pulls_in_the_national_feed(outlet, listing_h
     scoped = {i.url for i in scrape(outlet, listing_html)}
     widened_items = HTMLScraper(source, StubFetcher(listing_html, LISTING_URL), wide).fetch()
     widened = {i.url for i in widened_items}
-    national = story_hrefs(HTMLParser(listing_html), NATIONAL_RAILS)
+    national = story_hrefs(LexborHTMLParser(listing_html), NATIONAL_RAILS)
 
     assert len(widened) > len(scoped) * 2
     assert widened & national, "expected the wide selector to reach the national rails"
@@ -156,7 +156,7 @@ def test_widening_the_item_selector_pulls_in_the_national_feed(outlet, listing_h
 def test_title_matches_the_class_not_the_tag(listing_html):
     """`h2.news-title` looks reasonable and silently drops most of the page:
     this CMS uses h3 for nearly every card and h2 for a handful."""
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     h3 = len(tree.css("h3.news-title"))
     h2 = len(tree.css("h2.news-title"))

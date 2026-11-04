@@ -11,7 +11,7 @@ the shape that made app/parsing/dates.py grow a numeric BS pattern.
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -105,7 +105,7 @@ def test_listing_yields_unique_dated_items(outlet, listing_html):
 
 def test_date_parses_in_this_hosts_format(outlet, listing_html):
     _, selectors = outlet
-    card = HTMLParser(listing_html).css(selectors["listing"]["item"])[0]
+    card = LexborHTMLParser(listing_html).css(selectors["listing"]["item"])[0]
 
     raw = select_one(card, selectors["listing"]["published"])
 
@@ -121,7 +121,7 @@ def test_listing_is_a_table_not_a_card_grid(outlet, listing_html):
     """MOHA renders its listing as a Livewire TABLE. Reaching for a card class
     finds nothing at all here."""
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
 
     assert selectors["listing"]["item"] == "table.table tbody tr"
     assert len(tree.css("table.table tbody tr")) == EXPECTED_ITEMS
@@ -137,7 +137,7 @@ def test_date_is_all_numeric_bikram_sambat(listing_html):
     on Devanagari numerals: the ASCII form is indistinguishable from an ISO
     Gregorian date, and parse_datetime tries BS before ISO under `auto`.
     """
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
     raw = select_one(tree.css("table.table tbody tr")[0], "td.d-none.d-md-table-cell")
 
     assert any(d in raw for d in "०१२३४५६७८९"), "expected Devanagari numerals"

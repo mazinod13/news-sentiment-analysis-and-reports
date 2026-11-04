@@ -16,7 +16,7 @@ shared by seven hosts. Three things make it awkward:
 from __future__ import annotations
 
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.fetcher import FetchResult
 from app.ingestion.html import HTMLScraper
@@ -138,7 +138,7 @@ def test_listing_takes_the_category_list_not_the_site_wide_widget(outlet, listin
     text, not URLs.
     """
     _, selectors = outlet
-    tree = HTMLParser(listing_html)
+    tree = LexborHTMLParser(listing_html)
     assert selectors["listing"]["item"] == "div.grid__card"
 
     def content_paths(nodes):
@@ -166,7 +166,7 @@ def test_listing_takes_the_category_list_not_the_site_wide_widget(outlet, listin
 def test_date_parses_in_this_hosts_format(listing_html):
     """`published_format: auto` is required, not laziness: this family mixes
     Devanagari Bikram Sambat with English Gregorian depending on the host."""
-    card = HTMLParser(listing_html).css("div.grid__card")[0]
+    card = LexborHTMLParser(listing_html).css("div.grid__card")[0]
 
     raw = select_one(card, "div.post__date p")
 
@@ -195,7 +195,7 @@ def test_detail_block_is_the_shared_banner_not_the_body(outlet, story_html):
     is identical on every host and has nothing to do with the article.
     """
     _, selectors = outlet
-    tree = HTMLParser(story_html)
+    tree = LexborHTMLParser(story_html)
 
     block = tree.css("div.detail__block")
     assert len(block) == 1, "if this changes, re-check which container is the body"

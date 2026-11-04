@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import feedparser
 import pytest
-from selectolax.parser import HTMLParser
+from selectolax.lexbor import LexborHTMLParser
 
 from app.ingestion.base import RawItem
 from app.parsing.article import extract
@@ -132,7 +132,7 @@ def test_published_comes_from_meta_as_real_iso(outlet, fixture_text):
 def test_page_has_three_prose_containers(fixture_text):
     """The article, a footer note and a callout all use .prose; only prose-lg
     is the body."""
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_story.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_story.html"))
 
     assert len(tree.css("div.prose")) == 3
     assert len(tree.css("div.prose.prose-lg")) == 1
@@ -171,7 +171,7 @@ def test_body_is_one_paragraph_with_br_separators(fixture_text):
     paragraph breaks, so those breaks are lost in the stored text. If this
     starts failing the theme changed to real <p> tags and the body selector
     should be revisited."""
-    tree = HTMLParser(fixture_text(f"{SOURCE_ID}_story.html"))
+    tree = LexborHTMLParser(fixture_text(f"{SOURCE_ID}_story.html"))
 
     assert len(tree.css("div.prose.prose-lg p")) == 1
     assert len(tree.css("div.prose.prose-lg br")) > 1
