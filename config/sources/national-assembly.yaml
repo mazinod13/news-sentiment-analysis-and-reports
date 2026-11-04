@@ -40,8 +40,7 @@ notes: |
     <div style="text-align: justify;"> with no <p> anywhere, and a `p`-based
     selector returns an empty body for those (1 of 8 sampled). The pack selects
     the container instead. Both layouts have a fixture.
-  - `div.row div.col-sm-6` matches 60 nodes for 30 stories because the
-    bootstrap grid classes nest. Use `div.grid-news`, which is the real card.
+  - Use `div.grid-news`, which is the real card, one per story.
   - A tag rail lives inside div.single-item and is excluded, or every body ends
     with a stray "ट्यागहरु:" paragraph.
   - Capture fixtures with `curl.exe -sL <url> -o <file>`. PowerShell's `>`
