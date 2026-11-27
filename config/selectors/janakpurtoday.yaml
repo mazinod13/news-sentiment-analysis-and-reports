@@ -17,8 +17,8 @@ article:
   published: "meta[property='article:published_time']@content"
 
   # bs = Bikram Sambat in Devanagari, iso = machine-readable, auto = try both
-  published_format: bs   
-                           
+  # The meta tag holds ISO, not BS: `bs` rejected every date.
+  published_format: auto
 
   image: "meta[property='og:image']@content"
 
@@ -28,5 +28,7 @@ exclude:
   - "aside"
   - "#comments"          # Facebook comments embed under "# Comment"
   - ".td-related-title"  # "Related News" rail
-  - ".td_module_*"       # related/latest/trending article cards
+  # related/latest/trending article cards (class prefix match; `.td_module_*`
+  # is not valid CSS and Lexbor rejects it)
+  - "[class*='td_module_']"
   - "footer"              # contact/team/advertising block at page bottom
